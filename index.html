@@ -88,9 +88,57 @@
     transition: transform .3s ease; z-index: 100; pointer-events: none;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ===== 密码锁 ===== */
+  #lockScreen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .lock-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 340px;
+    text-align: center;
+  }
+  .lock-box .lock-icon { font-size: 48px; margin-bottom: 12px; }
+  .lock-box h2 { font-size: 20px; margin-bottom: 6px; }
+  .lock-box p { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .lock-box input {
+    width: 100%; padding: 12px 16px;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; outline: none; margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .lock-box input:focus { border-color: var(--accent); }
+  .lock-box button {
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #0d1117;
+    border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: opacity .15s;
+  }
+  .lock-box button:hover { opacity: .85; }
+  .lock-err { color: var(--red); font-size: 13px; min-height: 18px; margin-bottom: 8px; }
 </style>
 </head>
 <body>
+
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>团队看板 · 访问受限</h2>
+    <p>请输入访问密码</p>
+    <input type="password" id="lockPass" placeholder="访问密码" onkeydown="if(event.key==='Enter')tryUnlock()">
+    <div class="lock-err" id="lockErr"></div>
+    <button onclick="tryUnlock()">进入看板</button>
+  </div>
+</div>
+
 <div class="container">
   <h1>📊 振昌声学 · 团队项目看板 <span class="badge badge-live">● LIVE</span></h1>
   <p class="subtitle">点击卡片或项目行试试 👆 · GitHub Pages 免费托管 · 白猫自动生成</p>
@@ -217,6 +265,31 @@
     t.classList.add('show');
     clearTimeout(showToast._timer);
     showToast._timer = setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  // ===== 密码锁逻辑 =====
+  const PAGE_PASSWORD = "zhenchang2026"; // ← 修改这里即可换密码
+  const lockScreen = document.getElementById('lockScreen');
+  const lockPass = document.getElementById('lockPass');
+  const lockErr = document.getElementById('lockErr');
+
+  function tryUnlock() {
+    if (lockPass.value === PAGE_PASSWORD) {
+      lockScreen.style.display = 'none';
+      sessionStorage.setItem('dashboard_unlocked', '1');
+      lockErr.textContent = '';
+    } else {
+      lockErr.textContent = '密码错误，请重试';
+      lockPass.value = '';
+      lockPass.focus();
+    }
+  }
+
+  // 已解锁过（本次会话）则跳过
+  if (sessionStorage.getItem('dashboard_unlocked') === '1') {
+    lockScreen.style.display = 'none';
+  } else {
+    lockPass.focus();
   }
 </script>
 </body>
