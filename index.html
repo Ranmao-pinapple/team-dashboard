@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>振昌声学 · 团队看板</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  .subtitle { color: var(--muted); margin-bottom: 32px; font-size: 14px; }
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .badge-live { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid var(--green); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card h3 { font-size: 14px; color: var(--muted); font-weight: 500; margin-bottom: 12px; }
+  .big-number { font-size: 36px; font-weight: 700; }
+  .green { color: var(--green); }
+  .yellow { color: var(--yellow); }
+  .red { color: var(--red); }
+  .blue { color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; color: var(--muted); font-size: 13px; font-weight: 500; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 12px; font-size: 14px; border-bottom: 1px solid var(--border); }
+  .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .st-ok { background: rgba(63,185,80,.15); color: var(--green); }
+  .st-wait { background: rgba(210,153,34,.15); color: var(--yellow); }
+  .st-risk { background: rgba(248,81,73,.15); color: var(--red); }
+  .footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
+  .footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📊 振昌声学 · 团队项目看板 <span class="badge badge-live">● LIVE</span></h1>
+  <p class="subtitle">示例页面 · GitHub Pages 免费托管 · 由白猫自动生成</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>进行中项目</h3>
+      <div class="big-number blue">4</div>
+    </div>
+    <div class="card">
+      <h3>本周完成</h3>
+      <div class="big-number green">3</div>
+    </div>
+    <div class="card">
+      <h3>待跟进</h3>
+      <div class="big-number yellow">2</div>
+    </div>
+    <div class="card">
+      <h3>风险项</h3>
+      <div class="big-number red">1</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>项目状态一览</h3>
+    <table>
+      <tr><th>项目</th><th>状态</th><th>备注</th></tr>
+      <tr><td>VWCO 巴西卡车</td><td><span class="status st-ok">✅ 进行中</span></td><td>物流成本表 / 包装方案表</td></tr>
+      <tr><td>VFe32 小海绵（凯华）</td><td><span class="status st-ok">✅ 量产</span></td><td>8K套/月</td></tr>
+      <tr><td>Limo Green 吸音棉</td><td><span class="status st-wait">🔄 备料中</span></td><td>已备料，待打样</td></tr>
+      <tr><td>Limo Green 海绵</td><td><span class="status st-wait">🔄 外协打样</span></td><td>待打样结果</td></tr>
+      <tr><td>某项目风险项</td><td><span class="status st-risk">⚠️ 风险</span></td><td>示例数据，替换为真实内容</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    由 白猫 (Hermes Agent) 生成 · 2026-07-31 · 数据源：Zane 项目跟踪
+  </div>
+</div>
+</body>
+</html>
