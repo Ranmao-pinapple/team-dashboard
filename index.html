@@ -217,6 +217,7 @@
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('project')">🏠 项目看板</button>
     <button class="tab-btn" onclick="switchTab('pull')">📅 月拉动计划</button>
+    <button class="tab-btn" onclick="switchTab('po')">📋 订单台账</button>
     <button class="tab-btn" onclick="switchTab('finance')">💰 对账开票</button>
   </div>
 
@@ -333,7 +334,54 @@
     <div class="card" id="tableWrap" style="padding:12px"></div>
   </div>
 
-  <!-- ========== Tab 3: 对账开票 ========== -->
+  <!-- ========== Tab 3: 订单台账 ========== -->
+  <div class="tab-content" id="tab-po">
+    <div class="grid" id="poStatGrid">
+      <div class="card stat">
+        <h3>订单总数</h3>
+        <div class="big-number blue" id="poCount">—</div>
+        <div class="sub">采购订单累计</div>
+      </div>
+      <div class="card stat">
+        <h3>待交付数量</h3>
+        <div class="big-number yellow" id="poQty">—</div>
+        <div class="sub">未完成交付</div>
+      </div>
+      <div class="card stat">
+        <h3>订单金额(含税)</h3>
+        <div class="big-number green" id="poAmount">—</div>
+        <div class="sub">累计订单金额</div>
+      </div>
+      <div class="card stat">
+        <h3>待确认订单</h3>
+        <div class="big-number purple" id="poPending">—</div>
+        <div class="sub">收到未回传确认</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--accent)"></span>已接收</span>
+        <span><span class="dot" style="background:var(--green)"></span>已确认</span>
+        <span><span class="dot" style="background:var(--purple)"></span>已交付</span>
+        <span><span class="dot" style="background:var(--yellow)"></span>待确认</span>
+        <span style="color:var(--muted)">※ 交期为系统生成，仅供参考</span>
+      </div>
+      <div class="updated" id="updatedLabelPo">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="poFilterBar">
+      <button class="active" data-f="all" onclick="setPoFilter('all')">全部</button>
+      <button data-f="received" onclick="setPoFilter('received')">已接收</button>
+      <button data-f="confirmed" onclick="setPoFilter('confirmed')">已确认</button>
+      <button data-f="delivered" onclick="setPoFilter('delivered')">已交付</button>
+      <button data-f="pending" onclick="setPoFilter('pending')">待确认</button>
+    </div>
+
+    <div class="card" id="poTableWrap" style="padding:12px"></div>
+  </div>
+
+  <!-- ========== Tab 4: 对账开票 ========== -->
   <div class="tab-content" id="tab-finance">
     <div class="grid" id="statGrid">
       <div class="card stat">
@@ -446,12 +494,21 @@ const FINANCE_DATA = {
   ]
 };
 
+// ===== 订单台账数据块（白猫脚本自动更新区域） =====
+// status: received(已接收) / confirmed(已确认回传) / delivered(已交付) / pending(待确认)
+const PO_DATA = {
+  updatedAt: "2026-07-31",
+  orders: [
+    { po: "4500123139", date: "2026-07-27", customer: "浙江凯华", part: "VFe32前通风盖板本体海绵", partCode: "51000000000001", spec: "条6x10x1301.3BEX7305010", qty: 4000, unitPrice: 1.00, total: 4000.00, taxRate: 13, delivery: "2026-08-30", payment: "票到90天", status: "received", remark: "交期为系统生成，非真实交期" }
+  ]
+};
+
 // ===== Tab 切换 =====
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => {
-    if (b.textContent.includes(name === 'project' ? '项目看板' : name === 'pull' ? '月拉动' : '对账开票')) {
+    if (b.textContent.includes(name === 'project' ? '项目看板' : name === 'pull' ? '月拉动' : name === 'po' ? '订单台账' : '对账开票')) {
       b.classList.add('active');
     }
   });
@@ -675,6 +732,75 @@ function setFilter(f) {
   renderFinance();
 }
 
+// ===== 订单台账渲染 =====
+let currentPoFilter = 'all';
+
+function poStatusBadge(s) {
+  const map = {
+    received: '<span class="status st-confirmed">🔵 已接收</span>',
+    confirmed: '<span class="status st-paid">✅ 已确认</span>',
+    delivered: '<span class="status st-invoiced">🟣 已交付</span>',
+    pending: '<span class="status st-pending">🟡 待确认</span>'
+  };
+  return map[s] || map.pending;
+}
+
+function renderPoStats() {
+  const orders = PO_DATA.orders;
+  let count = orders.length;
+  let qty = 0, amount = 0, pendingCount = 0;
+  orders.forEach(o => {
+    if (o.status !== 'delivered') qty += o.qty;
+    amount += o.total;
+    if (o.status === 'pending' || o.status === 'received') pendingCount++;
+  });
+  document.getElementById('poCount').textContent = count;
+  document.getElementById('poQty').textContent = qty.toLocaleString() + ' 件';
+  document.getElementById('poAmount').textContent = '¥' + amount.toLocaleString('zh-CN');
+  document.getElementById('poPending').textContent = pendingCount;
+}
+
+function renderPo() {
+  const wrap = document.getElementById('poTableWrap');
+  let orders = PO_DATA.orders;
+  if (currentPoFilter !== 'all') {
+    orders = orders.filter(o => o.status === currentPoFilter);
+  }
+
+  let html = '<table><tr><th>订单编号</th><th>订单日期</th><th>客户</th><th>零件名称</th><th>物料编码</th><th>数量</th><th>含税单价</th><th>含税总额</th><th>税率</th><th>系统交期</th><th>付款条件</th><th>状态</th><th>备注</th></tr>';
+  orders.forEach(o => {
+    html += `<tr>
+      <td class="part">${o.po}</td>
+      <td>${o.date}</td>
+      <td class="part">${o.customer}</td>
+      <td>${o.part}</td>
+      <td style="font-size:11px">${o.partCode}</td>
+      <td class="part">${o.qty.toLocaleString()} 件</td>
+      <td>¥${o.unitPrice.toFixed(2)}</td>
+      <td class="part">¥${o.total.toLocaleString('zh-CN')}</td>
+      <td>${o.taxRate}%</td>
+      <td style="color:var(--muted)">${o.delivery || '—'}</td>
+      <td>${o.payment}</td>
+      <td>${poStatusBadge(o.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${o.remark || ''}</td>
+    </tr>`;
+  });
+  if (!orders.length) html += '<tr><td colspan="13" style="color:var(--muted);padding:24px">该筛选条件下暂无订单</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderPoStats();
+  document.getElementById('updatedLabelPo').textContent = `最后更新：${PO_DATA.updatedAt}`;
+}
+
+function setPoFilter(f) {
+  currentPoFilter = f;
+  document.querySelectorAll('#poFilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderPo();
+}
+
 // ===== 密码锁逻辑 =====
 const PAGE_PASSWORD = "tairui999"; // ← 修改这里即可换密码
 const lockScreen = document.getElementById('lockScreen');
@@ -704,6 +830,7 @@ if (sessionStorage.getItem('dashboard_unlocked') === '1') {
 
 renderMonthPicker();
 renderPull();
+renderPo();
 renderFinance();
 </script>
 </body>
