@@ -6,17 +6,17 @@
 <title>臻畅/泰瑞 · 销售四部看板</title>
 <style>
   :root {
-    --bg: #0d1117;
-    --card: #161b22;
-    --card-hover: #1c2330;
-    --border: #30363d;
-    --text: #e6edf3;
-    --muted: #8b949e;
-    --accent: #58a6ff;
-    --green: #3fb950;
-    --yellow: #d29922;
-    --red: #f85149;
-    --purple: #bc8cff;
+    --bg: #ffffff;
+    --card: #f6f6f7;
+    --card-hover: #ededee;
+    --border: #e0e0e2;
+    --text: #171a20;
+    --muted: #5c5e62;
+    --accent: #e82127;
+    --green: #12a150;
+    --yellow: #b45309;
+    --red: #e82127;
+    --purple: #7c3aed;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -38,7 +38,7 @@
     margin-left: 10px;
     vertical-align: middle;
   }
-  .badge-live { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid var(--green); }
+  .badge-live { background: rgba(18,161,80,.12); color: var(--green); border: 1px solid var(--green); }
 
   /* Tab 导航 */
   .tabs {
@@ -54,7 +54,7 @@
     transition: border-color .15s, background .15s, color .15s;
   }
   .tab-btn:hover { border-color: var(--accent); }
-  .tab-btn.active { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+  .tab-btn.active { background: var(--accent); color: #ffffff; border-color: var(--accent); }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
@@ -90,17 +90,17 @@
   }
   th:first-child, td:first-child { text-align: left; }
   th.today { color: var(--yellow); }
-  th.weekend { color: #3d444d; }
+  th.weekend { color: #c4c4c6; }
   td { padding: 5px 3px; font-size: 12px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
-  td.today { background: rgba(210,153,34,.12); box-shadow: inset 0 0 0 1px var(--yellow); border-radius: 4px; }
-  td.weekend { color: #3d444d; }
-  tr:hover td { background: rgba(88,166,255,.04); }
+  td.today { background: rgba(180,83,9,.10); box-shadow: inset 0 0 0 1px var(--yellow); border-radius: 4px; }
+  td.weekend { color: #c4c4c6; }
+  tr:hover td { background: rgba(232,33,39,.04); }
   .part { font-weight: 600; font-size: 13px; }
   .proj { color: var(--muted); font-size: 11px; }
   .proj-row { cursor: pointer; transition: background .15s ease; }
-  .proj-row:hover { background: rgba(88,166,255,.06); }
-  .detail-row td { background: rgba(22,27,34,.6); padding: 0; }
-  .detail-panel { padding: 16px 20px; border-left: 3px solid var(--accent); margin: 4px 12px; background: rgba(88,166,255,.05); border-radius: 0 8px 8px 0; }
+  .proj-row:hover { background: rgba(232,33,39,.06); }
+  .detail-row td { background: rgba(23,26,32,.04); padding: 0; }
+  .detail-panel { padding: 16px 20px; border-left: 3px solid var(--accent); margin: 4px 12px; background: rgba(232,33,39,.05); border-radius: 0 8px 8px 0; }
   .detail-panel h4 { color: var(--accent); font-size: 14px; margin-bottom: 8px; }
   .detail-panel ul { list-style: none; }
   .detail-panel li { font-size: 13px; color: var(--muted); padding: 3px 0; }
@@ -112,22 +112,22 @@
   .cell-pair .act { color: var(--accent); font-size: 11px; }
   .cell-pair .act.miss { color: var(--red); }
   .cell-pair .act.hit { color: var(--green); }
-  .cell-zero { color: #3d444d; }
+  .cell-zero { color: #c4c4c6; }
   .rate { font-size: 12px; font-weight: 700; }
   .rate-high { color: var(--green); }
   .rate-mid { color: var(--yellow); }
   .rate-low { color: var(--red); }
 
   .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-  .st-live { background: rgba(63,185,80,.15); color: var(--green); }
-  .st-plan { background: rgba(88,166,255,.15); color: var(--accent); }
-  .st-wait { background: rgba(210,153,34,.15); color: var(--yellow); }
-  .st-pending { background: rgba(210,153,34,.15); color: var(--yellow); }
-  .st-confirmed { background: rgba(88,166,255,.15); color: var(--accent); }
-  .st-invoiced { background: rgba(188,140,255,.15); color: var(--purple); }
-  .st-paid { background: rgba(63,185,80,.15); color: var(--green); }
-  .st-partial { background: rgba(210,153,34,.15); color: var(--yellow); }
-  .st-overdue { background: rgba(248,81,73,.15); color: var(--red); }
+  .st-live { background: rgba(18,161,80,.12); color: var(--green); }
+  .st-plan { background: rgba(232,33,39,.10); color: var(--accent); }
+  .st-wait { background: rgba(180,83,9,.12); color: var(--yellow); }
+  .st-pending { background: rgba(180,83,9,.12); color: var(--yellow); }
+  .st-confirmed { background: rgba(232,33,39,.10); color: var(--accent); }
+  .st-invoiced { background: rgba(124,58,237,.12); color: var(--purple); }
+  .st-paid { background: rgba(18,161,80,.12); color: var(--green); }
+  .st-partial { background: rgba(180,83,9,.12); color: var(--yellow); }
+  .st-overdue { background: rgba(232,33,39,.12); color: var(--red); }
 
   .toolbar {
     display: flex; justify-content: space-between; align-items: center;
@@ -146,7 +146,7 @@
     transition: border-color .15s, background .15s;
   }
   .month-picker button:hover { border-color: var(--accent); }
-  .month-picker button.active { background: var(--accent); color: #0d1117; font-weight: 700; border-color: var(--accent); }
+  .month-picker button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
   .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
   .filters button {
     padding: 6px 14px;
@@ -156,7 +156,7 @@
     transition: border-color .15s, background .15s;
   }
   .filters button:hover { border-color: var(--accent); }
-  .filters button.active { background: var(--accent); color: #0d1117; font-weight: 700; border-color: var(--accent); }
+  .filters button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
   .empty-note { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
   .footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
 
@@ -188,7 +188,7 @@
   .lock-box input:focus { border-color: var(--accent); }
   .lock-box button {
     width: 100%; padding: 12px;
-    background: var(--accent); color: #0d1117;
+    background: var(--accent); color: #ffffff;
     border: none; border-radius: 8px;
     font-size: 15px; font-weight: 700; cursor: pointer;
     transition: opacity .15s;
@@ -324,7 +324,7 @@
         <span><span class="dot" style="background:var(--accent)"></span>实际</span>
         <span><span class="dot" style="background:var(--red)"></span>实际未达标</span>
         <span><span class="dot" style="background:var(--yellow)"></span>■ 今天</span>
-        <span><span class="dot" style="background:#3d444d"></span>周末/无计划</span>
+        <span><span class="dot" style="background:#c4c4c6"></span>周末/无计划</span>
       </div>
       <div class="updated" id="updatedLabelPull">最后更新：--</div>
     </div>
@@ -499,7 +499,7 @@ const FINANCE_DATA = {
 const PO_DATA = {
   updatedAt: "2026-07-31",
   orders: [
-    { po: "4500123139", date: "2026-07-27", customer: "浙江凯华", part: "VFe32前通风盖板本体海绵", partCode: "51000000000001", spec: "", qty: 4000, unitPrice: 1.0, total: 4000.0, taxRate: 13, delivery: "2026-08-30", payment: "票到90天", status: "received", remark: "系统生成日期，非真实交期" }
+    { po: "4500123139", date: "2026-07-27", customer: "浙江凯华", part: "VFe32前通风盖板本体海绵", partCode: "51000000000001", spec: "条6x10x1301.3BEX7305010", qty: 4000, unitPrice: 1.00, total: 4000.00, taxRate: 13, delivery: "2026-08-30", payment: "票到90天", status: "received", remark: "交期为系统生成，非真实交期" }
   ]
 };
 
@@ -670,7 +670,7 @@ function paidBadge(row) {
       ? '<span class="status st-overdue">🔴 逾期</span>'
       : '<span class="status st-invoiced">🟣 待回款</span>';
   }
-  return '<span style="color:#3d444d">—</span>';
+  return '<span style="color:#c4c4c6">—</span>';
 }
 
 function stage(row) {
