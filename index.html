@@ -16,6 +16,7 @@
     --green: #3fb950;
     --yellow: #d29922;
     --red: #f85149;
+    --purple: #bc8cff;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -25,17 +26,9 @@
     padding: 40px 20px;
     min-height: 100vh;
   }
-  .container { max-width: 900px; margin: 0 auto; }
+  .container { max-width: 1300px; margin: 0 auto; }
   h1 { font-size: 28px; margin-bottom: 8px; }
-  .subtitle { color: var(--muted); margin-bottom: 32px; font-size: 14px; }
-  .nav { margin-bottom: 20px; }
-  .nav a {
-    color: var(--accent); text-decoration: none; font-size: 14px;
-    margin-right: 16px; font-weight: 600;
-    padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px;
-    transition: border-color .15s, background .15s;
-  }
-  .nav a:hover { border-color: var(--accent); background: rgba(88,166,255,.08); }
+  .subtitle { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
   .badge {
     display: inline-block;
     padding: 3px 12px;
@@ -46,6 +39,25 @@
     vertical-align: middle;
   }
   .badge-live { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid var(--green); }
+
+  /* Tab 导航 */
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    padding: 9px 22px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .tab-btn:hover { border-color: var(--accent); }
+  .tab-btn.active { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -57,45 +69,96 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px;
-    cursor: pointer;
-    transition: transform .15s ease, border-color .15s ease, background .15s ease;
-    position: relative;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    cursor: default;
   }
-  .card:hover { transform: translateY(-3px); border-color: var(--accent); background: var(--card-hover); }
-  .card h3 { font-size: 14px; color: var(--muted); font-weight: 500; margin-bottom: 12px; }
-  .big-number { font-size: 36px; font-weight: 700; }
-  .card .card-hint {
-    position: absolute; bottom: 12px; right: 14px;
-    font-size: 11px; color: var(--muted); opacity: .7;
-  }
+  .stat h3 { font-size: 13px; color: var(--muted); font-weight: 500; margin-bottom: 10px; }
+  .big-number { font-size: 34px; font-weight: 700; }
+  .stat .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
   .green { color: var(--green); }
   .yellow { color: var(--yellow); }
   .red { color: var(--red); }
   .blue { color: var(--accent); }
+  .purple { color: var(--purple); }
+
   table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; color: var(--muted); font-size: 13px; font-weight: 500; padding: 10px 12px; border-bottom: 1px solid var(--border); }
-  td { padding: 12px; font-size: 14px; border-bottom: 1px solid var(--border); }
+  th {
+    text-align: center; color: var(--muted); font-size: 11px; font-weight: 600;
+    padding: 6px 3px; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; }
+  th.today { color: var(--yellow); }
+  th.weekend { color: #3d444d; }
+  td { padding: 5px 3px; font-size: 12px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  td.today { background: rgba(210,153,34,.12); box-shadow: inset 0 0 0 1px var(--yellow); border-radius: 4px; }
+  td.weekend { color: #3d444d; }
+  tr:hover td { background: rgba(88,166,255,.04); }
+  .part { font-weight: 600; font-size: 13px; }
+  .proj { color: var(--muted); font-size: 11px; }
   .proj-row { cursor: pointer; transition: background .15s ease; }
   .proj-row:hover { background: rgba(88,166,255,.06); }
-  .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-  .st-ok { background: rgba(63,185,80,.15); color: var(--green); }
-  .st-wait { background: rgba(210,153,34,.15); color: var(--yellow); }
-  .st-risk { background: rgba(248,81,73,.15); color: var(--red); }
   .detail-row td { background: rgba(22,27,34,.6); padding: 0; }
   .detail-panel { padding: 16px 20px; border-left: 3px solid var(--accent); margin: 4px 12px; background: rgba(88,166,255,.05); border-radius: 0 8px 8px 0; }
   .detail-panel h4 { color: var(--accent); font-size: 14px; margin-bottom: 8px; }
   .detail-panel ul { list-style: none; }
   .detail-panel li { font-size: 13px; color: var(--muted); padding: 3px 0; }
   .detail-panel li strong { color: var(--text); font-weight: 500; }
-  .footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
-  .footer a { color: var(--accent); text-decoration: none; }
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-    padding: 10px 20px; font-size: 13px; color: var(--muted);
-    transition: transform .3s ease; z-index: 100; pointer-events: none;
+
+  .total-row td { border-top: 2px solid var(--border); font-weight: 700; color: var(--accent); }
+  .cell-pair { line-height: 1.25; }
+  .cell-pair .plan { color: var(--green); font-weight: 600; font-size: 12px; }
+  .cell-pair .act { color: var(--accent); font-size: 11px; }
+  .cell-pair .act.miss { color: var(--red); }
+  .cell-pair .act.hit { color: var(--green); }
+  .cell-zero { color: #3d444d; }
+  .rate { font-size: 12px; font-weight: 700; }
+  .rate-high { color: var(--green); }
+  .rate-mid { color: var(--yellow); }
+  .rate-low { color: var(--red); }
+
+  .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .st-live { background: rgba(63,185,80,.15); color: var(--green); }
+  .st-plan { background: rgba(88,166,255,.15); color: var(--accent); }
+  .st-wait { background: rgba(210,153,34,.15); color: var(--yellow); }
+  .st-pending { background: rgba(210,153,34,.15); color: var(--yellow); }
+  .st-confirmed { background: rgba(88,166,255,.15); color: var(--accent); }
+  .st-invoiced { background: rgba(188,140,255,.15); color: var(--purple); }
+  .st-paid { background: rgba(63,185,80,.15); color: var(--green); }
+  .st-partial { background: rgba(210,153,34,.15); color: var(--yellow); }
+  .st-overdue { background: rgba(248,81,73,.15); color: var(--red); }
+
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
   }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+  .legend { font-size: 12px; color: var(--muted); }
+  .legend span { margin-right: 12px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .updated { color: var(--muted); font-size: 12px; }
+  .month-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .month-picker button {
+    padding: 6px 14px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .month-picker button:hover { border-color: var(--accent); }
+  .month-picker button.active { background: var(--accent); color: #0d1117; font-weight: 700; border-color: var(--accent); }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .filters button {
+    padding: 6px 14px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .filters button:hover { border-color: var(--accent); }
+  .filters button.active { background: var(--accent); color: #0d1117; font-weight: 700; border-color: var(--accent); }
+  .empty-note { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+  .footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
 
   /* ===== 密码锁 ===== */
   #lockScreen {
@@ -139,7 +202,7 @@
 <div id="lockScreen">
   <div class="lock-box">
     <div class="lock-icon">🔒</div>
-    <h2>团队看板 · 访问受限</h2>
+    <h2>销售四部看板 · 访问受限</h2>
     <p>请输入访问密码</p>
     <input type="password" id="lockPass" placeholder="访问密码" onkeydown="if(event.key==='Enter')tryUnlock()">
     <div class="lock-err" id="lockErr"></div>
@@ -147,159 +210,501 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container" style="display:none" id="mainContent">
   <h1>📊 臻畅/泰瑞 · 销售四部看板 <span class="badge badge-live">● LIVE</span></h1>
-  <div class="nav"><a href="./pull-plan.html">📅 月拉动计划 →</a> <a href="./finance.html">💰 对账开票 →</a></div>
-  <p class="subtitle">点击卡片或项目行试试 👆 · GitHub Pages 免费托管 · 白猫自动生成</p>
+  <p class="subtitle">项目 / 拉动计划 / 对账开票 · 一站式 · 白猫自动更新</p>
 
-  <div class="grid" id="statGrid">
-    <div class="card" onclick="showToast('当前 4 个进行中项目')">
-      <h3>进行中项目</h3>
-      <div class="big-number blue">4</div>
-      <span class="card-hint">点击查看</span>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('project')">🏠 项目看板</button>
+    <button class="tab-btn" onclick="switchTab('pull')">📅 月拉动计划</button>
+    <button class="tab-btn" onclick="switchTab('finance')">💰 对账开票</button>
+  </div>
+
+  <!-- ========== Tab 1: 项目看板 ========== -->
+  <div class="tab-content active" id="tab-project">
+    <div class="grid">
+      <div class="card stat" onclick="showToast('当前 4 个进行中项目')">
+        <h3>进行中项目</h3>
+        <div class="big-number blue">4</div>
+        <div class="sub">点击查看</div>
+      </div>
+      <div class="card stat" onclick="showToast('本周完成 3 项')">
+        <h3>本周完成</h3>
+        <div class="big-number green">3</div>
+        <div class="sub">点击查看</div>
+      </div>
+      <div class="card stat" onclick="showToast('2 项待跟进')">
+        <h3>待跟进</h3>
+        <div class="big-number yellow">2</div>
+        <div class="sub">点击查看</div>
+      </div>
+      <div class="card stat" onclick="showToast('1 项风险，点击项目表查看详情')">
+        <h3>风险项</h3>
+        <div class="big-number red">1</div>
+        <div class="sub">点击查看</div>
+      </div>
     </div>
-    <div class="card" onclick="showToast('本周完成 3 项')">
-      <h3>本周完成</h3>
-      <div class="big-number green">3</div>
-      <span class="card-hint">点击查看</span>
-    </div>
-    <div class="card" onclick="showToast('2 项待跟进')">
-      <h3>待跟进</h3>
-      <div class="big-number yellow">2</div>
-      <span class="card-hint">点击查看</span>
-    </div>
-    <div class="card" onclick="showToast('1 项风险，点击项目表查看详情')">
-      <h3>风险项</h3>
-      <div class="big-number red">1</div>
-      <span class="card-hint">点击查看</span>
+
+    <div class="card">
+      <h3 style="color:var(--muted);font-size:14px;font-weight:500;margin-bottom:12px">项目状态一览（点击行展开详情）</h3>
+      <table>
+        <tr><th>项目</th><th>状态</th><th>备注</th></tr>
+        <tr class="proj-row" onclick="toggleDetail(this)">
+          <td>VWCO 巴西卡车</td><td><span class="status st-live">✅ 进行中</span></td><td>物流成本表 / 包装方案表</td>
+        </tr>
+        <tr class="detail-row" style="display:none">
+          <td colspan="3"><div class="detail-panel">
+            <h4>📦 VWCO 巴西卡车项目</h4>
+            <ul>
+              <li><strong>内容：</strong>物流成本表 + 包装方案表 + 报价</li>
+              <li><strong>当前状态：</strong>表格中英对照版已交付，待填写</li>
+              <li><strong>下一步：</strong>确认运输方式 → 填写数据 → 邮件发送</li>
+            </ul>
+          </div></td>
+        </tr>
+        <tr class="proj-row" onclick="toggleDetail(this)">
+          <td>VFe32 小海绵（凯华）</td><td><span class="status st-live">✅ 量产</span></td><td>8K套/月</td>
+        </tr>
+        <tr class="detail-row" style="display:none">
+          <td colspan="3"><div class="detail-panel">
+            <h4>🧽 VFe32 小海绵（浙江凯华）</h4>
+            <ul>
+              <li><strong>年净利：</strong>约 20.3 万</li>
+              <li><strong>利润率：</strong>约 27.4%</li>
+              <li><strong>产能：</strong>8K套/月</li>
+            </ul>
+          </div></td>
+        </tr>
+        <tr class="proj-row" onclick="toggleDetail(this)">
+          <td>Limo Green 吸音棉</td><td><span class="status st-wait">🔄 备料中</span></td><td>已备料，待打样</td>
+        </tr>
+        <tr class="detail-row" style="display:none">
+          <td colspan="3"><div class="detail-panel">
+            <h4>🔊 Limo Green 吸音棉</h4>
+            <ul>
+              <li><strong>状态：</strong>原材料已备料</li>
+              <li><strong>下一步：</strong>等待打样安排</li>
+            </ul>
+          </div></td>
+        </tr>
+        <tr class="proj-row" onclick="toggleDetail(this)">
+          <td>Limo Green 海绵</td><td><span class="status st-wait">🔄 外协打样</span></td><td>待打样结果</td>
+        </tr>
+        <tr class="detail-row" style="display:none">
+          <td colspan="3"><div class="detail-panel">
+            <h4>🧽 Limo Green 海绵（外协）</h4>
+            <ul>
+              <li><strong>状态：</strong>外协打样进行中</li>
+              <li><strong>备注：</strong>外协询价为财务职责，邮件不点名经办人</li>
+            </ul>
+          </div></td>
+        </tr>
+        <tr class="proj-row" onclick="toggleDetail(this)">
+          <td>示例风险项</td><td><span class="status st-risk">⚠️ 风险</span></td><td>示例数据，替换为真实内容</td>
+        </tr>
+        <tr class="detail-row" style="display:none">
+          <td colspan="3"><div class="detail-panel">
+            <h4>⚠️ 风险项示例</h4>
+            <ul>
+              <li><strong>说明：</strong>这行是演示数据，用来展示风险状态样式</li>
+              <li><strong>操作：</strong>把真实项目/风险填进来即可</li>
+            </ul>
+          </div></td>
+        </tr>
+      </table>
     </div>
   </div>
 
-  <div class="card" style="cursor:default">
-    <h3>项目状态一览（点击行展开详情）</h3>
-    <table>
-      <tr><th>项目</th><th>状态</th><th>备注</th></tr>
+  <!-- ========== Tab 2: 月拉动计划 ========== -->
+  <div class="tab-content" id="tab-pull">
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--green)"></span>计划</span>
+        <span><span class="dot" style="background:var(--accent)"></span>实际</span>
+        <span><span class="dot" style="background:var(--red)"></span>实际未达标</span>
+        <span><span class="dot" style="background:var(--yellow)"></span>■ 今天</span>
+        <span><span class="dot" style="background:#3d444d"></span>周末/无计划</span>
+      </div>
+      <div class="updated" id="updatedLabelPull">最后更新：--</div>
+    </div>
 
-      <tr class="proj-row" onclick="toggleDetail(this)">
-        <td>VWCO 巴西卡车</td><td><span class="status st-ok">✅ 进行中</span></td><td>物流成本表 / 包装方案表</td>
-      </tr>
-      <tr class="detail-row" style="display:none">
-        <td colspan="3"><div class="detail-panel">
-          <h4>📦 VWCO 巴西卡车项目</h4>
-          <ul>
-            <li><strong>内容：</strong>物流成本表 + 包装方案表 + 报价</li>
-            <li><strong>当前状态：</strong>表格中英对照版已交付，待填写</li>
-            <li><strong>下一步：</strong>确认运输方式 → 填写数据 → 邮件发送</li>
-          </ul>
-        </div></td>
-      </tr>
+    <div class="month-picker" id="monthPicker"></div>
 
-      <tr class="proj-row" onclick="toggleDetail(this)">
-        <td>VFe32 小海绵（凯华）</td><td><span class="status st-ok">✅ 量产</span></td><td>8K套/月</td>
-      </tr>
-      <tr class="detail-row" style="display:none">
-        <td colspan="3"><div class="detail-panel">
-          <h4>🧽 VFe32 小海绵（浙江凯华）</h4>
-          <ul>
-            <li><strong>年净利：</strong>约 20.3 万</li>
-            <li><strong>利润率：</strong>约 27.4%</li>
-            <li><strong>产能：</strong>8K套/月</li>
-          </ul>
-        </div></td>
-      </tr>
+    <div class="card" id="tableWrap" style="padding:12px"></div>
+  </div>
 
-      <tr class="proj-row" onclick="toggleDetail(this)">
-        <td>Limo Green 吸音棉</td><td><span class="status st-wait">🔄 备料中</span></td><td>已备料，待打样</td>
-      </tr>
-      <tr class="detail-row" style="display:none">
-        <td colspan="3"><div class="detail-panel">
-          <h4>🔊 Limo Green 吸音棉</h4>
-          <ul>
-            <li><strong>状态：</strong>原材料已备料</li>
-            <li><strong>下一步：</strong>等待打样安排</li>
-          </ul>
-        </div></td>
-      </tr>
+  <!-- ========== Tab 3: 对账开票 ========== -->
+  <div class="tab-content" id="tab-finance">
+    <div class="grid" id="statGrid">
+      <div class="card stat">
+        <h3>待对账金额</h3>
+        <div class="big-number yellow" id="sPending">—</div>
+        <div class="sub">已发货未对账</div>
+      </div>
+      <div class="card stat">
+        <h3>待开票金额</h3>
+        <div class="big-number blue" id="sConfirmed">—</div>
+        <div class="sub">已对账未开票</div>
+      </div>
+      <div class="card stat">
+        <h3>已开票金额</h3>
+        <div class="big-number purple" id="sInvoiced">—</div>
+        <div class="sub">已开票待回款</div>
+      </div>
+      <div class="card stat">
+        <h3>已回款金额</h3>
+        <div class="big-number green" id="sPaid">—</div>
+        <div class="sub">含部分回款</div>
+      </div>
+    </div>
 
-      <tr class="proj-row" onclick="toggleDetail(this)">
-        <td>Limo Green 海绵</td><td><span class="status st-wait">🔄 外协打样</span></td><td>待打样结果</td>
-      </tr>
-      <tr class="detail-row" style="display:none">
-        <td colspan="3"><div class="detail-panel">
-          <h4>🧽 Limo Green 海绵（外协）</h4>
-          <ul>
-            <li><strong>状态：</strong>外协打样进行中</li>
-            <li><strong>备注：</strong>外协询价为财务职责，邮件不点名经办人</li>
-          </ul>
-        </div></td>
-      </tr>
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--yellow)"></span>待对账</span>
+        <span><span class="dot" style="background:var(--accent)"></span>已对账</span>
+        <span><span class="dot" style="background:var(--purple)"></span>已开票</span>
+        <span><span class="dot" style="background:var(--green)"></span>已回款</span>
+        <span><span class="dot" style="background:var(--red)"></span>逾期</span>
+      </div>
+      <div class="updated" id="updatedLabelFinance">最后更新：--</div>
+    </div>
 
-      <tr class="proj-row" onclick="toggleDetail(this)">
-        <td>示例风险项</td><td><span class="status st-risk">⚠️ 风险</span></td><td>示例数据，替换为真实内容</td>
-      </tr>
-      <tr class="detail-row" style="display:none">
-        <td colspan="3"><div class="detail-panel">
-          <h4>⚠️ 风险项示例</h4>
-          <ul>
-            <li><strong>说明：</strong>这行是演示数据，用来展示风险状态样式</li>
-            <li><strong>操作：</strong>把真实项目/风险填进来即可</li>
-          </ul>
-        </div></td>
-      </tr>
-    </table>
+    <div class="filters" id="filterBar">
+      <button class="active" data-f="all" onclick="setFilter('all')">全部</button>
+      <button data-f="pending" onclick="setFilter('pending')">待对账</button>
+      <button data-f="confirmed" onclick="setFilter('confirmed')">已对账</button>
+      <button data-f="invoiced" onclick="setFilter('invoiced')">已开票</button>
+      <button data-f="paid" onclick="setFilter('paid')">已回款</button>
+      <button data-f="overdue" onclick="setFilter('overdue')">⚠ 逾期</button>
+    </div>
+
+    <div class="card" id="tableWrapFinance" style="padding:12px"></div>
   </div>
 
   <div class="footer">
-    由 白猫 (Hermes Agent) 生成 · 2026-07-31 · 数据源：Zane 项目跟踪
+    由 白猫 (Hermes Agent) 自动更新 · 数据源：订单/财务信息
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;color:var(--muted);transition:transform .3s ease;z-index:100;pointer-events:none"></div>
 
 <script>
-  function toggleDetail(row) {
-    const detailRow = row.nextElementSibling;
-    if (!detailRow || !detailRow.classList.contains('detail-row')) return;
-    const isHidden = detailRow.style.display === 'none';
-    // 收起其他展开的行
-    document.querySelectorAll('.detail-row').forEach(r => {
-      if (r !== detailRow) r.style.display = 'none';
-    });
-    detailRow.style.display = isHidden ? '' : 'none';
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => t.classList.remove('show'), 2000);
-  }
-
-  // ===== 密码锁逻辑 =====
-  const PAGE_PASSWORD = "tairui999"; // ← 修改这里即可换密码
-  const lockScreen = document.getElementById('lockScreen');
-  const lockPass = document.getElementById('lockPass');
-  const lockErr = document.getElementById('lockErr');
-
-  function tryUnlock() {
-    if (lockPass.value === PAGE_PASSWORD) {
-      lockScreen.style.display = 'none';
-      sessionStorage.setItem('dashboard_unlocked', '1');
-      lockErr.textContent = '';
-    } else {
-      lockErr.textContent = '密码错误，请重试';
-      lockPass.value = '';
-      lockPass.focus();
+// ===== 月拉动计划数据块（白猫脚本自动更新区域） =====
+const PULL_DATA = {
+  updatedAt: "2026-07-31",
+  year: 2026,
+  rows: [
+    {
+      part: "VFe32 小海绵",
+      proj: "凯华",
+      status: "live",
+      daily: {
+        7: [0,0,0,0,400,0,0,400,400,400,0,0,400,400,400,0,0,400,400,400,0,0,400,400,400,0,0,400,400,400,0],
+        8: [0,0,0,0,400,0,0,400,400,400,0,0,400,400,400,0,0,400,400,400,0,0,400,400,400,0,0,400,400,400,0]
+      },
+      actual: {
+        7: [0,0,0,0,400,0,0,400,380,400,0,0,360,400,400,0,0,400,400,400,0,0,400,400,400,0,0,400,400,400,0]
+      }
+    },
+    {
+      part: "Limo Green 吸音棉",
+      proj: "Limo Green",
+      status: "wait",
+      daily: {
+        8: [0,0,0,0,250,0,0,250,250,250,0,0,250,250,250,0,0,250,250,250,0,0,250,250,250,0,0,250,250,250,0]
+      },
+      actual: {}
+    },
+    {
+      part: "Limo Green 海绵",
+      proj: "Limo Green",
+      status: "wait",
+      daily: {
+        8: [0,0,0,0,150,0,0,150,150,150,0,0,150,150,150,0,0,150,150,150,0,0,150,150,150,0,0,150,150,150,0]
+      },
+      actual: {}
+    },
+    {
+      part: "示例：新项目A",
+      proj: "待定",
+      status: "plan",
+      daily: {},
+      actual: {}
     }
+  ]
+};
+
+// ===== 对账开票数据块（白猫脚本自动更新区域） =====
+const FINANCE_DATA = {
+  updatedAt: "2026-07-31",
+  rows: [
+    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-07", shipped: 85000, recon: "confirmed", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "对账单已确认，待开票" },
+    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-06", shipped: 88000, recon: "invoiced", invoiced: 88000, invoiceNo: "INV-202606-018", invoiceDate: "2026-07-10", paid: 0, overdue: true, remark: "开票已超30天，催款中" },
+    { cust: "Limo Green", proj: "吸音棉+海绵", period: "2026-07", shipped: 32000, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "等待客户对账" },
+    { cust: "示例客户B", proj: "地毯总成", period: "2026-05", shipped: 125000, recon: "paid", invoiced: 125000, invoiceNo: "INV-202605-007", invoiceDate: "2026-06-05", paid: 125000, overdue: false, remark: "已全额回款" },
+    { cust: "示例客户B", proj: "后备箱隔板", period: "2026-06", shipped: 46000, recon: "invoiced", invoiced: 46000, invoiceNo: "INV-202606-031", invoiceDate: "2026-07-15", paid: 20000, overdue: false, remark: "部分回款 2万" }
+  ]
+};
+
+// ===== Tab 切换 =====
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.includes(name === 'project' ? '项目看板' : name === 'pull' ? '月拉动' : '对账开票')) {
+      b.classList.add('active');
+    }
+  });
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ===== 项目看板交互 =====
+function toggleDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('.detail-row').forEach(r => {
+    if (r !== detailRow) r.style.display = 'none';
+  });
+  detailRow.style.display = isHidden ? '' : 'none';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(100px)', 2000);
+}
+
+// ===== 月拉动计划渲染 =====
+const statusMap = {
+  live: '<span class="status st-live">✅ 已确认</span>',
+  plan: '<span class="status st-plan">🔵 预测</span>',
+  wait: '<span class="status st-wait">🔄 待定</span>'
+};
+
+let currentMonth = new Date().getMonth() + 1;
+const today = new Date();
+
+function daysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
+function renderMonthPicker() {
+  const wrap = document.getElementById('monthPicker');
+  let html = '';
+  for (let m = 1; m <= 12; m++) {
+    const hasData = PULL_DATA.rows.some(r => r.daily[m]);
+    html += `<button class="${m === currentMonth ? 'active' : ''}" onclick="selectMonth(${m})">${m}月${hasData ? ' ·' : ''}</button>`;
+  }
+  wrap.innerHTML = html;
+}
+
+function selectMonth(m) {
+  currentMonth = m;
+  document.querySelectorAll('#monthPicker button').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent) === m);
+  });
+  renderPull();
+}
+
+function rateClass(rate) {
+  if (rate >= 100) return 'rate-high';
+  if (rate >= 90) return 'rate-mid';
+  return 'rate-low';
+}
+
+function renderPull() {
+  const wrap = document.getElementById('tableWrap');
+  const dim = daysInMonth(PULL_DATA.year, currentMonth);
+  const hasAnyData = PULL_DATA.rows.some(r => r.daily[currentMonth]);
+
+  if (!hasAnyData) {
+    wrap.innerHTML = `<div class="empty-note">📭 ${currentMonth}月暂无按天拉动数据 —— 待白猫接入订单信息后自动填充</div>`;
+    return;
   }
 
-  // 已解锁过（本次会话）则跳过
-  if (sessionStorage.getItem('dashboard_unlocked') === '1') {
+  const planTotals = new Array(dim).fill(0);
+  const actTotals = new Array(dim).fill(0);
+  let html = '<table><tr><th>零件</th><th>项目</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
+  for (let d = 1; d <= dim; d++) {
+    const dt = new Date(PULL_DATA.year, currentMonth - 1, d);
+    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+    const isToday = dt.toDateString() === today.toDateString();
+    html += `<th class="${isToday ? 'today' : isWeekend ? 'weekend' : ''}">${d}${isToday ? '★' : ''}</th>`;
+  }
+  html += '</tr>';
+
+  PULL_DATA.rows.forEach(r => {
+    const arr = r.daily[currentMonth];
+    if (!arr) return;
+    const act = r.actual[currentMonth] || [];
+    let planSum = 0, actSum = 0;
+    for (let d = 0; d < dim; d++) {
+      planSum += arr[d] || 0;
+      actSum += act[d] || 0;
+    }
+    const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
+    html += `<tr><td class="part">${r.part}</td><td class="proj">${r.proj}</td><td>${statusMap[r.status]}</td>`;
+    html += `<td>${planSum.toLocaleString()}</td><td>${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}">${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</td>`;
+
+    for (let d = 0; d < dim; d++) {
+      const plan = arr[d] || 0;
+      const a = act[d] || 0;
+      planTotals[d] += plan;
+      actTotals[d] += a;
+      const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
+      const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+      const isToday = dt.toDateString() === today.toDateString();
+      let cls = isToday ? 'today' : '';
+      if (isWeekend && plan === 0) cls += ' weekend';
+      const miss = a < plan;
+      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan">${plan > 0 ? plan.toLocaleString() : '—'}</div><div class="act ${a > 0 ? (miss ? 'miss' : 'hit') : ''}">${a > 0 ? a.toLocaleString() : '—'}</div></div></td>`;
+    }
+    html += '</tr>';
+  });
+
+  let grandPlan = 0, grandAct = 0;
+  html += '<tr class="total-row"><td colspan="3">当日合计</td><td id="totalPlanCell"></td><td id="totalActCell"></td><td id="totalRateCell"></td>';
+  for (let d = 0; d < dim; d++) {
+    grandPlan += planTotals[d];
+    grandAct += actTotals[d];
+    const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
+    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+    const isToday = dt.toDateString() === today.toDateString();
+    let cls = isToday ? 'today' : '';
+    if (isWeekend && planTotals[d] === 0) cls += ' weekend';
+    const miss = actTotals[d] < planTotals[d];
+    html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan">${planTotals[d] > 0 ? planTotals[d].toLocaleString() : '—'}</div><div class="act ${actTotals[d] > 0 ? (miss ? 'miss' : 'hit') : ''}">${actTotals[d] > 0 ? actTotals[d].toLocaleString() : '—'}</div></div></td>`;
+  }
+  html += '</tr>';
+  wrap.innerHTML = html;
+
+  document.getElementById('totalPlanCell').textContent = grandPlan.toLocaleString();
+  document.getElementById('totalActCell').textContent = grandAct > 0 ? grandAct.toLocaleString() : '—';
+  const totalRate = grandPlan > 0 ? Math.round((grandAct / grandPlan) * 100) : 0;
+  document.getElementById('totalRateCell').innerHTML = `<span class="rate ${rateClass(totalRate)}">${grandPlan > 0 && grandAct > 0 ? totalRate + '%' : '—'}</span>`;
+  document.getElementById('updatedLabelPull').textContent = `最后更新：${PULL_DATA.updatedAt} · ${PULL_DATA.year}年`;
+}
+
+// ===== 财务渲染 =====
+let currentFilter = 'all';
+
+function money(v) {
+  return '¥' + Number(v || 0).toLocaleString('zh-CN');
+}
+
+function reconBadge(r) {
+  const map = {
+    pending: '<span class="status st-pending">🟡 待对账</span>',
+    confirmed: '<span class="status st-confirmed">🔵 已对账</span>',
+    invoiced: '<span class="status st-invoiced">🟣 已开票</span>',
+    paid: '<span class="status st-paid">✅ 已回款</span>'
+  };
+  return map[r] || map.pending;
+}
+
+function paidBadge(row) {
+  if (row.recon === 'paid') return '<span class="status st-paid">✅ 已回款</span>';
+  if (row.paid > 0) return '<span class="status st-partial">🟡 部分回款</span>';
+  if (row.recon === 'invoiced') {
+    return row.overdue
+      ? '<span class="status st-overdue">🔴 逾期</span>'
+      : '<span class="status st-invoiced">🟣 待回款</span>';
+  }
+  return '<span style="color:#3d444d">—</span>';
+}
+
+function stage(row) {
+  if (row.recon === 'paid') return 'paid';
+  if (row.recon === 'invoiced') return row.overdue ? 'overdue' : 'invoiced';
+  return row.recon;
+}
+
+function renderStats() {
+  let pending = 0, confirmed = 0, invoiced = 0, paid = 0;
+  FINANCE_DATA.rows.forEach(r => {
+    if (r.recon === 'pending') pending += r.shipped;
+    else if (r.recon === 'confirmed') confirmed += r.shipped;
+    else if (r.recon === 'invoiced') invoiced += (r.invoiced - r.paid);
+    else if (r.recon === 'paid') paid += r.paid;
+  });
+  document.getElementById('sPending').textContent = money(pending);
+  document.getElementById('sConfirmed').textContent = money(confirmed);
+  document.getElementById('sInvoiced').textContent = money(invoiced);
+  document.getElementById('sPaid').textContent = money(paid);
+}
+
+function renderFinance() {
+  const wrap = document.getElementById('tableWrapFinance');
+  let rows = FINANCE_DATA.rows;
+  if (currentFilter !== 'all') {
+    rows = rows.filter(r => stage(r) === currentFilter);
+  }
+
+  let html = '<table><tr><th>客户</th><th>项目</th><th>账期</th><th>发货金额</th><th>对账状态</th><th>开票金额</th><th>发票号</th><th>开票日期</th><th>回款状态</th><th>已回款</th><th>备注</th></tr>';
+  rows.forEach(r => {
+    html += `<tr>
+      <td class="part">${r.cust}</td>
+      <td>${r.proj}</td>
+      <td>${r.period}</td>
+      <td class="part">${money(r.shipped)}</td>
+      <td>${reconBadge(r.recon)}</td>
+      <td class="part">${r.invoiced ? money(r.invoiced) : '—'}</td>
+      <td>${r.invoiceNo || '—'}</td>
+      <td>${r.invoiceDate || '—'}</td>
+      <td>${paidBadge(r)}</td>
+      <td class="part">${r.paid ? money(r.paid) : '—'}</td>
+      <td style="color:var(--muted);font-size:12px">${r.remark || ''}</td>
+    </tr>`;
+  });
+  if (!rows.length) html += '<tr><td colspan="11" style="color:var(--muted);padding:24px">该筛选条件下暂无数据</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderStats();
+  document.getElementById('updatedLabelFinance').textContent = `最后更新：${FINANCE_DATA.updatedAt}`;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('#filterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderFinance();
+}
+
+// ===== 密码锁逻辑 =====
+const PAGE_PASSWORD = "tairui999"; // ← 修改这里即可换密码
+const lockScreen = document.getElementById('lockScreen');
+const lockPass = document.getElementById('lockPass');
+const lockErr = document.getElementById('lockErr');
+const mainContent = document.getElementById('mainContent');
+
+function tryUnlock() {
+  if (lockPass.value === PAGE_PASSWORD) {
     lockScreen.style.display = 'none';
+    mainContent.style.display = '';
+    sessionStorage.setItem('dashboard_unlocked', '1');
+    lockErr.textContent = '';
   } else {
+    lockErr.textContent = '密码错误，请重试';
+    lockPass.value = '';
     lockPass.focus();
   }
+}
+
+if (sessionStorage.getItem('dashboard_unlocked') === '1') {
+  lockScreen.style.display = 'none';
+  mainContent.style.display = '';
+} else {
+  lockPass.focus();
+}
+
+renderMonthPicker();
+renderPull();
+renderFinance();
 </script>
 </body>
 </html>
