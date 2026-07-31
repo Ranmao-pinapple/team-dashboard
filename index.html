@@ -28,6 +28,14 @@
   .container { max-width: 900px; margin: 0 auto; }
   h1 { font-size: 28px; margin-bottom: 8px; }
   .subtitle { color: var(--muted); margin-bottom: 32px; font-size: 14px; }
+  .nav { margin-bottom: 20px; }
+  .nav a {
+    color: var(--accent); text-decoration: none; font-size: 14px;
+    margin-right: 16px; font-weight: 600;
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px;
+    transition: border-color .15s, background .15s;
+  }
+  .nav a:hover { border-color: var(--accent); background: rgba(88,166,255,.08); }
   .badge {
     display: inline-block;
     padding: 3px 12px;
@@ -141,6 +149,7 @@
 
 <div class="container">
   <h1>📊 振昌声学 · 团队项目看板 <span class="badge badge-live">● LIVE</span></h1>
+  <div class="nav"><a href="./pull-plan.html">📅 月拉动计划 →</a></div>
   <p class="subtitle">点击卡片或项目行试试 👆 · GitHub Pages 免费托管 · 白猫自动生成</p>
 
   <div class="grid" id="statGrid">

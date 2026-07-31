@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>振昌声学 · 月拉动计划看板</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --card-hover: #1c2330;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .subtitle { color: var(--muted); margin-bottom: 24px; font-size: 14px; }
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .badge-live { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid var(--green); }
+  .nav { margin-bottom: 20px; }
+  .nav a {
+    color: var(--accent); text-decoration: none; font-size: 13px;
+    margin-right: 16px; opacity: .8;
+  }
+  .nav a:hover { opacity: 1; }
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+  }
+  .updated { color: var(--muted); font-size: 12px; }
+  .legend { font-size: 12px; color: var(--muted); }
+  .legend span { margin-right: 12px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; min-width: 900px; }
+  th {
+    text-align: center; color: var(--muted); font-size: 12px; font-weight: 600;
+    padding: 8px 6px; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; }
+  td { padding: 9px 6px; font-size: 13px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  tr:hover td { background: rgba(88,166,255,.04); }
+  .part { font-weight: 600; }
+  .proj { color: var(--muted); font-size: 12px; }
+  .total-row td { border-top: 2px solid var(--border); font-weight: 700; color: var(--accent); }
+  .cell-live { color: var(--green); font-weight: 600; }
+  .cell-zero { color: #3d444d; }
+  .cell-upcoming { color: var(--yellow); }
+  .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .st-live { background: rgba(63,185,80,.15); color: var(--green); }
+  .st-plan { background: rgba(88,166,255,.15); color: var(--accent); }
+  .st-wait { background: rgba(210,153,34,.15); color: var(--yellow); }
+  .footer { color: var(--muted); font-size: 12px; margin-top: 24px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📅 月拉动计划看板 <span class="badge badge-live">● LIVE</span></h1>
+  <div class="nav"><a href="./">← 返回项目看板</a></div>
+  <p class="subtitle">按客户需求月度拉动 · 数据由白猫定期从订单信息自动更新</p>
+
+  <div class="toolbar">
+    <div class="legend">
+      <span><span class="dot" style="background:var(--green)"></span>已确认订单</span>
+      <span><span class="dot" style="background:var(--yellow)"></span>预测/计划</span>
+      <span><span class="dot" style="background:var(--accent)"></span>年度合计</span>
+    </div>
+    <div class="updated" id="updatedLabel">最后更新：--</div>
+  </div>
+
+  <div class="card" id="tableWrap"></div>
+
+  <div class="footer">
+    由 白猫 (Hermes Agent) 自动更新 · 数据源：订单/社交软件跟进
+  </div>
+</div>
+
+<script>
+// ===== 月拉动计划数据块（白猫脚本自动更新区域） =====
+const PULL_DATA = {
+  updatedAt: "2026-07-31",
+  months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+  rows: [
+    { part: "VFe32 小海绵", proj: "凯华", status: "live", plan: [8000,8000,8000,8000,8000,8000,8000,8000,8000,8000,8000,8000] },
+    { part: "Limo Green 吸音棉", proj: "Limo Green", status: "wait", plan: [0,0,0,0,0,0,0,5000,5000,5000,5000,5000] },
+    { part: "Limo Green 海绵", proj: "Limo Green", status: "wait", plan: [0,0,0,0,0,0,0,3000,3000,3000,3000,3000] },
+    { part: "示例：新项目A", proj: "待定", status: "plan", plan: [0,0,0,1000,1000,1000,1000,1000,1000,1000,1000,1000] }
+  ]
+};
+
+// ===== 渲染逻辑 =====
+function render() {
+  const statusMap = {
+    live: '<span class="status st-live">✅ 已确认</span>',
+    plan: '<span class="status st-plan">🔵 预测</span>',
+    wait: '<span class="status st-wait">🔄 待定</span>'
+  };
+  const totals = PULL_DATA.months.map(() => 0);
+
+  let html = '<table><tr><th>零件</th><th>项目</th><th>状态</th>';
+  PULL_DATA.months.forEach(m => html += `<th>${m}</th>`);
+  html += '<th>年合计</th></tr>';
+
+  PULL_DATA.rows.forEach(r => {
+    let sum = 0;
+    html += `<tr><td class="part">${r.part}</td><td class="proj">${r.proj}</td><td>${statusMap[r.status]}</td>`;
+    r.plan.forEach((v, i) => {
+      sum += v;
+      totals[i] += v;
+      let cls = v > 0 ? 'cell-live' : 'cell-zero';
+      if (r.status !== 'live' && v > 0) cls = 'cell-upcoming';
+      html += `<td class="${cls}">${v > 0 ? v.toLocaleString() : '—'}</td>`;
+    });
+    html += `<td style="color:var(--accent);font-weight:700">${sum.toLocaleString()}</td></tr>`;
+  });
+
+  html += '<tr class="total-row"><td colspan="3">月需求合计</td>';
+  totals.forEach(v => html += `<td>${v > 0 ? v.toLocaleString() : '—'}</td>`);
+  const grand = totals.reduce((a, b) => a + b, 0);
+  html += `<td>${grand.toLocaleString()}</td></tr>`;
+  html += '</table>';
+
+  document.getElementById('tableWrap').innerHTML = html;
+  document.getElementById('updatedLabel').textContent = `最后更新：${PULL_DATA.updatedAt}`;
+}
+render();
+</script>
+</body>
+</html>
