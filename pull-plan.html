@@ -25,7 +25,7 @@
     padding: 40px 20px;
     min-height: 100vh;
   }
-  .container { max-width: 1200px; margin: 0 auto; }
+  .container { max-width: 1300px; margin: 0 auto; }
   h1 { font-size: 26px; margin-bottom: 6px; }
   .subtitle { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
   .badge {
@@ -52,7 +52,6 @@
   .legend span { margin-right: 12px; }
   .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
   .updated { color: var(--muted); font-size: 12px; }
-  /* 月份选择器 */
   .month-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
   .month-picker button {
     padding: 6px 14px;
@@ -71,7 +70,7 @@
     margin-bottom: 20px;
     overflow-x: auto;
   }
-  table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+  table { width: 100%; border-collapse: collapse; min-width: 1150px; }
   th {
     text-align: center; color: var(--muted); font-size: 11px; font-weight: 600;
     padding: 6px 3px; border-bottom: 1px solid var(--border);
@@ -80,16 +79,26 @@
   th:first-child, td:first-child { text-align: left; }
   th.today { color: var(--yellow); }
   th.weekend { color: #3d444d; }
-  td { padding: 7px 3px; font-size: 12px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  th.group-end { border-right: 1px solid #3d444d; }
+  td { padding: 4px 3px; font-size: 12px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
   td.today { background: rgba(210,153,34,.12); box-shadow: inset 0 0 0 1px var(--yellow); border-radius: 4px; }
   td.weekend { color: #3d444d; }
+  td.group-end { border-right: 1px solid #3d444d; }
   tr:hover td { background: rgba(88,166,255,.04); }
   .part { font-weight: 600; font-size: 13px; }
   .proj { color: var(--muted); font-size: 11px; }
   .total-row td { border-top: 2px solid var(--border); font-weight: 700; color: var(--accent); }
-  .cell-confirm { color: var(--green); font-weight: 600; }
-  .cell-forecast { color: var(--yellow); }
+  .cell-pair { line-height: 1.25; }
+  .cell-pair .plan { color: var(--green); font-weight: 600; font-size: 12px; }
+  .cell-pair .act { color: var(--accent); font-size: 11px; }
+  .cell-pair .act.miss { color: var(--red); }
+  .cell-pair .act.hit { color: var(--green); }
+  .cell-plan-only { color: var(--yellow); font-weight: 600; font-size: 12px; }
   .cell-zero { color: #3d444d; }
+  .rate { font-size: 12px; font-weight: 700; }
+  .rate-high { color: var(--green); }
+  .rate-mid { color: var(--yellow); }
+  .rate-low { color: var(--red); }
   .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
   .st-live { background: rgba(63,185,80,.15); color: var(--green); }
   .st-plan { background: rgba(88,166,255,.15); color: var(--accent); }
@@ -150,12 +159,13 @@
 <div class="container" style="display:none" id="mainContent">
   <h1>📅 臻畅/泰瑞 · 月拉动计划看板 <span class="badge badge-live">● LIVE</span></h1>
   <div class="nav"><a href="./">← 返回项目看板</a></div>
-  <p class="subtitle">精确到天的客户拉动计划 · 数据由白猫定期从订单信息自动更新</p>
+  <p class="subtitle">精确到天的拉动计划 vs 实际发货 · 数据由白猫定期从订单信息自动更新</p>
 
   <div class="toolbar">
     <div class="legend">
-      <span><span class="dot" style="background:var(--green)"></span>已确认</span>
-      <span><span class="dot" style="background:var(--yellow)"></span>预测</span>
+      <span><span class="dot" style="background:var(--green)"></span>计划</span>
+      <span><span class="dot" style="background:var(--accent)"></span>实际</span>
+      <span><span class="dot" style="background:var(--red)"></span>实际未达标</span>
       <span><span class="dot" style="background:var(--yellow)"></span>■ 今天</span>
       <span><span class="dot" style="background:#3d444d"></span>周末/无计划</span>
     </div>
@@ -173,8 +183,8 @@
 
 <script>
 // ===== 月拉动计划数据块（白猫脚本自动更新区域） =====
-// daily 数组 = 当月1号~31号，每个自然日一个数量；超出当月天数的自动忽略
-// 未提供 daily 的月份 → 看板显示"该月暂无按天数据"
+// daily  = 计划数量（当月1号~31号，每个自然日一个数）
+// actual = 实际发货数量（没有的月份/日期不填或为0）
 const PULL_DATA = {
   updatedAt: "2026-07-31",
   year: 2026,
@@ -251,6 +261,12 @@ function selectMonth(m) {
   render();
 }
 
+function rateClass(rate) {
+  if (rate >= 100) return 'rate-high';
+  if (rate >= 90) return 'rate-mid';
+  return 'rate-low';
+}
+
 function render() {
   const wrap = document.getElementById('tableWrap');
   const dim = daysInMonth(PULL_DATA.year, currentMonth);
@@ -261,51 +277,88 @@ function render() {
     return;
   }
 
-  const totals = new Array(dim).fill(0);
-  let html = '<table><tr><th>零件</th><th>项目</th><th>状态</th>';
+  const planTotals = new Array(dim).fill(0);
+  const actTotals = new Array(dim).fill(0);
+  let html = '<table><tr><th>零件</th><th>项目</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
   for (let d = 1; d <= dim; d++) {
     const dt = new Date(PULL_DATA.year, currentMonth - 1, d);
     const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
     const isToday = dt.toDateString() === today.toDateString();
     html += `<th class="${isToday ? 'today' : isWeekend ? 'weekend' : ''}">${d}${isToday ? '★' : ''}</th>`;
   }
-  html += '<th>月合计</th></tr>';
+  html += '</tr>';
 
   PULL_DATA.rows.forEach(r => {
     const arr = r.daily[currentMonth];
     if (!arr) return;
-    let sum = 0;
+    const act = r.actual[currentMonth] || [];
+    let planSum = 0, actSum = 0;
     html += `<tr><td class="part">${r.part}</td><td class="proj">${r.proj}</td><td>${statusMap[r.status]}</td>`;
+    // 月计划/月实际/达成率
     for (let d = 0; d < dim; d++) {
-      const v = arr[d] || 0;
-      sum += v;
-      totals[d] += v;
+      planSum += arr[d] || 0;
+      actSum += act[d] || 0;
+    }
+    const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
+    html += `<td>${planSum.toLocaleString()}</td><td>${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}">${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</td>`;
+
+    for (let d = 0; d < dim; d++) {
+      const plan = arr[d] || 0;
+      const a = act[d] || 0;
+      planTotals[d] += plan;
+      actTotals[d] += a;
       const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
       const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
       const isToday = dt.toDateString() === today.toDateString();
       let cls = isToday ? 'today' : '';
-      if (v > 0) cls += (r.status === 'live' ? ' cell-confirm' : ' cell-forecast');
-      if (isWeekend && v === 0) cls += ' weekend';
-      html += `<td class="${cls.trim()}">${v > 0 ? v : '—'}</td>`;
+      if (isWeekend && plan === 0) cls += ' weekend';
+
+      if (plan > 0 && a > 0) {
+        const miss = a < plan;
+        cls += ' group-end';
+        html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan">${plan.toLocaleString()}</div><div class="act ${miss ? 'miss' : 'hit'}">${a.toLocaleString()}</div></div></td>`;
+      } else if (plan > 0) {
+        cls += ' group-end';
+        html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan">${plan.toLocaleString()}</div><div class="act" style="color:#3d444d">—</div></div></td>`;
+      } else if (a > 0) {
+        cls += ' group-end';
+        html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan" style="color:#3d444d">—</div><div class="act">${a.toLocaleString()}</div></div></td>`;
+      } else {
+        cls += ' group-end';
+        html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan cell-zero">—</div><div class="act cell-zero">—</div></div></td>`;
+      }
     }
-    html += `<td>${sum.toLocaleString()}</td></tr>`;
+    html += '</tr>';
   });
 
-  html += '<tr class="total-row"><td colspan="3">当日合计</td>';
-  let grand = 0;
+  // 合计行
+  let grandPlan = 0, grandAct = 0;
+  html += '<tr class="total-row"><td colspan="3">当日合计</td><td id="totalPlanCell"></td><td id="totalActCell"></td><td id="totalRateCell"></td>';
   for (let d = 0; d < dim; d++) {
-    grand += totals[d];
+    grandPlan += planTotals[d];
+    grandAct += actTotals[d];
     const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
     const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
     const isToday = dt.toDateString() === today.toDateString();
     let cls = isToday ? 'today' : '';
-    if (totals[d] > 0 && !isWeekend) cls += ' cell-confirm';
-    html += `<td class="${cls.trim()}">${totals[d] > 0 ? totals[d].toLocaleString() : '—'}</td>`;
+    if (isWeekend && planTotals[d] === 0) cls += ' weekend';
+    if (planTotals[d] > 0 || actTotals[d] > 0) {
+      const miss = actTotals[d] < planTotals[d];
+      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan">${planTotals[d] > 0 ? planTotals[d].toLocaleString() : '—'}</div><div class="act ${miss ? 'miss' : 'hit'}">${actTotals[d] > 0 ? actTotals[d].toLocaleString() : '—'}</div></div></td>`;
+    } else {
+      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan cell-zero">—</div><div class="act cell-zero">—</div></div></td>`;
+    }
   }
-  html += `<td>${grand.toLocaleString()}</td></tr>`;
-  html += '</table>';
+  html += '</tr>';
 
   wrap.innerHTML = html;
+
+  // 填合计行的月度汇总
+  document.getElementById('totalPlanCell').textContent = grandPlan.toLocaleString();
+  document.getElementById('totalActCell').textContent = grandAct > 0 ? grandAct.toLocaleString() : '—';
+  const totalRate = grandPlan > 0 ? Math.round((grandAct / grandPlan) * 100) : 0;
+  document.getElementById('totalRateCell').innerHTML = `<span class="rate ${rateClass(totalRate)}">${grandPlan > 0 && grandAct > 0 ? totalRate + '%' : '—'}</span>`;
+
   document.getElementById('updatedLabel').textContent = `最后更新：${PULL_DATA.updatedAt} · ${PULL_DATA.year}年`;
 }
 
@@ -329,7 +382,6 @@ function tryUnlock() {
   }
 }
 
-// 已解锁过（本次会话）则跳过
 if (sessionStorage.getItem('dashboard_unlocked') === '1') {
   lockScreen.style.display = 'none';
   mainContent.style.display = '';
