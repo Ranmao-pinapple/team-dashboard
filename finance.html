@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>臻畅/泰瑞 · 对账开票系统</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --card-hover: #1c2330;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --purple: #bc8cff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1250px; margin: 0 auto; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .subtitle { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .badge-live { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid var(--green); }
+  .nav { margin-bottom: 16px; }
+  .nav a {
+    color: var(--accent); text-decoration: none; font-size: 13px;
+    margin-right: 16px; opacity: .8;
+  }
+  .nav a:hover { opacity: 1; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .stat { cursor: default; }
+  .stat h3 { font-size: 13px; color: var(--muted); font-weight: 500; margin-bottom: 10px; }
+  .big-number { font-size: 30px; font-weight: 700; }
+  .stat .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .green { color: var(--green); }
+  .yellow { color: var(--yellow); }
+  .red { color: var(--red); }
+  .blue { color: var(--accent); }
+  .purple { color: var(--purple); }
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+  }
+  .legend { font-size: 12px; color: var(--muted); }
+  .legend span { margin-right: 12px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .updated { color: var(--muted); font-size: 12px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .filters button {
+    padding: 6px 14px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .filters button:hover { border-color: var(--accent); }
+  .filters button.active { background: var(--accent); color: #0d1117; font-weight: 700; border-color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; min-width: 1050px; }
+  th {
+    text-align: center; color: var(--muted); font-size: 12px; font-weight: 600;
+    padding: 8px 6px; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; }
+  td { padding: 10px 6px; font-size: 13px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  tr:hover td { background: rgba(88,166,255,.04); }
+  .cust { font-weight: 600; }
+  .amount { font-weight: 600; }
+  .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .st-pending { background: rgba(210,153,34,.15); color: var(--yellow); }
+  .st-confirmed { background: rgba(88,166,255,.15); color: var(--accent); }
+  .st-invoiced { background: rgba(188,140,255,.15); color: var(--purple); }
+  .st-paid { background: rgba(63,185,80,.15); color: var(--green); }
+  .st-partial { background: rgba(210,153,34,.15); color: var(--yellow); }
+  .st-overdue { background: rgba(248,81,73,.15); color: var(--red); }
+  .footer { color: var(--muted); font-size: 12px; margin-top: 24px; text-align: center; }
+
+  /* ===== 密码锁 ===== */
+  #lockScreen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .lock-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 340px;
+    text-align: center;
+  }
+  .lock-box .lock-icon { font-size: 48px; margin-bottom: 12px; }
+  .lock-box h2 { font-size: 20px; margin-bottom: 6px; }
+  .lock-box p { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .lock-box input {
+    width: 100%; padding: 12px 16px;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; outline: none; margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .lock-box input:focus { border-color: var(--accent); }
+  .lock-box button {
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #0d1117;
+    border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: opacity .15s;
+  }
+  .lock-box button:hover { opacity: .85; }
+  .lock-err { color: var(--red); font-size: 13px; min-height: 18px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>财务系统 · 访问受限</h2>
+    <p>请输入访问密码</p>
+    <input type="password" id="lockPass" placeholder="访问密码" onkeydown="if(event.key==='Enter')tryUnlock()">
+    <div class="lock-err" id="lockErr"></div>
+    <button onclick="tryUnlock()">进入系统</button>
+  </div>
+</div>
+
+<div class="container" style="display:none" id="mainContent">
+  <h1>💰 臻畅/泰瑞 · 对账开票系统 <span class="badge badge-live">● LIVE</span></h1>
+  <div class="nav"><a href="./">← 返回项目看板</a> <a href="./pull-plan.html">📅 月拉动计划 →</a></div>
+  <p class="subtitle">发货 → 对账 → 开票 → 回款 · 全流程跟踪 · 金额均为未税 RMB</p>
+
+  <div class="grid" id="statGrid">
+    <div class="card stat">
+      <h3>待对账金额</h3>
+      <div class="big-number yellow" id="sPending">—</div>
+      <div class="sub">已发货未对账</div>
+    </div>
+    <div class="card stat">
+      <h3>待开票金额</h3>
+      <div class="big-number blue" id="sConfirmed">—</div>
+      <div class="sub">已对账未开票</div>
+    </div>
+    <div class="card stat">
+      <h3>已开票金额</h3>
+      <div class="big-number purple" id="sInvoiced">—</div>
+      <div class="sub">已开票待回款</div>
+    </div>
+    <div class="card stat">
+      <h3>已回款金额</h3>
+      <div class="big-number green" id="sPaid">—</div>
+      <div class="sub">含部分回款</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="legend">
+      <span><span class="dot" style="background:var(--yellow)"></span>待对账</span>
+      <span><span class="dot" style="background:var(--accent)"></span>已对账</span>
+      <span><span class="dot" style="background:var(--purple)"></span>已开票</span>
+      <span><span class="dot" style="background:var(--green)"></span>已回款</span>
+      <span><span class="dot" style="background:var(--red)"></span>逾期</span>
+    </div>
+    <div class="updated" id="updatedLabel">最后更新：--</div>
+  </div>
+
+  <div class="filters" id="filterBar">
+    <button class="active" data-f="all" onclick="setFilter('all')">全部</button>
+    <button data-f="pending" onclick="setFilter('pending')">待对账</button>
+    <button data-f="confirmed" onclick="setFilter('confirmed')">已对账</button>
+    <button data-f="invoiced" onclick="setFilter('invoiced')">已开票</button>
+    <button data-f="paid" onclick="setFilter('paid')">已回款</button>
+    <button data-f="overdue" onclick="setFilter('overdue')">⚠ 逾期</button>
+  </div>
+
+  <div class="card" id="tableWrap"></div>
+
+  <div class="footer">
+    由 白猫 (Hermes Agent) 自动更新 · 数据源：财务对账信息
+  </div>
+</div>
+
+<script>
+// ===== 对账开票数据块（白猫脚本自动更新区域） =====
+// 状态流转: pending(待对账) → confirmed(已对账) → invoiced(已开票) → paid(已回款)
+// overdue: true 表示逾期未回款/未开票
+const FINANCE_DATA = {
+  updatedAt: "2026-07-31",
+  rows: [
+    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-07", shipped: 85000, recon: "confirmed", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "对账单已确认，待开票" },
+    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-06", shipped: 88000, recon: "invoiced", invoiced: 88000, invoiceNo: "INV-202606-018", invoiceDate: "2026-07-10", paid: 0, overdue: true, remark: "开票已超30天，催款中" },
+    { cust: "Limo Green", proj: "吸音棉+海绵", period: "2026-07", shipped: 32000, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "等待客户对账" },
+    { cust: "示例客户B", proj: "地毯总成", period: "2026-05", shipped: 125000, recon: "paid", invoiced: 125000, invoiceNo: "INV-202605-007", invoiceDate: "2026-06-05", paid: 125000, overdue: false, remark: "已全额回款" },
+    { cust: "示例客户B", proj: "后备箱隔板", period: "2026-06", shipped: 46000, recon: "invoiced", invoiced: 46000, invoiceNo: "INV-202606-031", invoiceDate: "2026-07-15", paid: 20000, overdue: false, remark: "部分回款 2万" }
+  ]
+};
+
+// ===== 渲染逻辑 =====
+let currentFilter = 'all';
+
+function money(v) {
+  return '¥' + Number(v || 0).toLocaleString('zh-CN');
+}
+
+function reconBadge(r) {
+  const map = {
+    pending: '<span class="status st-pending">🟡 待对账</span>',
+    confirmed: '<span class="status st-confirmed">🔵 已对账</span>',
+    invoiced: '<span class="status st-invoiced">🟣 已开票</span>',
+    paid: '<span class="status st-paid">✅ 已回款</span>'
+  };
+  return map[r] || map.pending;
+}
+
+function paidBadge(row) {
+  if (row.recon === 'paid') return '<span class="status st-paid">✅ 已回款</span>';
+  if (row.paid > 0) return '<span class="status st-partial">🟡 部分回款</span>';
+  if (row.recon === 'invoiced') {
+    return row.overdue
+      ? '<span class="status st-overdue">🔴 逾期</span>'
+      : '<span class="status st-invoiced">🟣 待回款</span>';
+  }
+  return '<span style="color:#3d444d">—</span>';
+}
+
+function stage(row) {
+  if (row.recon === 'paid') return 'paid';
+  if (row.recon === 'invoiced') return row.overdue ? 'overdue' : 'invoiced';
+  return row.recon; // pending / confirmed
+}
+
+function renderStats(rows) {
+  let pending = 0, confirmed = 0, invoiced = 0, paid = 0;
+  rows.forEach(r => {
+    if (r.recon === 'pending') pending += r.shipped;
+    else if (r.recon === 'confirmed') confirmed += r.shipped;
+    else if (r.recon === 'invoiced') invoiced += (r.invoiced - r.paid);
+    else if (r.recon === 'paid') paid += r.paid;
+  });
+  document.getElementById('sPending').textContent = money(pending);
+  document.getElementById('sConfirmed').textContent = money(confirmed);
+  document.getElementById('sInvoiced').textContent = money(invoiced);
+  document.getElementById('sPaid').textContent = money(paid);
+}
+
+function render() {
+  const wrap = document.getElementById('tableWrap');
+  let rows = FINANCE_DATA.rows;
+  if (currentFilter !== 'all') {
+    rows = rows.filter(r => stage(r) === currentFilter);
+  }
+
+  let html = '<table><tr><th>客户</th><th>项目</th><th>账期</th><th>发货金额</th><th>对账状态</th><th>开票金额</th><th>发票号</th><th>开票日期</th><th>回款状态</th><th>已回款</th><th>备注</th></tr>';
+  rows.forEach(r => {
+    html += `<tr>
+      <td class="cust">${r.cust}</td>
+      <td>${r.proj}</td>
+      <td>${r.period}</td>
+      <td class="amount">${money(r.shipped)}</td>
+      <td>${reconBadge(r.recon)}</td>
+      <td class="amount">${r.invoiced ? money(r.invoiced) : '—'}</td>
+      <td>${r.invoiceNo || '—'}</td>
+      <td>${r.invoiceDate || '—'}</td>
+      <td>${paidBadge(r)}</td>
+      <td class="amount">${r.paid ? money(r.paid) : '—'}</td>
+      <td style="color:var(--muted);font-size:12px">${r.remark || ''}</td>
+    </tr>`;
+  });
+  if (!rows.length) html += '<tr><td colspan="11" style="color:var(--muted);padding:24px">该筛选条件下暂无数据</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderStats(FINANCE_DATA.rows);
+  document.getElementById('updatedLabel').textContent = `最后更新：${FINANCE_DATA.updatedAt}`;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('#filterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  render();
+}
+
+// ===== 密码锁逻辑 =====
+const PAGE_PASSWORD = "tairui999"; // ← 修改这里即可换密码
+const lockScreen = document.getElementById('lockScreen');
+const lockPass = document.getElementById('lockPass');
+const lockErr = document.getElementById('lockErr');
+const mainContent = document.getElementById('mainContent');
+
+function tryUnlock() {
+  if (lockPass.value === PAGE_PASSWORD) {
+    lockScreen.style.display = 'none';
+    mainContent.style.display = '';
+    sessionStorage.setItem('dashboard_unlocked', '1');
+    lockErr.textContent = '';
+  } else {
+    lockErr.textContent = '密码错误，请重试';
+    lockPass.value = '';
+    lockPass.focus();
+  }
+}
+
+if (sessionStorage.getItem('dashboard_unlocked') === '1') {
+  lockScreen.style.display = 'none';
+  mainContent.style.display = '';
+} else {
+  lockPass.focus();
+}
+
+render();
+</script>
+</body>
+</html>
