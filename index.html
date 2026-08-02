@@ -105,6 +105,16 @@
   .detail-panel ul { list-style: none; }
   .detail-panel li { font-size: 13px; color: var(--muted); padding: 3px 0; }
   .detail-panel li strong { color: var(--text); font-weight: 500; }
+  .fin-row { cursor: pointer; transition: background .15s ease; }
+  .fin-row:hover { background: rgba(232,33,39,.06); }
+  .fin-row.active { background: rgba(232,33,39,.08); }
+  .fin-toggle { color: var(--accent); font-size: 12px; font-weight: 600; }
+  .detail-inner { padding: 14px 20px; border-left: 3px solid var(--accent); margin: 4px 12px; background: rgba(232,33,39,.04); border-radius: 0 8px 8px 0; }
+  .detail-inner h4 { color: var(--accent); font-size: 13px; margin-bottom: 8px; }
+  .sub-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .sub-table th { text-align: left; color: var(--muted); padding: 5px 8px; border-bottom: 2px solid var(--border); font-weight: 600; white-space: nowrap; }
+  .sub-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  .detail-total { margin-top: 10px; color: var(--accent); font-weight: 700; font-size: 12px; }
 
   .total-row td { border-top: 2px solid var(--border); font-weight: 700; color: var(--accent); }
   .cell-pair { line-height: 1.25; }
@@ -486,13 +496,13 @@ const PULL_DATA = {
 const FINANCE_DATA = {
   updatedAt: "2026-08-02",
   rows: [
-    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-07", shipped: 85000, recon: "confirmed", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "对账单已确认，待开票" },
-    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-06", shipped: 88000, recon: "invoiced", invoiced: 88000, invoiceNo: "INV-202606-018", invoiceDate: "2026-07-10", paid: 0, overdue: true, remark: "开票已超30天，催款中" },
-    { cust: "Limo Green", proj: "吸音棉+海绵", period: "2026-07", shipped: 32000, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "等待客户对账" },
-    { cust: "示例客户B", proj: "地毯总成", period: "2026-05", shipped: 125000, recon: "paid", invoiced: 125000, invoiceNo: "INV-202605-007", invoiceDate: "2026-06-05", paid: 125000, overdue: false, remark: "已全额回款" },
-    { cust: "示例客户B", proj: "后备箱隔板", period: "2026-06", shipped: 46000, recon: "invoiced", invoiced: 46000, invoiceNo: "INV-202606-031", invoiceDate: "2026-07-15", paid: 20000, overdue: false, remark: "部分回款 2万" },
-    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-06-25", shipped: 19876.11, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "5-6月对账单(靖凯模塑抬头)，6.25对账，待确认" },
-    { cust: "浙江凯华", proj: "LIMO7 RHD风管棉", period: "2026-06-25", shipped: 50426.27, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "5-6月对账单(靖凯模塑抬头)，6.25对账，待确认" }
+    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-07", shipped: 85000, recon: "confirmed", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "对账单已确认，待开票", details: [] },
+    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-06", shipped: 88000, recon: "invoiced", invoiced: 88000, invoiceNo: "INV-202606-018", invoiceDate: "2026-07-10", paid: 0, overdue: true, remark: "开票已超30天，催款中", details: [] },
+    { cust: "Limo Green", proj: "吸音棉+海绵", period: "2026-07", shipped: 32000, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "等待客户对账", details: [] },
+    { cust: "示例客户B", proj: "地毯总成", period: "2026-05", shipped: 125000, recon: "paid", invoiced: 125000, invoiceNo: "INV-202605-007", invoiceDate: "2026-06-05", paid: 125000, overdue: false, remark: "已全额回款", details: [] },
+    { cust: "示例客户B", proj: "后备箱隔板", period: "2026-06", shipped: 46000, recon: "invoiced", invoiced: 46000, invoiceNo: "INV-202606-031", invoiceDate: "2026-07-15", paid: 20000, overdue: false, remark: "部分回款 2万", details: [] },
+    { cust: "浙江凯华", proj: "VFe32 小海绵", period: "2026-06-25", shipped: 19876.11, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "5-6月对账单(靖凯模塑抬头)，6.25对账，待确认", details: [{"date": "2026-05-31", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011053", "spec": "BIN73031332AA", "qty": 4000, "unit_price_tax": 0.79, "total_tax": 3160.0}, {"date": "2026-05-31", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011055", "spec": "BIN73031362AA", "qty": 4000, "unit_price_tax": 0.6, "total_tax": 2400.0}, {"date": "2026-05-31", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011049", "spec": "BIN73031211AA", "qty": 4000, "unit_price_tax": 2.6, "total_tax": 10400.0}, {"date": "2026-06-10", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011049", "spec": "BIN73031211AA", "qty": 1000, "unit_price_tax": 2.6, "total_tax": 2600.0}, {"date": "2026-06-24", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011049", "spec": "BIN73031211AA", "qty": 1500, "unit_price_tax": 2.6, "total_tax": 3900.0}] },
+    { cust: "浙江凯华", proj: "LIMO7 RHD风管棉", period: "2026-06-25", shipped: 50426.27, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "5-6月对账单(靖凯模塑抬头)，6.25对账，待确认", details: [{"date": "2026-06-10", "part": "VF-LIMO 7_RHD-左下挡脚板隔音垫", "part_code": "510000000000013930", "spec": "BIN32551820AA", "qty": 11275, "unit_price_tax": 0.73, "total_tax": 8230.75}, {"date": "2026-06-17", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 260, "unit_price_tax": 0.85, "total_tax": 221.0}, {"date": "2026-06-17", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 260, "unit_price_tax": 3.62, "total_tax": 941.2}, {"date": "2026-06-17", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 260, "unit_price_tax": 1.14, "total_tax": 296.4}, {"date": "2026-06-17", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 260, "unit_price_tax": 3.66, "total_tax": 951.6}, {"date": "2026-06-19", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 549, "unit_price_tax": 0.85, "total_tax": 466.65}, {"date": "2026-06-19", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 549, "unit_price_tax": 3.62, "total_tax": 1987.38}, {"date": "2026-06-19", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 549, "unit_price_tax": 1.14, "total_tax": 625.86}, {"date": "2026-06-19", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 549, "unit_price_tax": 3.66, "total_tax": 2009.34}, {"date": "2026-06-24", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 2200, "unit_price_tax": 0.85, "total_tax": 1870.0}, {"date": "2026-06-24", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 2200, "unit_price_tax": 3.62, "total_tax": 7964.0}, {"date": "2026-06-24", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 2200, "unit_price_tax": 1.14, "total_tax": 2508.0}, {"date": "2026-06-24", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 2110, "unit_price_tax": 3.66, "total_tax": 7722.6}, {"date": "2026-06-29", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 2250, "unit_price_tax": 0.85, "total_tax": 1912.5}, {"date": "2026-06-29", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 2250, "unit_price_tax": 3.62, "total_tax": 8145.0}, {"date": "2026-06-29", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 2250, "unit_price_tax": 1.14, "total_tax": 2565.0}, {"date": "2026-06-29", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 2340, "unit_price_tax": 3.66, "total_tax": 8564.4}] }
   ]
 };
 
@@ -700,6 +710,18 @@ function renderStats() {
   document.getElementById('sPaid').textContent = money(paid);
 }
 
+function toggleFinDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('#tableWrapFinance .detail-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('#tableWrapFinance .fin-row').forEach(r => r.classList.remove('active'));
+  if (isHidden) {
+    detailRow.style.display = '';
+    row.classList.add('active');
+  }
+}
+
 function renderFinance() {
   const wrap = document.getElementById('tableWrapFinance');
   let rows = FINANCE_DATA.rows;
@@ -707,9 +729,14 @@ function renderFinance() {
     rows = rows.filter(r => stage(r) === currentFilter);
   }
 
-  let html = '<table><tr><th>客户</th><th>项目</th><th>账期</th><th>发货金额</th><th>对账状态</th><th>开票金额</th><th>发票号</th><th>开票日期</th><th>回款状态</th><th>已回款</th><th>备注</th></tr>';
+  let html = '<table><tr><th>客户</th><th>项目</th><th>账期</th><th>发货金额</th><th>对账状态</th><th>开票金额</th><th>发票号</th><th>开票日期</th><th>回款状态</th><th>已回款</th><th>备注</th><th></th></tr>';
   rows.forEach(r => {
-    html += `<tr>
+    const hasDetail = r.details && r.details.length;
+    const clickAttr = hasDetail ? ' class="fin-row" onclick="toggleFinDetail(this)"' : '';
+    const toggleCell = hasDetail
+      ? '<td class="fin-toggle">▸ 明细</td>'
+      : '<td style="color:#c4c4c6">—</td>';
+    html += `<tr${clickAttr}>
       <td class="part">${r.cust}</td>
       <td>${r.proj}</td>
       <td>${r.period}</td>
@@ -721,9 +748,26 @@ function renderFinance() {
       <td>${paidBadge(r)}</td>
       <td class="part">${r.paid ? money(r.paid) : '—'}</td>
       <td style="color:var(--muted);font-size:12px">${r.remark || ''}</td>
+      ${toggleCell}
     </tr>`;
+    if (hasDetail) {
+      const qtySum = r.details.reduce((s, d) => s + d.qty, 0);
+      const amtSum = r.details.reduce((s, d) => s + d.total_tax, 0);
+      const subRows = r.details.map(d => `<tr>
+        <td>${d.date}</td><td>${d.part}</td><td>${d.part_code}</td><td>${d.spec || ''}</td>
+        <td class="part">${d.qty}</td><td class="part">${d.unit_price_tax}</td><td class="part">${money(d.total_tax)}</td>
+      </tr>`).join('');
+      html += `<tr class="detail-row" style="display:none"><td colspan="12"><div class="detail-inner">
+        <h4>📦 ${r.proj} · 发货明细（${r.period}）</h4>
+        <table class="sub-table">
+          <tr><th>送货日期</th><th>物料名称</th><th>物料号</th><th>规格</th><th>数量(件)</th><th>含税单价</th><th>含税金额</th></tr>
+          ${subRows}
+        </table>
+        <div class="detail-total">合计：${qtySum} 件 ｜ 含税 ¥${Number(amtSum).toLocaleString('zh-CN', {minimumFractionDigits: 2})}</div>
+      </div></td></tr>`;
+    }
   });
-  if (!rows.length) html += '<tr><td colspan="11" style="color:var(--muted);padding:24px">该筛选条件下暂无数据</td></tr>';
+  if (!rows.length) html += '<tr><td colspan="12" style="color:var(--muted);padding:24px">该筛选条件下暂无数据</td></tr>';
   html += '</table>';
   wrap.innerHTML = html;
 
