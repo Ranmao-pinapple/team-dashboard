@@ -842,10 +842,13 @@ function renderPo() {
     const first = items[0];
     const qtySum = items.reduce((s, o) => s + o.qty, 0);
     const totalSum = items.reduce((s, o) => s + o.total, 0);
-    const multi = items.length > 1;
-    const clickAttr = multi ? ' class="fin-row" onclick="togglePoDetail(this)"' : '';
-    const toggleCell = multi ? '<td class="fin-toggle">▸ 明细</td>' : '<td style="color:#c4c4c6">—</td>';
-    html += `<tr${clickAttr}>
+    const subRows = items.map(o => `<tr>
+      <td>${o.part}</td><td style="font-size:11px">${o.partCode}</td>
+      <td class="part">${o.qty.toLocaleString()} 件</td>
+      <td>¥${o.unitPrice.toFixed(2)}</td>
+      <td class="part">¥${o.total.toLocaleString('zh-CN')}</td>
+    </tr>`).join('');
+    html += `<tr class="fin-row" onclick="togglePoDetail(this)">
       <td class="part">${first.po}</td>
       <td>${first.date}</td>
       <td class="part">${first.customer}</td>
@@ -857,23 +860,15 @@ function renderPo() {
       <td>${first.payment}</td>
       <td>${poStatusBadge(first.status)}</td>
       <td style="color:var(--muted);font-size:12px">${first.remark || ''}</td>
-      ${toggleCell}
+      <td class="fin-toggle">▸ 明细</td>
     </tr>`;
-    if (multi) {
-      const subRows = items.map(o => `<tr>
-        <td>${o.part}</td><td style="font-size:11px">${o.partCode}</td>
-        <td class="part">${o.qty.toLocaleString()} 件</td>
-        <td>¥${o.unitPrice.toFixed(2)}</td>
-        <td class="part">¥${o.total.toLocaleString('zh-CN')}</td>
-      </tr>`).join('');
-      html += `<tr class="detail-row" style="display:none"><td colspan="12"><div class="detail-inner">
-        <h4>📦 ${first.po} · 物料明细（${items.length} 种）</h4>
-        <table class="sub-table">
-          <tr><th>零件名称</th><th>物料编码</th><th>数量</th><th>含税单价</th><th>含税金额</th></tr>
-          ${subRows}
-        </table>
-      </div></td></tr>`;
-    }
+    html += `<tr class="detail-row" style="display:none"><td colspan="12"><div class="detail-inner">
+      <h4>📦 ${first.po} · 物料明细（${items.length} 种）</h4>
+      <table class="sub-table">
+        <tr><th>零件名称</th><th>物料编码</th><th>数量</th><th>含税单价</th><th>含税金额</th></tr>
+        ${subRows}
+      </table>
+    </div></td></tr>`;
   });
   if (!poList.length) html += '<tr><td colspan="12" style="color:var(--muted);padding:24px">该筛选条件下暂无订单</td></tr>';
   html += '</table>';
