@@ -168,6 +168,95 @@
   .filters button:hover { border-color: var(--accent); }
   .filters button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
   .empty-note { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+
+  /* ===== 月拉动计划 · 高级感升级（仅作用于拉动页签） ===== */
+  #tab-pull .toolbar { margin-bottom: 12px; }
+  #pullStats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  #pullStats .ps-card {
+    background: linear-gradient(180deg, #ffffff, #f7f7f8);
+    border: 1px solid #e8e8ea; border-radius: 14px; padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(23,26,32,.05);
+  }
+  #pullStats .ps-card .ps-label { font-size: 11px; color: #8a8a8e; font-weight: 600; letter-spacing: .06em; }
+  #pullStats .ps-card .ps-num {
+    font-size: 28px; font-weight: 800; color: #171a20; margin-top: 4px;
+    font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+  }
+  #pullStats .ps-card .ps-sub { font-size: 11px; color: #9a9aa0; margin-top: 6px; }
+  #pullStats .ps-card.ps-acc {
+    background: linear-gradient(135deg, #e82127, #b3121a);
+    border-color: transparent; box-shadow: 0 4px 14px rgba(232,33,39,.28);
+  }
+  #pullStats .ps-card.ps-acc .ps-label { color: rgba(255,255,255,.72); }
+  #pullStats .ps-card.ps-acc .ps-num { color: #ffffff; }
+  #pullStats .ps-card.ps-acc .ps-sub { color: rgba(255,255,255,.55); }
+  #pullStats .ps-bar { height: 6px; background: #ececee; border-radius: 99px; margin-top: 10px; overflow: hidden; }
+  #pullStats .ps-bar i { display: block; height: 100%; border-radius: 99px; transition: width .6s ease; }
+  #pullStats .ps-bar i.rate-high { background: #16a34a; }
+  #pullStats .ps-bar i.rate-mid { background: #eab308; }
+  #pullStats .ps-bar i.rate-low { background: #e82127; }
+  #pullStats .ps-card.ps-acc .ps-bar { background: rgba(255,255,255,.22); }
+  #pullStats .ps-card.ps-acc .ps-bar i { background: #ffffff; }
+
+  #tableWrap { max-height: 74vh; overflow: auto; border-radius: 16px; box-shadow: 0 2px 14px rgba(23,26,32,.06); scrollbar-width: thin; }
+  #tableWrap table { border-collapse: separate; border-spacing: 0; min-width: max-content; }
+  #tableWrap thead th {
+    position: sticky; top: 0; z-index: 3;
+    background: #fafafa; color: #171a20; font-weight: 700; font-size: 11px;
+    padding: 10px 4px 8px; border-bottom: 2px solid #171a20;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  #tableWrap thead th .wk { display: block; font-size: 9px; color: #9a9aa0; font-weight: 500; margin-top: 2px; }
+  #tableWrap thead th.today { background: #171a20; color: #ffffff; }
+  #tableWrap thead th.today .wk { color: #e8e8ea; }
+  #tableWrap thead th.weekend { color: #b5b5ba; }
+  #tableWrap tbody td {
+    padding: 7px 4px; font-size: 12px; border-bottom: 1px solid #f0f0f2;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  #tableWrap tbody tr:hover td { background: rgba(232,33,39,.035); }
+  #tableWrap td.today { background: rgba(232,33,39,.06); box-shadow: inset 0 0 0 1px rgba(232,33,39,.22); border-radius: 6px; }
+  #tableWrap td.weekend { background: #fafafa; color: #b5b5ba; }
+  #tableWrap .part { font-weight: 700; font-size: 12.5px; color: #171a20; }
+  #tableWrap .proj { font-size: 10px; color: #9a9aa0; }
+  #tableWrap .num { font-weight: 600; color: #171a20; }
+  #tableWrap .cell-pair { line-height: 1.35; }
+  #tableWrap .cell-pair .plan { color: #171a20; font-weight: 700; font-size: 11.5px; }
+  #tableWrap .cell-pair .plan.z { color: #d4d4d8; font-weight: 500; }
+  #tableWrap .cell-pair .act { color: #e82127; font-size: 10.5px; font-weight: 600; }
+  #tableWrap .cell-pair .act.z { color: #d4d4d8; font-weight: 400; }
+  #tableWrap .cell-pair .act.miss { color: #d4262e; }
+  #tableWrap .cell-pair .act.miss::before { content: '▼'; font-size: 8px; margin-right: 2px; }
+  #tableWrap .cell-pair .act.hit { color: #16a34a; }
+  #tableWrap .rate-wrap { display: inline-flex; align-items: center; gap: 6px; }
+  #tableWrap .rate-bar { width: 44px; height: 5px; background: #ececee; border-radius: 99px; overflow: hidden; flex: none; }
+  #tableWrap .rate-bar i { display: block; height: 100%; border-radius: 99px; }
+  #tableWrap .rate-bar.rate-high i { background: #16a34a; }
+  #tableWrap .rate-bar.rate-mid i { background: #eab308; }
+  #tableWrap .rate-bar.rate-low i { background: #e82127; }
+  #tableWrap .rate { font-size: 11.5px; font-weight: 700; }
+  #tableWrap tr.total-row td {
+    background: #171a20; color: #ffffff; font-weight: 700; border-top: none;
+    position: sticky; bottom: 0; z-index: 2;
+  }
+  #tableWrap tr.total-row td:first-child { border-radius: 10px 0 0 10px; }
+  #tableWrap tr.total-row td:last-child { border-radius: 0 10px 10px 0; }
+  #tableWrap tr.total-row .cell-pair .plan { color: #f5f5f6; }
+  #tableWrap tr.total-row .cell-pair .plan.z { color: rgba(255,255,255,.35); }
+  #tableWrap tr.total-row .cell-pair .act { color: #ff8a8d; }
+  #tableWrap tr.total-row .cell-pair .act.z { color: rgba(255,255,255,.35); }
+  #tableWrap tr.total-row .cell-pair .act.miss::before { content: ''; }
+  #tableWrap tr.total-row .rate { color: #ffffff; }
+  #tableWrap tr.total-row .rate-bar { background: rgba(255,255,255,.22); }
+  #tableWrap tr.total-row .rate-bar i { background: #ffffff; }
+
+  #monthPicker button { border-radius: 99px; font-weight: 600; position: relative; }
+  #monthPicker button.active { background: linear-gradient(135deg, #e82127, #b3121a); box-shadow: 0 2px 8px rgba(232,33,39,.35); }
+  #monthPicker button::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: transparent; }
+  #monthPicker button.has::after { background: #d4d4d8; }
+  #monthPicker button.has.active::after { background: #ffffff; }
+  @media (max-width: 720px) { #pullStats { grid-template-columns: repeat(2, 1fr); } }
+
   .footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
 
   /* ===== 密码锁 ===== */
@@ -330,10 +419,10 @@
   <div class="tab-content" id="tab-pull">
     <div class="toolbar">
       <div class="legend">
-        <span><span class="dot" style="background:var(--green)"></span>计划</span>
+        <span><span class="dot" style="background:#171a20"></span>计划</span>
         <span><span class="dot" style="background:var(--accent)"></span>实际</span>
-        <span><span class="dot" style="background:var(--red)"></span>实际未达标</span>
-        <span><span class="dot" style="background:var(--yellow)"></span>■ 今天</span>
+        <span><span class="dot" style="background:var(--red)"></span>未达标 ▼</span>
+        <span><span class="dot" style="background:var(--red);box-shadow:0 0 0 2px rgba(232,33,39,.25)"></span>今天</span>
         <span><span class="dot" style="background:#c4c4c6"></span>周末/无计划</span>
       </div>
       <div class="updated" id="updatedLabelPull">最后更新：--</div>
@@ -341,7 +430,9 @@
 
     <div class="month-picker" id="monthPicker"></div>
 
-    <div class="card" id="tableWrap" style="padding:12px"></div>
+    <div id="pullStats"></div>
+
+    <div class="card" id="tableWrap" style="padding:14px 12px"></div>
   </div>
 
   <!-- ========== Tab 3: 订单台账 ========== -->
@@ -639,7 +730,7 @@ function renderMonthPicker() {
   let html = '';
   for (let m = 1; m <= 12; m++) {
     const hasData = PULL_DATA.rows.some(r => r.daily[m]);
-    html += `<button class="${m === currentMonth ? 'active' : ''}" onclick="selectMonth(${m})">${m}月${hasData ? ' ·' : ''}</button>`;
+    html += `<button class="${m === currentMonth ? 'active' : ''}${hasData ? ' has' : ''}" onclick="selectMonth(${m})">${m}月</button>`;
   }
   wrap.innerHTML = html;
 }
@@ -670,14 +761,34 @@ function renderPull() {
 
   const planTotals = new Array(dim).fill(0);
   const actTotals = new Array(dim).fill(0);
-  let html = '<table><tr><th>零件</th><th>项目</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
+
+  // —— 统计卡总览 ——
+  let nRows = 0, grandPlan = 0, grandAct = 0;
+  PULL_DATA.rows.forEach(r => {
+    const arr = r.daily[currentMonth];
+    if (!arr) return;
+    nRows++;
+    const act = r.actual[currentMonth] || [];
+    for (let d = 0; d < dim; d++) { grandPlan += arr[d] || 0; grandAct += act[d] || 0; }
+  });
+  const grandRate = grandPlan > 0 ? Math.round((grandAct / grandPlan) * 100) : 0;
+  const gRateTxt = grandPlan > 0 && grandAct > 0 ? grandRate + '%' : '—';
+  const gRk = grandRate >= 100 ? 'rate-high' : grandRate >= 90 ? 'rate-mid' : 'rate-low';
+  document.getElementById('pullStats').innerHTML =
+    `<div class="ps-card"><div class="ps-label">在产零件</div><div class="ps-num">${nRows}</div><div class="ps-sub">${currentMonth}月 · 按天拉动计划</div></div>` +
+    `<div class="ps-card"><div class="ps-label">月计划总量</div><div class="ps-num">${grandPlan.toLocaleString()}</div><div class="ps-sub">件</div></div>` +
+    `<div class="ps-card"><div class="ps-label">月实际总量</div><div class="ps-num">${grandAct.toLocaleString()}</div><div class="ps-sub">${grandAct > 0 ? '件' : '待对账'}</div></div>` +
+    `<div class="ps-card ps-acc"><div class="ps-label">总达成率</div><div class="ps-num">${gRateTxt}</div><div class="ps-bar"><i class="${gRk}" style="width:${Math.min(grandRate, 100)}%"></i></div><div class="ps-sub">计划 vs 实际</div></div>`;
+
+  let html = '<table><thead><tr><th>零件</th><th>项目</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
+  const wk = ['日', '一', '二', '三', '四', '五', '六'];
   for (let d = 1; d <= dim; d++) {
     const dt = new Date(PULL_DATA.year, currentMonth - 1, d);
     const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
     const isToday = dt.toDateString() === today.toDateString();
-    html += `<th class="${isToday ? 'today' : isWeekend ? 'weekend' : ''}">${d}${isToday ? '★' : ''}</th>`;
+    html += `<th class="${isToday ? 'today' : isWeekend ? 'weekend' : ''}">${d}${isToday ? '★' : ''}<span class="wk">周${wk[dt.getDay()]}</span></th>`;
   }
-  html += '</tr>';
+  html += '</tr></thead><tbody>';
 
   PULL_DATA.rows.forEach(r => {
     const arr = r.daily[currentMonth];
@@ -690,7 +801,7 @@ function renderPull() {
     }
     const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
     html += `<tr><td class="part">${r.part}</td><td class="proj">${r.proj}</td><td>${statusMap[r.status]}</td>`;
-    html += `<td>${planSum.toLocaleString()}</td><td>${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}">${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</td>`;
+    html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
 
     for (let d = 0; d < dim; d++) {
       const plan = arr[d] || 0;
@@ -703,25 +814,22 @@ function renderPull() {
       let cls = isToday ? 'today' : '';
       if (isWeekend && plan === 0) cls += ' weekend';
       const miss = a < plan;
-      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan">${plan > 0 ? plan.toLocaleString() : '—'}</div><div class="act ${a > 0 ? (miss ? 'miss' : 'hit') : ''}">${a > 0 ? a.toLocaleString() : '—'}</div></div></td>`;
+      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${plan > 0 ? '' : 'z'}">${plan > 0 ? plan.toLocaleString() : '—'}</div><div class="act ${a > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${a > 0 ? a.toLocaleString() : '—'}</div></div></td>`;
     }
     html += '</tr>';
   });
 
-  let grandPlan = 0, grandAct = 0;
   html += '<tr class="total-row"><td colspan="3">当日合计</td><td id="totalPlanCell"></td><td id="totalActCell"></td><td id="totalRateCell"></td>';
   for (let d = 0; d < dim; d++) {
-    grandPlan += planTotals[d];
-    grandAct += actTotals[d];
     const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
     const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
     const isToday = dt.toDateString() === today.toDateString();
     let cls = isToday ? 'today' : '';
     if (isWeekend && planTotals[d] === 0) cls += ' weekend';
     const miss = actTotals[d] < planTotals[d];
-    html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan">${planTotals[d] > 0 ? planTotals[d].toLocaleString() : '—'}</div><div class="act ${actTotals[d] > 0 ? (miss ? 'miss' : 'hit') : ''}">${actTotals[d] > 0 ? actTotals[d].toLocaleString() : '—'}</div></div></td>`;
+    html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${planTotals[d] > 0 ? '' : 'z'}">${planTotals[d] > 0 ? planTotals[d].toLocaleString() : '—'}</div><div class="act ${actTotals[d] > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${actTotals[d] > 0 ? actTotals[d].toLocaleString() : '—'}</div></div></td>`;
   }
-  html += '</tr>';
+  html += '</tr></tbody>';
   wrap.innerHTML = html;
 
   document.getElementById('totalPlanCell').textContent = grandPlan.toLocaleString();
