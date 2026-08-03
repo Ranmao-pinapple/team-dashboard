@@ -250,6 +250,14 @@
   #tableWrap tr.total-row .rate-bar { background: rgba(255,255,255,.22); }
   #tableWrap tr.total-row .rate-bar i { background: #ffffff; }
 
+  #tableWrap tr.proj-group-row { cursor: pointer; }
+  #tableWrap tr.proj-group-row td { background: #f4f4f6; border-top: 1px solid #e8e8ea; border-bottom: 1px solid #e8e8ea; }
+  #tableWrap tr.proj-group-row td:first-child { box-shadow: inset 3px 0 0 #e82127; }
+  #tableWrap tr.proj-group-row:hover td { background: rgba(232,33,39,.05); }
+  #tableWrap .proj-caret { display: inline-block; width: 14px; color: #e82127; font-size: 10px; transition: transform .15s; }
+  #tableWrap .proj-count { color: #9a9aa0; font-size: 10px; font-weight: 500; margin-left: 6px; }
+  #tableWrap tr.proj-part td { background: #ffffff; }
+
   #monthPicker button { border-radius: 99px; font-weight: 600; position: relative; }
   #monthPicker button.active { background: linear-gradient(135deg, #e82127, #b3121a); box-shadow: 0 2px 8px rgba(232,33,39,.35); }
   #monthPicker button::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: transparent; }
@@ -770,25 +778,34 @@ function renderPull() {
   const planTotals = new Array(dim).fill(0);
   const actTotals = new Array(dim).fill(0);
 
-  // —— 统计卡总览 ——
-  let nRows = 0, grandPlan = 0, grandAct = 0;
+  // —— 按项目分组 ——
+  const projOrder = [], projOf = {};
   PULL_DATA.rows.forEach(r => {
     const arr = r.daily[currentMonth];
     if (!arr) return;
-    nRows++;
-    const act = r.actual[currentMonth] || [];
-    for (let d = 0; d < dim; d++) { grandPlan += arr[d] || 0; grandAct += act[d] || 0; }
+    const p = r.project || r.proj || '未分组';
+    if (!projOf[p]) { projOf[p] = []; projOrder.push(p); }
+    projOf[p].push(r);
   });
+
+  // —— 统计卡总览 ——
+  let nRows = 0, grandPlan = 0, grandAct = 0;
+  projOrder.forEach(p => projOf[p].forEach(r => {
+    nRows++;
+    const arr = r.daily[currentMonth], act = r.actual[currentMonth] || [];
+    for (let d = 0; d < dim; d++) { grandPlan += arr[d] || 0; grandAct += act[d] || 0; }
+  }));
+  const nProj = projOrder.length;
   const grandRate = grandPlan > 0 ? Math.round((grandAct / grandPlan) * 100) : 0;
   const gRateTxt = grandPlan > 0 && grandAct > 0 ? grandRate + '%' : '—';
   const gRk = grandRate >= 100 ? 'rate-high' : grandRate >= 90 ? 'rate-mid' : 'rate-low';
   document.getElementById('pullStats').innerHTML =
-    `<div class="ps-card"><div class="ps-label">在产零件</div><div class="ps-num">${nRows}</div><div class="ps-sub">${currentMonth}月 · 按天拉动计划</div></div>` +
+    `<div class="ps-card"><div class="ps-label">在产项目</div><div class="ps-num">${nProj}</div><div class="ps-sub">${nRows} 个零件 · ${currentMonth}月按天拉动</div></div>` +
     `<div class="ps-card"><div class="ps-label">月计划总量</div><div class="ps-num">${grandPlan.toLocaleString()}</div><div class="ps-sub">件</div></div>` +
     `<div class="ps-card"><div class="ps-label">月实际总量</div><div class="ps-num">${grandAct.toLocaleString()}</div><div class="ps-sub">${grandAct > 0 ? '件' : '待对账'}</div></div>` +
     `<div class="ps-card ps-acc"><div class="ps-label">总达成率</div><div class="ps-num">${gRateTxt}</div><div class="ps-bar"><i class="${gRk}" style="width:${Math.min(grandRate, 100)}%"></i></div><div class="ps-sub">计划 vs 实际</div></div>`;
 
-  let html = '<table><thead><tr><th>零件</th><th>项目</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
+  let html = '<table><thead><tr><th>项目</th><th>零件</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
   const wk = ['日', '一', '二', '三', '四', '五', '六'];
   for (let d = 1; d <= dim; d++) {
     const dt = new Date(PULL_DATA.year, currentMonth - 1, d);
@@ -798,36 +815,58 @@ function renderPull() {
   }
   html += '</tr></thead><tbody>';
 
-  PULL_DATA.rows.forEach(r => {
-    const arr = r.daily[currentMonth];
-    if (!arr) return;
-    const act = r.actual[currentMonth] || [];
-    let planSum = 0, actSum = 0;
+  // —— 项目行(汇总) + 零件明细行(默认折叠) ——
+  projOrder.forEach(p => {
+    const rows = projOf[p];
+    const pPlan = new Array(dim).fill(0), pAct = new Array(dim).fill(0);
+    let pPlanSum = 0, pActSum = 0;
+    rows.forEach(r => {
+      const arr = r.daily[currentMonth], act = r.actual[currentMonth] || [];
+      for (let d = 0; d < dim; d++) {
+        pPlan[d] += arr[d] || 0; pAct[d] += act[d] || 0;
+        pPlanSum += arr[d] || 0; pActSum += act[d] || 0;
+        planTotals[d] += arr[d] || 0; actTotals[d] += act[d] || 0;
+      }
+    });
+    const prate = pPlanSum > 0 ? Math.round((pActSum / pPlanSum) * 100) : 0;
+    const pid = 'proj' + p.replace(/[^A-Za-z0-9]/g, '');
+    html += `<tr class="proj-group-row" onclick="toggleProj(this, '${pid}')"><td class="part"><span class="proj-caret">▸</span> ${p} <span class="proj-count">${rows.length}件</span></td><td class="proj">—</td><td></td>`;
+    html += `<td class="num">${pPlanSum.toLocaleString()}</td><td class="num">${pActSum > 0 ? pActSum.toLocaleString() : '—'}</td>`;
+    html += `<td class="rate ${rateClass(prate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(prate)}"><i style="width:${Math.min(prate, 100)}%"></i></div>${pPlanSum > 0 && pActSum > 0 ? prate + '%' : '—'}</div></td>`;
     for (let d = 0; d < dim; d++) {
-      planSum += arr[d] || 0;
-      actSum += act[d] || 0;
-    }
-    const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
-    html += `<tr><td class="part">${r.part}</td><td class="proj">${r.proj}</td><td>${statusMap[r.status]}</td>`;
-    html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
-
-    for (let d = 0; d < dim; d++) {
-      const plan = arr[d] || 0;
-      const a = act[d] || 0;
-      planTotals[d] += plan;
-      actTotals[d] += a;
       const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
       const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
       const isToday = dt.toDateString() === today.toDateString();
       let cls = isToday ? 'today' : '';
-      if (isWeekend && plan === 0) cls += ' weekend';
-      const miss = a < plan;
-      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${plan > 0 ? '' : 'z'}">${plan > 0 ? plan.toLocaleString() : '—'}</div><div class="act ${a > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${a > 0 ? a.toLocaleString() : '—'}</div></div></td>`;
+      if (isWeekend && pPlan[d] === 0) cls += ' weekend';
+      const miss = pAct[d] < pPlan[d];
+      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${pPlan[d] > 0 ? '' : 'z'}">${pPlan[d] > 0 ? pPlan[d].toLocaleString() : '—'}</div><div class="act ${pAct[d] > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${pAct[d] > 0 ? pAct[d].toLocaleString() : '—'}</div></div></td>`;
     }
     html += '</tr>';
+
+    rows.forEach(r => {
+      const arr = r.daily[currentMonth], act = r.actual[currentMonth] || [];
+      let planSum = 0, actSum = 0;
+      for (let d = 0; d < dim; d++) { planSum += arr[d] || 0; actSum += act[d] || 0; }
+      const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
+      html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part">${r.part}</td><td>${statusMap[r.status]}</td>`;
+      html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
+      for (let d = 0; d < dim; d++) {
+        const plan = arr[d] || 0, a = act[d] || 0;
+        const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
+        const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+        const isToday = dt.toDateString() === today.toDateString();
+        let cls = isToday ? 'today' : '';
+        if (isWeekend && plan === 0) cls += ' weekend';
+        const miss = a < plan;
+        html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${plan > 0 ? '' : 'z'}">${plan > 0 ? plan.toLocaleString() : '—'}</div><div class="act ${a > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${a > 0 ? a.toLocaleString() : '—'}</div></div></td>`;
+      }
+      html += '</tr>';
+    });
   });
 
-  html += '<tr class="total-row"><td colspan="3">当日合计</td><td id="totalPlanCell"></td><td id="totalActCell"></td><td id="totalRateCell"></td>';
+  // —— 当日合计（全部零件） ——
+  html += '<tr class="total-row"><td colspan="3">当日合计 · 全部零件</td><td id="totalPlanCell"></td><td id="totalActCell"></td><td id="totalRateCell"></td>';
   for (let d = 0; d < dim; d++) {
     const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
     const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
@@ -845,6 +884,14 @@ function renderPull() {
   const totalRate = grandPlan > 0 ? Math.round((grandAct / grandPlan) * 100) : 0;
   document.getElementById('totalRateCell').innerHTML = `<span class="rate ${rateClass(totalRate)}">${grandPlan > 0 && grandAct > 0 ? totalRate + '%' : '—'}</span>`;
   document.getElementById('updatedLabelPull').textContent = `最后更新：${PULL_DATA.updatedAt} · ${PULL_DATA.year}年`;
+}
+
+// 点击项目行 → 展开/折叠该项目的零件明细
+function toggleProj(row, pid) {
+  const parts = document.querySelectorAll('tr.proj-part.' + pid);
+  const hidden = !parts.length || parts[0].style.display === 'none';
+  parts.forEach(tr => tr.style.display = hidden ? '' : 'none');
+  row.querySelector('.proj-caret').textContent = hidden ? '▾' : '▸';
 }
 
 // ===== 财务渲染 =====
