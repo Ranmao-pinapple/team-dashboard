@@ -1030,13 +1030,15 @@ function poStatusBadge(s) {
 
 function renderPoStats() {
   const orders = PO_DATA.orders;
-  let count = orders.length;
-  let qty = 0, amount = 0, pendingCount = 0;
+  let count = new Set(orders.map(o => o.po)).size;
+  let qty = 0, amount = 0;
+  const pendPo = new Set();
   orders.forEach(o => {
     if (o.status !== 'delivered') qty += o.qty;
     amount += o.total;
-    if (o.status === 'pending' || o.status === 'received') pendingCount++;
+    if (o.status === 'pending' || o.status === 'received') pendPo.add(o.po);
   });
+  let pendingCount = pendPo.size;
   document.getElementById('poCount').textContent = count;
   document.getElementById('poQty').textContent = qty.toLocaleString() + ' 件';
   document.getElementById('poAmount').textContent = '¥' + amount.toLocaleString('zh-CN');
