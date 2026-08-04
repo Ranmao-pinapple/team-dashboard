@@ -173,6 +173,35 @@
 
   @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
 
+  /* ===== 项目管理 · 视图切换 + 甘特图 ===== */
+  .view-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+  .view-bar button {
+    padding: 6px 14px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .view-bar button:hover { border-color: var(--accent); }
+  .view-bar button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
+
+  .gantt-scroll { overflow-x: auto; }
+  .gantt { min-width: 860px; }
+  .gantt-head { display: grid; grid-template-columns: 220px 1fr; border-bottom: 2px solid var(--border); }
+  .gantt-head .gantt-axis { position: relative; height: 28px; }
+  .gantt-row { display: grid; grid-template-columns: 220px 1fr; border-bottom: 1px solid var(--border); min-height: 34px; }
+  .gantt-row.proj { background: var(--card); font-weight: 700; }
+  .gantt-row .gantt-label { padding: 8px 10px; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border); }
+  .gantt-row .gantt-cell { position: relative; }
+  .gantt-tick { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--border); z-index: 1; }
+  .gantt-tick.now { border-left: 2px solid var(--accent); z-index: 3; }
+  .gantt-bar { position: absolute; top: 8px; height: 18px; border-radius: 9px; font-size: 10px; line-height: 18px; padding: 0 6px; color: #fff; white-space: nowrap; overflow: hidden; z-index: 2; }
+  .gantt-bar.done { background: var(--green); }
+  .gantt-bar.doing { background: #2563eb; animation: blink 1.2s infinite; }
+  .gantt-bar.todo { background: #c4c4c6; }
+  .gantt-bar.late { background: var(--red); }
+  .gantt-bar span { display: block; transform: scale(.95); transform-origin: left center; }
+
   /* ===== 月拉动计划 · 高级感升级（仅作用于拉动页签） ===== */
   #tab-pull .toolbar { margin-bottom: 12px; }
   #pullStats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -331,6 +360,7 @@
     <button class="tab-btn" onclick="switchTab('po')">📋 订单台账</button>
     <button class="tab-btn" onclick="switchTab('finance')">💰 对账开票</button>
     <button class="tab-btn" onclick="switchTab('apqp')">🚀 项目管理</button>
+    <button class="tab-btn" onclick="switchTab('task')">📌 任务待办</button>
   </div>
 
   <!-- ========== Tab 1: 项目看板 ========== -->
@@ -586,7 +616,63 @@
       <button data-f="risk" onclick="setApqpFilter('risk')">⚠ 风险</button>
     </div>
 
+    <div class="view-bar">
+      <button class="active" data-v="table" onclick="setApqpView('table')">📊 表格视图</button>
+      <button data-v="gantt" onclick="setApqpView('gantt')">📈 甘特图</button>
+    </div>
+
     <div class="card" id="apqpTableWrap" style="padding:12px"></div>
+    <div class="card" id="apqpGanttWrap" style="padding:16px;display:none"></div>
+  </div>
+
+  <!-- ========== Tab 6: 任务待办 ========== -->
+  <div class="tab-content" id="tab-task">
+    <div class="grid" id="taskStatGrid">
+      <div class="card stat">
+        <h3>总任务</h3>
+        <div class="big-number blue" id="taskTotal">—</div>
+        <div class="sub">当前待办池</div>
+      </div>
+      <div class="card stat">
+        <h3>进行中</h3>
+        <div class="big-number purple" id="taskDoing">—</div>
+        <div class="sub">正在执行</div>
+      </div>
+      <div class="card stat">
+        <h3>本周到期</h3>
+        <div class="big-number yellow" id="taskDue">—</div>
+        <div class="sub">7天内截止</div>
+      </div>
+      <div class="card stat">
+        <h3>已完成</h3>
+        <div class="big-number green" id="taskDone">—</div>
+        <div class="sub">累计完成</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--red)"></span>P0 紧急</span>
+        <span><span class="dot" style="background:var(--yellow)"></span>P1 重要</span>
+        <span><span class="dot" style="background:#2563eb"></span>P2 常规</span>
+        <span><span class="dot" style="background:#c4c4c6"></span>P3 低优</span>
+        <span style="color:var(--muted)">※ 点击任务行展开详情</span>
+      </div>
+      <div class="updated" id="updatedLabelTask">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="taskFilterBar">
+      <button class="active" data-f="all" onclick="setTaskFilter('all')">全部</button>
+      <button data-f="todo" onclick="setTaskFilter('todo')">待办</button>
+      <button data-f="doing" onclick="setTaskFilter('doing')">进行中</button>
+      <button data-f="done" onclick="setTaskFilter('done')">已完成</button>
+      <button data-f="P0" onclick="setTaskFilter('P0')">🔴 P0</button>
+      <button data-f="P1" onclick="setTaskFilter('P1')">🟠 P1</button>
+      <button data-f="P2" onclick="setTaskFilter('P2')">🔵 P2</button>
+      <button data-f="P3" onclick="setTaskFilter('P3')">⚪ P3</button>
+    </div>
+
+    <div class="card" id="taskTableWrap" style="padding:12px"></div>
   </div>
 
   <div class="footer">
@@ -843,12 +929,32 @@ const PROJECT_DATA = {
   ]
 };
 
+// ===== 任务待办数据块（白猫脚本自动更新区域） =====
+// status: todo(待办) / doing(进行中) / done(已完成)
+// priority: P0(紧急) / P1(重要) / P2(常规) / P3(低优)
+const TASK_DATA = {
+  updatedAt: "2026-08-04",
+  tasks: [
+    { id: "T001", title: "VWCO物流成本表填写", project: "VWCO 巴西卡车", owner: "Zane", priority: "P0", due: "2026-08-10", status: "doing", remark: "确认运输方式后填写，中英对照版已交付" },
+    { id: "T002", title: "VWCO包装方案表填写", project: "VWCO 巴西卡车", owner: "Zane", priority: "P1", due: "2026-08-15", status: "todo", remark: "待物流数据确认后联动填写" },
+    { id: "T003", title: "VWCO报价邮件发送", project: "VWCO 巴西卡车", owner: "Zane", priority: "P0", due: "2026-08-12", status: "todo", remark: "两表填完后统一邮件发送" },
+    { id: "T004", title: "Limo Green 海绵外协打样跟进", project: "Limo Green 海绵（外协）", owner: "Zane", priority: "P0", due: "2026-08-05", status: "doing", remark: "已超计划3天，催外协反馈打样结果" },
+    { id: "T005", title: "Limo Green 吸音棉打样安排", project: "Limo Green 吸音棉", owner: "Zane", priority: "P1", due: "2026-08-14", status: "todo", remark: "备料已完成，待安排打样" },
+    { id: "T006", title: "凯华7月对账单确认", project: "VFe32 小海绵（凯华）", owner: "财务", priority: "P1", due: "2026-08-06", status: "doing", remark: "7月对账单待客户确认，确认后开票" },
+    { id: "T007", title: "VFe32 8月拉动计划核对", project: "VFe32 小海绵（凯华）", owner: "Zane", priority: "P2", due: "2026-08-08", status: "todo", remark: "与订单台账交叉核对数量" },
+    { id: "T008", title: "凯华逾期回款催收", project: "VFe32 小海绵（凯华）", owner: "Zane", priority: "P0", due: "2026-08-07", status: "todo", remark: "INV-202606-018 开票已超30天，催款" },
+    { id: "T009", title: "7月对账单财务录入", project: "内部", owner: "白猫", priority: "P2", due: "2026-08-05", status: "doing", remark: "对账单确认后录入财务看板" },
+    { id: "T010", title: "周报汇总", project: "内部", owner: "Zane", priority: "P3", due: "2026-08-08", status: "todo", remark: "每周五下班前输出" }
+  ]
+};
+
 // ===== Tab 切换 =====
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => {
-    if (b.textContent.includes(name === 'project' ? '项目看板' : name === 'pull' ? '月拉动' : name === 'po' ? '订单台账' : name === 'finance' ? '对账开票' : '项目管理')) {
+    const label = { project: '项目看板', pull: '月拉动', po: '订单台账', finance: '对账开票', apqp: '项目管理', task: '任务待办' };
+    if (b.textContent.includes(label[name] || '')) {
       b.classList.add('active');
     }
   });
@@ -1385,6 +1491,192 @@ function setApqpFilter(f) {
     b.classList.toggle('active', b.dataset.f === f);
   });
   renderApqp();
+  renderGantt();
+}
+
+// ===== 甘特图渲染 =====
+function setApqpView(v) {
+  document.querySelectorAll('.view-bar button').forEach(b => b.classList.toggle('active', b.dataset.v === v));
+  document.getElementById('apqpTableWrap').style.display = v === 'table' ? '' : 'none';
+  document.getElementById('apqpGanttWrap').style.display = v === 'gantt' ? '' : 'none';
+  if (v === 'gantt') renderGantt();
+}
+
+function parseDate(s) {
+  if (!s) return null;
+  const p = s.split('-');
+  return new Date(+p[0], +p[1] - 1, +p[2]);
+}
+
+function renderGantt() {
+  const wrap = document.getElementById('apqpGanttWrap');
+  const projects = currentApqpFilter === 'all'
+    ? PROJECT_DATA.projects
+    : PROJECT_DATA.projects.filter(p => p.status === currentApqpFilter);
+
+  // —— 收集所有日期范围 ——
+  let minD = null, maxD = null;
+  const touch = d => { if (!d) return; if (!minD || d < minD) minD = d; if (!maxD || d > maxD) maxD = d; };
+  projects.forEach(p => p.phases.forEach(ph => { touch(parseDate(ph.planDate)); touch(parseDate(ph.actualDate)); }));
+
+  const today = new Date();
+  touch(today);
+  if (!minD || !maxD) { wrap.innerHTML = '<div class="empty-note">暂无排期数据</div>'; return; }
+  // 前后留白：起点往前推10天，终点往后推30天
+  const start = new Date(minD); start.setDate(start.getDate() - 10);
+  const end = new Date(maxD); end.setDate(end.getDate() + 30);
+  const totalDays = Math.max((end - start) / 86400000, 60);
+
+  const pct = d => ((d - start) / 86400000) / totalDays * 100;
+
+  // —— 月份刻度 ——
+  let ticks = '';
+  const axisTicks = [];
+  for (let t = new Date(start.getFullYear(), start.getMonth(), 1); t <= end; t.setMonth(t.getMonth() + 1)) {
+    axisTicks.push(new Date(t));
+  }
+  axisTicks.push(new Date(end.getFullYear(), end.getMonth() + 1, 1));
+
+  // —— 表头 ——
+  let head = '<div class="gantt-head"><div class="gantt-label" style="border-right:1px solid var(--border);padding:8px 10px;font-weight:700">项目 / 阶段</div><div class="gantt-axis">';
+  axisTicks.forEach(t => {
+    const x = pct(t);
+    head += `<div class="gantt-tick" style="left:${x}%"></div>`;
+    head += `<div style="position:absolute;left:${x}%;top:2px;transform:translateX(6px);font-size:10.5px;color:var(--muted)">${t.getMonth() + 1}月</div>`;
+  });
+  head += `<div class="gantt-tick now" style="left:${pct(today)}%"></div></div></div>`;
+
+  // —— 行 ——
+  let rows = '';
+  projects.forEach(p => {
+    const st = p.phases.find(ph => ph.status === 'doing') || p.phases.find(ph => ph.status === 'late') || p.phases[p.phases.length - 1];
+    rows += `<div class="gantt-row proj"><div class="gantt-label">${p.name} <span style="font-weight:400;color:var(--muted);font-size:11px">(${p.phase}/5)</span></div><div class="gantt-cell"></div></div>`;
+    p.phases.forEach(ph => {
+      const ps = parseDate(ph.planDate);
+      const pas = parseDate(ph.actualDate);
+      let barHtml = '';
+      if (ph.status === 'done' && pas) {
+        // 已完成：plan→actual
+        const s = ps || pas, e = pas;
+        barHtml = `<div class="gantt-bar done" style="left:${pct(s)}%;width:${Math.max(pct(e) - pct(s), 2)}%" title="✓ ${ph.name} (${ph.planDate || '—'} → ${ph.actualDate})"><span>✓ ${ph.name}</span></div>`;
+      } else if (ph.status === 'doing' && ps) {
+        // 进行中：plan→今天
+        const s = ps, e = today;
+        barHtml = `<div class="gantt-bar doing" style="left:${pct(s)}%;width:${Math.max(pct(e) - pct(s), 2)}%" title="🔄 ${ph.name} (${ph.planDate} → 进行中)"><span>🔄 ${ph.name}</span></div>`;
+      } else if (ph.status === 'late' && ps) {
+        // 延期：plan→今天，红色
+        const s = ps, e = today;
+        barHtml = `<div class="gantt-bar late" style="left:${pct(s)}%;width:${Math.max(pct(e) - pct(s), 2)}%" title="⚠ ${ph.name} 已延期 (计划 ${ph.planDate})"><span>⚠ ${ph.name}</span></div>`;
+      } else if (ph.status === 'todo' && ps) {
+        // 未开始：计划日期一个点
+        barHtml = `<div class="gantt-bar todo" style="left:${pct(ps)}%;width:6px;transform:translateX(-3px);padding:0" title="○ ${ph.name} (计划 ${ph.planDate})"></div>`;
+      }
+      rows += `<div class="gantt-row"><div class="gantt-label">${ph.phase}. ${ph.name}</div><div class="gantt-cell">${barHtml}<div class="gantt-tick now" style="left:${pct(today)}%"></div></div></div>`;
+    });
+  });
+
+  wrap.innerHTML = `<div class="gantt-scroll"><div class="gantt">${head}${rows}</div></div>`;
+}
+
+// ===== 任务待办渲染 =====
+let currentTaskFilter = 'all';
+function taskPriorityBadge(pr) {
+  const map = {
+    P0: '<span class="status st-overdue">🔴 P0</span>',
+    P1: '<span class="status st-pending">🟠 P1</span>',
+    P2: '<span class="status st-blue">🔵 P2</span>',
+    P3: '<span class="status" style="background:#e9e9ea;color:#5c5e62">⚪ P3</span>'
+  };
+  return map[pr] || map.P3;
+}
+
+function taskStatusBadge(s) {
+  const map = {
+    todo: '<span class="status st-pending">🟡 待办</span>',
+    doing: '<span class="status st-blue">🔵 进行中</span>',
+    done: '<span class="status st-paid">✅ 已完成</span>'
+  };
+  return map[s] || map.todo;
+}
+
+function toggleTaskDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('#taskTableWrap .detail-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('#taskTableWrap .fin-row').forEach(r => r.classList.remove('active'));
+  if (isHidden) {
+    detailRow.style.display = '';
+    row.classList.add('active');
+  }
+}
+
+function renderTaskStats() {
+  const tasks = TASK_DATA.tasks;
+  const today = new Date();
+  const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+  const doing = tasks.filter(t => t.status === 'doing').length;
+  const done = tasks.filter(t => t.status === 'done').length;
+  const due = tasks.filter(t => t.status !== 'done' && parseDate(t.due) && parseDate(t.due) <= in7).length;
+  document.getElementById('taskTotal').textContent = tasks.length;
+  document.getElementById('taskDoing').textContent = doing;
+  document.getElementById('taskDue').textContent = due;
+  document.getElementById('taskDone').textContent = done;
+}
+
+function renderTask() {
+  const wrap = document.getElementById('taskTableWrap');
+  let tasks = TASK_DATA.tasks;
+  if (currentTaskFilter === 'todo' || currentTaskFilter === 'doing' || currentTaskFilter === 'done') {
+    tasks = tasks.filter(t => t.status === currentTaskFilter);
+  } else if (currentTaskFilter !== 'all') {
+    tasks = tasks.filter(t => t.priority === currentTaskFilter);
+  }
+
+  const today = new Date();
+  let html = '<table><tr><th>ID</th><th>任务</th><th>所属项目</th><th>负责人</th><th>优先级</th><th>截止日</th><th>状态</th><th>备注</th><th></th></tr>';
+  tasks.forEach(t => {
+    const d = parseDate(t.due);
+    const overdue = t.status !== 'done' && d && d < today;
+    const dueTxt = d ? (overdue ? `<span style="color:var(--red);font-weight:700">${t.due} ⚠逾期</span>` : t.due) : '—';
+    html += `<tr class="fin-row" onclick="toggleTaskDetail(this)">
+      <td style="color:var(--muted);font-size:12px">${t.id}</td>
+      <td class="part">${t.title}</td>
+      <td style="font-size:12px">${t.project}</td>
+      <td>${t.owner}</td>
+      <td>${taskPriorityBadge(t.priority)}</td>
+      <td>${dueTxt}</td>
+      <td>${taskStatusBadge(t.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${t.remark || ''}</td>
+      <td class="fin-toggle">▸</td>
+    </tr>`;
+    html += `<tr class="detail-row" style="display:none"><td colspan="9"><div class="detail-inner">
+      <h4>📌 ${t.title} <span style="font-weight:400;color:var(--muted)">(${t.id})</span></h4>
+      <table class="sub-table">
+        <tr><th>所属项目</th><th>负责人</th><th>优先级</th><th>截止日</th><th>状态</th></tr>
+        <tr>
+          <td>${t.project}</td><td>${t.owner}</td><td>${t.priority}</td>
+          <td>${t.due || '—'}${overdue ? ' <span style="color:var(--red)">⚠ 已逾期</span>' : ''}</td>
+          <td>${t.status === 'done' ? '已完成' : t.status === 'doing' ? '进行中' : '待办'}</td>
+        </tr>
+      </table>
+      <div style="margin-top:8px;font-size:12.5px;color:var(--muted)">📝 ${t.remark || '暂无备注'}</div>
+    </div></td></tr>`;
+  });
+  if (!tasks.length) html += '<tr><td colspan="9" style="color:var(--muted);padding:24px">该筛选条件下暂无任务</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderTaskStats();
+  document.getElementById('updatedLabelTask').textContent = `最后更新：${TASK_DATA.updatedAt}`;
+}
+
+function setTaskFilter(f) {
+  currentTaskFilter = f;
+  document.querySelectorAll('#taskFilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderTask();
 }
 
 // ===== 密码锁逻辑 =====
@@ -1419,6 +1711,7 @@ renderPull();
 renderPo();
 renderFinance();
 renderApqp();
+renderTask();
 </script>
 </body>
 </html>
