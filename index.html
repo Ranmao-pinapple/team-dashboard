@@ -138,6 +138,8 @@
   .st-paid { background: rgba(18,161,80,.12); color: var(--green); }
   .st-partial { background: rgba(180,83,9,.12); color: var(--yellow); }
   .st-overdue { background: rgba(232,33,39,.12); color: var(--red); }
+  .st-risk { background: rgba(232,33,39,.12); color: var(--red); }
+  .st-blue { background: rgba(37,99,235,.12); color: #2563eb; }
 
   .toolbar {
     display: flex; justify-content: space-between; align-items: center;
@@ -168,6 +170,8 @@
   .filters button:hover { border-color: var(--accent); }
   .filters button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
   .empty-note { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
 
   /* ===== 月拉动计划 · 高级感升级（仅作用于拉动页签） ===== */
   #tab-pull .toolbar { margin-bottom: 12px; }
@@ -326,6 +330,7 @@
     <button class="tab-btn" onclick="switchTab('pull')">📅 月拉动计划</button>
     <button class="tab-btn" onclick="switchTab('po')">📋 订单台账</button>
     <button class="tab-btn" onclick="switchTab('finance')">💰 对账开票</button>
+    <button class="tab-btn" onclick="switchTab('apqp')">🚀 项目管理</button>
   </div>
 
   <!-- ========== Tab 1: 项目看板 ========== -->
@@ -538,6 +543,52 @@
     <div class="card" id="tableWrapFinance" style="padding:12px"></div>
   </div>
 
+  <!-- ========== Tab 5: 项目管理 (APQP) ========== -->
+  <div class="tab-content" id="tab-apqp">
+    <div class="grid" id="apqpStatGrid">
+      <div class="card stat">
+        <h3>进行中项目</h3>
+        <div class="big-number blue" id="apqpActive">—</div>
+        <div class="sub">APQP 未到量产</div>
+      </div>
+      <div class="card stat">
+        <h3>已量产项目</h3>
+        <div class="big-number green" id="apqpLive">—</div>
+        <div class="sub">SOP 后量产</div>
+      </div>
+      <div class="card stat">
+        <h3>风险/待跟进</h3>
+        <div class="big-number yellow" id="apqpRisk">—</div>
+        <div class="sub">进度延期或卡点</div>
+      </div>
+      <div class="card stat">
+        <h3>APQP 阶段</h3>
+        <div class="big-number purple" id="apqpPhaseCount">5</div>
+        <div class="sub">1立项 2产品 3过程 4确认 5反馈</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--green)"></span>已完成</span>
+        <span><span class="dot" style="background:var(--accent)"></span>进行中</span>
+        <span><span class="dot" style="background:#c4c4c6"></span>未开始</span>
+        <span><span class="dot" style="background:var(--red)"></span>延期</span>
+        <span style="color:var(--muted)">※ 点击项目行展开 APQP 阶段明细 + 时间线</span>
+      </div>
+      <div class="updated" id="updatedLabelApqp">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="apqpFilterBar">
+      <button class="active" data-f="all" onclick="setApqpFilter('all')">全部</button>
+      <button data-f="active" onclick="setApqpFilter('active')">开发中</button>
+      <button data-f="live" onclick="setApqpFilter('live')">已量产</button>
+      <button data-f="risk" onclick="setApqpFilter('risk')">⚠ 风险</button>
+    </div>
+
+    <div class="card" id="apqpTableWrap" style="padding:12px"></div>
+  </div>
+
   <div class="footer">
     由 白猫 (Hermes Agent) 自动更新 · 数据源：订单/财务信息
   </div>
@@ -696,12 +747,108 @@ const PO_DATA = {
   ]
 };
 
+// ===== 项目管理数据块（白猫脚本自动更新区域） =====
+// 项目 status: active(开发中) / live(量产) / risk(风险) / wait(暂停)
+// 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
+// APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
+const PROJECT_DATA = {
+  updatedAt: "2026-08-04",
+  projects: [
+    {
+      name: "VFe32 小海绵（凯华）", customer: "浙江凯华", product: "前通风盖板本体海绵",
+      status: "live", rfqDate: "2025-11-20", phase: 5,
+      nextStep: "量产供货 8K套/月，年净利约20.3万",
+      phases: [
+        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2025-11-30", actualDate: "2025-11-28", remark: "内部询价→报价→定点" },
+        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-01-15", actualDate: "2026-01-10", remark: "图纸确认/样件认可" },
+        { phase: 3, name: "过程设计和开发", status: "done", planDate: "2026-03-01", actualDate: "2026-02-25", remark: "模压工装/裁切工艺" },
+        { phase: 4, name: "产品和过程确认", status: "done", planDate: "2026-04-01", actualDate: "2026-03-30", remark: "PPAP/试产确认" },
+        { phase: 5, name: "反馈评定纠正", status: "done", planDate: "2026-05-01", actualDate: "2026-04-28", remark: "SOP量产" }
+      ],
+      timeline: [
+        { date: "2025-11-20", event: "内部询价", status: "done" },
+        { date: "2025-12-05", event: "报价提交", status: "done" },
+        { date: "2026-01-10", event: "客户定点", status: "done" },
+        { date: "2026-04-28", event: "SOP量产", status: "done" }
+      ]
+    },
+    {
+      name: "VF-LIMO7 RHD风管棉", customer: "浙江凯华", product: "风管隔音棉×4+挡脚板隔音垫",
+      status: "live", rfqDate: "2026-01-15", phase: 5,
+      nextStep: "已量产对账（BIN32472013/16/17/18AA, 32551820AA）",
+      phases: [
+        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-01-31", actualDate: "2026-01-28", remark: "内部询价→报价→定点" },
+        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-03-01", actualDate: "2026-02-27", remark: "图纸确认" },
+        { phase: 3, name: "过程设计和开发", status: "done", planDate: "2026-04-01", actualDate: "2026-03-31", remark: "裁切工艺/胶带贴合" },
+        { phase: 4, name: "产品和过程确认", status: "done", planDate: "2026-04-30", actualDate: "2026-04-28", remark: "PPAP/试产" },
+        { phase: 5, name: "反馈评定纠正", status: "done", planDate: "2026-05-15", actualDate: "2026-05-10", remark: "SOP量产，5-6月已对账" }
+      ],
+      timeline: [
+        { date: "2026-01-15", event: "内部询价", status: "done" },
+        { date: "2026-02-10", event: "报价提交", status: "done" },
+        { date: "2026-03-05", event: "客户定点", status: "done" },
+        { date: "2026-05-10", event: "SOP量产", status: "done" }
+      ]
+    },
+    {
+      name: "VWCO 巴西卡车", customer: "VWCO", product: "吸音棉+地毯总成",
+      status: "active", rfqDate: "2026-07-01", phase: 2,
+      nextStep: "确认运输方式 → 填写物流/包装数据 → 邮件发送",
+      phases: [
+        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-07-15", actualDate: "2026-07-10", remark: "物流成本表/包装方案表已交付" },
+        { phase: 2, name: "产品设计和开发", status: "doing", planDate: "2026-08-15", actualDate: "", remark: "表格中英对照版待填写" },
+        { phase: 3, name: "过程设计和开发", status: "todo", planDate: "", actualDate: "", remark: "" },
+        { phase: 4, name: "产品和过程确认", status: "todo", planDate: "", actualDate: "", remark: "" },
+        { phase: 5, name: "反馈评定纠正", status: "todo", planDate: "", actualDate: "", remark: "" }
+      ],
+      timeline: [
+        { date: "2026-07-01", event: "内部询价", status: "done" },
+        { date: "2026-07-10", event: "表格交付（待填写）", status: "doing" }
+      ]
+    },
+    {
+      name: "Limo Green 吸音棉", customer: "Limo Green", product: "吸音棉",
+      status: "wait", rfqDate: "2026-06-10", phase: 3,
+      nextStep: "原材料已备料，等待打样安排",
+      phases: [
+        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-06-20", actualDate: "2026-06-18", remark: "内部询价→报价" },
+        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-07-10", actualDate: "2026-07-08", remark: "图纸/规格确认" },
+        { phase: 3, name: "过程设计和开发", status: "doing", planDate: "2026-08-10", actualDate: "", remark: "备料完成，待打样" },
+        { phase: 4, name: "产品和过程确认", status: "todo", planDate: "", actualDate: "", remark: "" },
+        { phase: 5, name: "反馈评定纠正", status: "todo", planDate: "", actualDate: "", remark: "" }
+      ],
+      timeline: [
+        { date: "2026-06-10", event: "内部询价", status: "done" },
+        { date: "2026-07-08", event: "图纸确认", status: "done" },
+        { date: "2026-07-25", event: "备料完成", status: "done" }
+      ]
+    },
+    {
+      name: "Limo Green 海绵（外协）", customer: "Limo Green", product: "海绵（外协打样）",
+      status: "risk", rfqDate: "2026-06-15", phase: 3,
+      nextStep: "外协打样进行中，待打样结果反馈",
+      phases: [
+        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-06-25", actualDate: "2026-06-22", remark: "内部询价→外协询价（财务职责）" },
+        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-07-15", actualDate: "2026-07-12", remark: "规格确认" },
+        { phase: 3, name: "过程设计和开发", status: "late", planDate: "2026-07-30", actualDate: "", remark: "外协打样中，已超计划3天" },
+        { phase: 4, name: "产品和过程确认", status: "todo", planDate: "", actualDate: "", remark: "" },
+        { phase: 5, name: "反馈评定纠正", status: "todo", planDate: "", actualDate: "", remark: "" }
+      ],
+      timeline: [
+        { date: "2026-06-15", event: "内部询价", status: "done" },
+        { date: "2026-07-01", event: "外协询价发出", status: "done" },
+        { date: "2026-07-20", event: "外协打样", status: "doing" }
+      ]
+    }
+  ]
+};
+
 // ===== Tab 切换 =====
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => {
-    if (b.textContent.includes(name === 'project' ? '项目看板' : name === 'pull' ? '月拉动' : name === 'po' ? '订单台账' : '对账开票')) {
+    if (b.textContent.includes(name === 'project' ? '项目看板' : name === 'pull' ? '月拉动' : name === 'po' ? '订单台账' : name === 'finance' ? '对账开票' : '项目管理')) {
       b.classList.add('active');
     }
   });
@@ -1120,6 +1267,126 @@ function setPoFilter(f) {
   renderPo();
 }
 
+// ===== 项目管理 (APQP) 渲染 =====
+const APQP_STAGES = ['计划和确定项目', '产品设计和开发', '过程设计和开发', '产品和过程确认', '反馈评定纠正'];
+
+function apqpStatusBadge(s) {
+  const map = {
+    active: '<span class="status st-blue">🔵 开发中</span>',
+    live: '<span class="status st-live">✅ 量产</span>',
+    risk: '<span class="status st-risk">⚠️ 风险</span>',
+    wait: '<span class="status st-wait">🔄 暂停</span>'
+  };
+  return map[s] || map.wait;
+}
+
+function apqpPhaseBadge(s) {
+  const map = {
+    done: '<span class="status st-live">✅ 完成</span>',
+    doing: '<span class="status st-blue">🔵 进行中</span>',
+    todo: '<span class="status st-wait">⚪ 未开始</span>',
+    late: '<span class="status st-risk">🔴 延期</span>'
+  };
+  return map[s] || map.todo;
+}
+
+function apqpPhaseDots(p) {
+  // 五阶段进度条：done绿 / doing蓝 / late红 / todo灰
+  let html = '<div style="display:flex;gap:4px;align-items:center">';
+  p.phases.forEach(ph => {
+    const color = ph.status === 'done' ? 'var(--green)' : ph.status === 'doing' ? '#2563eb' : ph.status === 'late' ? 'var(--red)' : '#c4c4c6';
+    const pulse = ph.status === 'doing' ? ' style="animation:blink 1.2s infinite"' : '';
+    html += `<span title="阶段${ph.phase} ${ph.name}: ${ph.remark || ph.status}" style="width:14px;height:14px;border-radius:4px;background:${color}"${pulse}></span>`;
+  });
+  html += `<span style="color:var(--muted);font-size:11px;margin-left:6px">${p.phase}/5</span></div>`;
+  return html;
+}
+
+function toggleApqpDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('#apqpTableWrap .detail-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('#apqpTableWrap .fin-row').forEach(r => r.classList.remove('active'));
+  if (isHidden) {
+    detailRow.style.display = '';
+    row.classList.add('active');
+  }
+}
+
+function renderApqpStats() {
+  const ps = PROJECT_DATA.projects;
+  const active = ps.filter(p => p.status === 'active').length;
+  const live = ps.filter(p => p.status === 'live').length;
+  const risk = ps.filter(p => p.status === 'risk').length;
+  document.getElementById('apqpActive').textContent = active;
+  document.getElementById('apqpLive').textContent = live;
+  document.getElementById('apqpRisk').textContent = risk;
+}
+
+function renderApqp() {
+  const wrap = document.getElementById('apqpTableWrap');
+  let projects = PROJECT_DATA.projects;
+  if (currentApqpFilter !== 'all') {
+    projects = projects.filter(p => p.status === currentApqpFilter);
+  }
+
+  let html = '<table><tr><th>项目</th><th>客户</th><th>产品</th><th>内部询价</th><th>APQP进度</th><th>当前阶段</th><th>状态</th><th>下一步</th><th></th></tr>';
+  projects.forEach(p => {
+    const cur = p.phases.find(ph => ph.phase === p.phase) || p.phases[p.phases.length - 1];
+    const phaseRows = p.phases.map(ph => `<tr>
+      <td>${ph.phase}. ${ph.name}</td>
+      <td>${apqpPhaseBadge(ph.status)}</td>
+      <td style="color:var(--muted)">${ph.planDate || '—'}</td>
+      <td style="color:var(--muted)">${ph.actualDate || '—'}</td>
+      <td style="font-size:12px">${ph.remark || ''}</td>
+    </tr>`).join('');
+    const tlRows = (p.timeline || []).map(t => `<tr>
+      <td style="white-space:nowrap">${t.date}</td>
+      <td>${t.event}</td>
+      <td>${t.status === 'done' ? '<span class="status st-live">✅ 完成</span>' : '<span class="status st-blue">🔄 进行中</span>'}</td>
+    </tr>`).join('');
+    html += `<tr class="fin-row" onclick="toggleApqpDetail(this)">
+      <td class="part">${p.name}</td>
+      <td>${p.customer}</td>
+      <td style="font-size:12px">${p.product}</td>
+      <td style="color:var(--muted)">${p.rfqDate || '—'}</td>
+      <td>${apqpPhaseDots(p)}</td>
+      <td>${cur ? `${cur.phase}. ${cur.name}` : '—'}</td>
+      <td>${apqpStatusBadge(p.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${p.nextStep || ''}</td>
+      <td class="fin-toggle">▸ 展开</td>
+    </tr>`;
+    html += `<tr class="detail-row" style="display:none"><td colspan="9"><div class="detail-inner">
+      <h4>🚀 ${p.name} · APQP 阶段明细</h4>
+      <table class="sub-table">
+        <tr><th>阶段</th><th>状态</th><th>计划日期</th><th>实际日期</th><th>备注</th></tr>
+        ${phaseRows}
+      </table>
+      ${tlRows ? `<h4 style="margin-top:14px">📅 时间线</h4>
+      <table class="sub-table">
+        <tr><th>日期</th><th>事件</th><th>状态</th></tr>
+        ${tlRows}
+      </table>` : ''}
+    </div></td></tr>`;
+  });
+  if (!projects.length) html += '<tr><td colspan="9" style="color:var(--muted);padding:24px">该筛选条件下暂无项目</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderApqpStats();
+  document.getElementById('updatedLabelApqp').textContent = `最后更新：${PROJECT_DATA.updatedAt}`;
+}
+
+let currentApqpFilter = 'all';
+function setApqpFilter(f) {
+  currentApqpFilter = f;
+  document.querySelectorAll('#apqpFilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderApqp();
+}
+
 // ===== 密码锁逻辑 =====
 const PAGE_PASSWORD = "tairui999"; // ← 修改这里即可换密码
 const lockScreen = document.getElementById('lockScreen');
@@ -1151,6 +1418,7 @@ renderMonthPicker();
 renderPull();
 renderPo();
 renderFinance();
+renderApqp();
 </script>
 </body>
 </html>
