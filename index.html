@@ -1393,8 +1393,10 @@ function renderApqp() {
     const partsRows = (p.parts || []).map(pt => `<tr>
       <td>${pt.name}</td>
       <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
+      <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
     </tr>`).join('');
-    const partsTxt = (p.parts || []).length > 0 ? `<span style="font-size:12px">${(p.parts||[]).length}个零件</span>` : (p.product || '—');
+    const nPulled = (p.parts || []).filter(pt => pt.pulled).length;
+    const partsTxt = (p.parts || []).length > 0 ? `<span style="font-size:12px">${(p.parts||[]).length}个零件 · <span style="color:var(--green)">${nPulled}已拉动</span>/<span style="color:var(--yellow)">${(p.parts||[]).length-nPulled}未拉</span></span>` : (p.product || '—');
     html += `<tr class="fin-row" onclick="toggleApqpDetail(this)">
       <td class="part">${p.name}</td>
       <td>${p.customer}</td>
@@ -1415,7 +1417,7 @@ function renderApqp() {
       </table>
       ${partsRows ? `<h4 style="margin-top:14px">🧩 零件清单（${(p.parts||[]).length}个）</h4>
       <table class="sub-table">
-        <tr><th>零件名称</th><th>物料编码</th></tr>
+        <tr><th>零件名称</th><th>物料编码</th><th>状态</th></tr>
         ${partsRows}
       </table>` : ''}
       <table class="sub-table" style="margin-top:14px">
