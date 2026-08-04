@@ -841,21 +841,21 @@ const PROJECT_DATA = {
   updatedAt: "2026-08-04",
   projects: [
     {
-      name: "VFe32（凯华）", customer: "浙江凯华", product: "小海绵/风管外部隔音棉/海绵条/后三角板泡棉等",
+      name: "VFe32", customer: "凯华", oem: "VINFAST", product: "小海绵/风管外部隔音棉/海绵条/后三角板泡棉等",
       status: "live", rfqDate: "2025-11-20", phase: 5,
       nextStep: "量产供货 8K套/月，年净利约20.3万",
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2025-11-30", "actualDate": "2025-11-28", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-01-15", "actualDate": "2026-01-10", "remark": "图纸确认/样件认可"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-03-01", "actualDate": "2026-02-25", "remark": "模压工装/裁切工艺"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-04-01", "actualDate": "2026-03-30", "remark": "PPAP/试产确认"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-05-01", "actualDate": "2026-04-28", "remark": "SOP量产"}],
       timeline: [{"date": "2025-11-20", "event": "内部询价", "status": "done"}, {"date": "2025-12-05", "event": "报价提交", "status": "done"}, {"date": "2026-01-10", "event": "客户定点", "status": "done"}, {"date": "2026-04-28", "event": "SOP量产", "status": "done"}]
     },
     {
-      name: "BC03（凯华）", customer: "浙江凯华", product: "吹面风隔音棉 BIN73631211AA",
+      name: "BC03", customer: "凯华", oem: "VINFAST", product: "吹面风隔音棉 BIN73631211AA",
       status: "live", rfqDate: "2026-05-10", phase: 5,
       nextStep: "已量产（吹面风隔音棉 BIN73631211AA）",
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-05-20", "actualDate": "2026-05-18", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-06-10", "actualDate": "2026-06-08", "remark": "图纸/规格确认"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-07-01", "actualDate": "2026-06-30", "remark": "裁切工艺确认"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-08-15", "actualDate": "2026-08-02", "remark": "首批订单交付确认，转入量产"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-08-10", "actualDate": "2026-08-03", "remark": "SOP量产"}],
       timeline: [{"date": "2026-05-10", "event": "内部询价", "status": "done"}, {"date": "2026-05-25", "event": "报价提交", "status": "done"}, {"date": "2026-06-15", "event": "客户定点", "status": "done"}, {"date": "2026-08-01", "event": "首批订单（248件）", "status": "doing"}, {"date": "2026-08-03", "event": "SOP量产", "status": "done"}]
     },
     {
-      name: "LEV1（凯华）", customer: "浙江凯华", product: "VF-LIMO7 RHD风管棉×4 + 挡脚板隔音垫",
+      name: "LEV1", customer: "凯华", oem: "VINFAST", product: "VF-LIMO7 RHD风管棉×4 + 挡脚板隔音垫",
       status: "live", rfqDate: "2026-01-15", phase: 5,
       nextStep: "已量产对账（BIN32472013/16/17/18AA, 32551820AA）",
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-01-31", "actualDate": "2026-01-28", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-03-01", "actualDate": "2026-02-27", "remark": "图纸确认"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-04-01", "actualDate": "2026-03-31", "remark": "裁切工艺/胶带贴合"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-04-30", "actualDate": "2026-04-28", "remark": "PPAP/试产"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-05-15", "actualDate": "2026-05-10", "remark": "SOP量产，5-6月已对账"}],
@@ -1372,7 +1372,7 @@ function renderApqp() {
     projects = projects.filter(p => p.status === currentApqpFilter);
   }
 
-  let html = '<table><tr><th>项目</th><th>客户</th><th>产品</th><th>内部询价</th><th>APQP进度</th><th>当前阶段</th><th>状态</th><th>下一步</th><th></th></tr>';
+  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>内部询价</th><th>APQP进度</th><th>当前阶段</th><th>状态</th><th>下一步</th><th></th></tr>';
   projects.forEach(p => {
     const cur = p.phases.find(ph => ph.phase === p.phase) || p.phases[p.phases.length - 1];
     const phaseRows = p.phases.map(ph => `<tr>
@@ -1390,7 +1390,7 @@ function renderApqp() {
     html += `<tr class="fin-row" onclick="toggleApqpDetail(this)">
       <td class="part">${p.name}</td>
       <td>${p.customer}</td>
-      <td style="font-size:12px">${p.product}</td>
+      <td>${p.oem ? `<span class="status st-blue" style="font-weight:700">${p.oem}</span>` : '—'}</td>
       <td style="color:var(--muted)">${p.rfqDate || '—'}</td>
       <td>${apqpPhaseDots(p)}</td>
       <td>${cur ? `${cur.phase}. ${cur.name}` : '—'}</td>
@@ -1401,6 +1401,10 @@ function renderApqp() {
     html += `<tr class="detail-row" style="display:none"><td colspan="9"><div class="detail-inner">
       <h4>🚀 ${p.name} · APQP 阶段明细</h4>
       <table class="sub-table">
+        <tr><th>项目</th><th>客户</th><th>主机厂</th><th>产品</th></tr>
+        <tr><td>${p.name}</td><td>${p.customer}</td><td>${p.oem || '—'}</td><td>${p.product || ''}</td></tr>
+      </table>
+      <table class="sub-table" style="margin-top:8px">
         <tr><th>阶段</th><th>状态</th><th>计划日期</th><th>实际日期</th><th>备注</th></tr>
         ${phaseRows}
       </table>
