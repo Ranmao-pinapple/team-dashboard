@@ -841,90 +841,25 @@ const PROJECT_DATA = {
   updatedAt: "2026-08-04",
   projects: [
     {
-      name: "VFe32 小海绵（凯华）", customer: "浙江凯华", product: "前通风盖板本体海绵",
+      name: "VFe32（凯华）", customer: "浙江凯华", product: "小海绵/风管外部隔音棉/海绵条/后三角板泡棉等",
       status: "live", rfqDate: "2025-11-20", phase: 5,
       nextStep: "量产供货 8K套/月，年净利约20.3万",
-      phases: [
-        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2025-11-30", actualDate: "2025-11-28", remark: "内部询价→报价→定点" },
-        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-01-15", actualDate: "2026-01-10", remark: "图纸确认/样件认可" },
-        { phase: 3, name: "过程设计和开发", status: "done", planDate: "2026-03-01", actualDate: "2026-02-25", remark: "模压工装/裁切工艺" },
-        { phase: 4, name: "产品和过程确认", status: "done", planDate: "2026-04-01", actualDate: "2026-03-30", remark: "PPAP/试产确认" },
-        { phase: 5, name: "反馈评定纠正", status: "done", planDate: "2026-05-01", actualDate: "2026-04-28", remark: "SOP量产" }
-      ],
-      timeline: [
-        { date: "2025-11-20", event: "内部询价", status: "done" },
-        { date: "2025-12-05", event: "报价提交", status: "done" },
-        { date: "2026-01-10", event: "客户定点", status: "done" },
-        { date: "2026-04-28", event: "SOP量产", status: "done" }
-      ]
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2025-11-30", "actualDate": "2025-11-28", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-01-15", "actualDate": "2026-01-10", "remark": "图纸确认/样件认可"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-03-01", "actualDate": "2026-02-25", "remark": "模压工装/裁切工艺"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-04-01", "actualDate": "2026-03-30", "remark": "PPAP/试产确认"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-05-01", "actualDate": "2026-04-28", "remark": "SOP量产"}],
+      timeline: [{"date": "2025-11-20", "event": "内部询价", "status": "done"}, {"date": "2025-12-05", "event": "报价提交", "status": "done"}, {"date": "2026-01-10", "event": "客户定点", "status": "done"}, {"date": "2026-04-28", "event": "SOP量产", "status": "done"}]
     },
     {
-      name: "VF-LIMO7 RHD风管棉", customer: "浙江凯华", product: "风管隔音棉×4+挡脚板隔音垫",
+      name: "BC03（凯华）", customer: "浙江凯华", product: "吹面风隔音棉 BIN73631211AA",
+      status: "active", rfqDate: "2026-05-10", phase: 4,
+      nextStep: "首批订单已下（248件），待客户确认后进入量产",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-05-20", "actualDate": "2026-05-18", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-06-10", "actualDate": "2026-06-08", "remark": "图纸/规格确认"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-07-01", "actualDate": "2026-06-30", "remark": "裁切工艺确认"}, {"phase": 4, "name": "产品和过程确认", "status": "doing", "planDate": "2026-08-15", "actualDate": "", "remark": "首批订单 BCO3-BIN73631211AA 已下，待交付确认"}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-05-10", "event": "内部询价", "status": "done"}, {"date": "2026-05-25", "event": "报价提交", "status": "done"}, {"date": "2026-06-15", "event": "客户定点", "status": "done"}, {"date": "2026-08-01", "event": "首批订单（248件）", "status": "doing"}]
+    },
+    {
+      name: "LEV1（凯华）", customer: "浙江凯华", product: "VF-LIMO7 RHD风管棉×4 + 挡脚板隔音垫",
       status: "live", rfqDate: "2026-01-15", phase: 5,
       nextStep: "已量产对账（BIN32472013/16/17/18AA, 32551820AA）",
-      phases: [
-        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-01-31", actualDate: "2026-01-28", remark: "内部询价→报价→定点" },
-        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-03-01", actualDate: "2026-02-27", remark: "图纸确认" },
-        { phase: 3, name: "过程设计和开发", status: "done", planDate: "2026-04-01", actualDate: "2026-03-31", remark: "裁切工艺/胶带贴合" },
-        { phase: 4, name: "产品和过程确认", status: "done", planDate: "2026-04-30", actualDate: "2026-04-28", remark: "PPAP/试产" },
-        { phase: 5, name: "反馈评定纠正", status: "done", planDate: "2026-05-15", actualDate: "2026-05-10", remark: "SOP量产，5-6月已对账" }
-      ],
-      timeline: [
-        { date: "2026-01-15", event: "内部询价", status: "done" },
-        { date: "2026-02-10", event: "报价提交", status: "done" },
-        { date: "2026-03-05", event: "客户定点", status: "done" },
-        { date: "2026-05-10", event: "SOP量产", status: "done" }
-      ]
-    },
-    {
-      name: "VWCO 巴西卡车", customer: "VWCO", product: "吸音棉+地毯总成",
-      status: "active", rfqDate: "2026-07-01", phase: 2,
-      nextStep: "确认运输方式 → 填写物流/包装数据 → 邮件发送",
-      phases: [
-        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-07-15", actualDate: "2026-07-10", remark: "物流成本表/包装方案表已交付" },
-        { phase: 2, name: "产品设计和开发", status: "doing", planDate: "2026-08-15", actualDate: "", remark: "表格中英对照版待填写" },
-        { phase: 3, name: "过程设计和开发", status: "todo", planDate: "", actualDate: "", remark: "" },
-        { phase: 4, name: "产品和过程确认", status: "todo", planDate: "", actualDate: "", remark: "" },
-        { phase: 5, name: "反馈评定纠正", status: "todo", planDate: "", actualDate: "", remark: "" }
-      ],
-      timeline: [
-        { date: "2026-07-01", event: "内部询价", status: "done" },
-        { date: "2026-07-10", event: "表格交付（待填写）", status: "doing" }
-      ]
-    },
-    {
-      name: "Limo Green 吸音棉", customer: "Limo Green", product: "吸音棉",
-      status: "wait", rfqDate: "2026-06-10", phase: 3,
-      nextStep: "原材料已备料，等待打样安排",
-      phases: [
-        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-06-20", actualDate: "2026-06-18", remark: "内部询价→报价" },
-        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-07-10", actualDate: "2026-07-08", remark: "图纸/规格确认" },
-        { phase: 3, name: "过程设计和开发", status: "doing", planDate: "2026-08-10", actualDate: "", remark: "备料完成，待打样" },
-        { phase: 4, name: "产品和过程确认", status: "todo", planDate: "", actualDate: "", remark: "" },
-        { phase: 5, name: "反馈评定纠正", status: "todo", planDate: "", actualDate: "", remark: "" }
-      ],
-      timeline: [
-        { date: "2026-06-10", event: "内部询价", status: "done" },
-        { date: "2026-07-08", event: "图纸确认", status: "done" },
-        { date: "2026-07-25", event: "备料完成", status: "done" }
-      ]
-    },
-    {
-      name: "Limo Green 海绵（外协）", customer: "Limo Green", product: "海绵（外协打样）",
-      status: "risk", rfqDate: "2026-06-15", phase: 3,
-      nextStep: "外协打样进行中，待打样结果反馈",
-      phases: [
-        { phase: 1, name: "计划和确定项目", status: "done", planDate: "2026-06-25", actualDate: "2026-06-22", remark: "内部询价→外协询价（财务职责）" },
-        { phase: 2, name: "产品设计和开发", status: "done", planDate: "2026-07-15", actualDate: "2026-07-12", remark: "规格确认" },
-        { phase: 3, name: "过程设计和开发", status: "late", planDate: "2026-07-30", actualDate: "", remark: "外协打样中，已超计划3天" },
-        { phase: 4, name: "产品和过程确认", status: "todo", planDate: "", actualDate: "", remark: "" },
-        { phase: 5, name: "反馈评定纠正", status: "todo", planDate: "", actualDate: "", remark: "" }
-      ],
-      timeline: [
-        { date: "2026-06-15", event: "内部询价", status: "done" },
-        { date: "2026-07-01", event: "外协询价发出", status: "done" },
-        { date: "2026-07-20", event: "外协打样", status: "doing" }
-      ]
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-01-31", "actualDate": "2026-01-28", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-03-01", "actualDate": "2026-02-27", "remark": "图纸确认"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-04-01", "actualDate": "2026-03-31", "remark": "裁切工艺/胶带贴合"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-04-30", "actualDate": "2026-04-28", "remark": "PPAP/试产"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-05-15", "actualDate": "2026-05-10", "remark": "SOP量产，5-6月已对账"}],
+      timeline: [{"date": "2026-01-15", "event": "内部询价", "status": "done"}, {"date": "2026-02-10", "event": "报价提交", "status": "done"}, {"date": "2026-03-05", "event": "客户定点", "status": "done"}, {"date": "2026-05-10", "event": "SOP量产", "status": "done"}]
     }
   ]
 };
