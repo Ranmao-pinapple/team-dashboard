@@ -1503,9 +1503,9 @@ function renderGantt() {
 
   // —— 行 ——
   let rows = '';
-  projects.forEach(p => {
+  projects.forEach((p, pi) => {
     const st = p.phases.find(ph => ph.status === 'doing') || p.phases.find(ph => ph.status === 'late') || p.phases[p.phases.length - 1];
-    rows += `<div class="gantt-row proj"><div class="gantt-label">${p.name} <span style="font-weight:400;color:var(--muted);font-size:11px">(${p.phase}/5)</span></div><div class="gantt-cell"></div></div>`;
+    rows += `<div class="gantt-row proj" onclick="toggleGanttProj(this,'gp${pi}')" style="cursor:pointer"><div class="gantt-label">${p.name} <span style="font-weight:400;color:var(--muted);font-size:11px">(${p.phase}/5)</span> <span class="gantt-arrow" style="font-size:11px;color:var(--accent)">▸</span></div><div class="gantt-cell"></div></div>`;
     p.phases.forEach(ph => {
       const ps = parseDate(ph.planDate);
       const pas = parseDate(ph.actualDate);
@@ -1526,11 +1526,25 @@ function renderGantt() {
         // 未开始：计划日期一个点
         barHtml = `<div class="gantt-bar todo" style="left:${pct(ps)}%;width:6px;transform:translateX(-3px);padding:0" title="○ ${ph.name} (计划 ${ph.planDate})"></div>`;
       }
-      rows += `<div class="gantt-row"><div class="gantt-label">${ph.phase}. ${ph.name}</div><div class="gantt-cell">${barHtml}<div class="gantt-tick now" style="left:${pct(today)}%"></div></div></div>`;
+      rows += `<div class="gantt-row gphase gp${pi}" style="display:none"><div class="gantt-label">${ph.phase}. ${ph.name}</div><div class="gantt-cell">${barHtml}<div class="gantt-tick now" style="left:${pct(today)}%"></div></div></div>`;
     });
   });
 
   wrap.innerHTML = `<div class="gantt-scroll"><div class="gantt">${head}${rows}</div></div>`;
+}
+
+// 甘特图项目行折叠/展开（手风琴：一次只展开一个项目）
+function toggleGanttProj(row, cls) {
+  const isHidden = !document.querySelector(`.gantt-row.${cls}`) ||
+    document.querySelector(`.gantt-row.${cls}`).style.display === 'none';
+  // 先全部收起
+  document.querySelectorAll('.gantt-row.gphase').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('.gantt-row.proj .gantt-arrow').forEach(a => a.textContent = '▸');
+  if (isHidden) {
+    document.querySelectorAll(`.gantt-row.${cls}`).forEach(r => r.style.display = '');
+    const arrow = row.querySelector('.gantt-arrow');
+    if (arrow) arrow.textContent = '▾';
+  }
 }
 
 // ===== 任务待办渲染 =====
