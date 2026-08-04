@@ -366,95 +366,31 @@
   <!-- ========== Tab 1: 项目看板 ========== -->
   <div class="tab-content active" id="tab-project">
     <div class="grid">
-      <div class="card stat" onclick="showToast('当前 4 个进行中项目')">
-        <h3>进行中项目</h3>
-        <div class="big-number blue">4</div>
-        <div class="sub">点击查看</div>
+      <div class="card stat" onclick="showToast('凯华平台项目总数')">
+        <h3>平台项目</h3>
+        <div class="big-number blue" id="boardProjTotal">0</div>
+        <div class="sub">VFe32 / BC03 / LEV1</div>
       </div>
-      <div class="card stat" onclick="showToast('本周完成 3 项')">
-        <h3>本周完成</h3>
-        <div class="big-number green">3</div>
-        <div class="sub">点击查看</div>
+      <div class="card stat" onclick="showToast('零件总数')">
+        <h3>零件总数</h3>
+        <div class="big-number green" id="boardPartTotal">0</div>
+        <div class="sub">点击展开查看</div>
       </div>
-      <div class="card stat" onclick="showToast('2 项待跟进')">
-        <h3>待跟进</h3>
-        <div class="big-number yellow">2</div>
-        <div class="sub">点击查看</div>
+      <div class="card stat" onclick="showToast('客户已开始拉动的零件数')">
+        <h3>已拉动零件</h3>
+        <div class="big-number green" id="boardPulled">0</div>
+        <div class="sub">🟢 有订单/对账</div>
       </div>
-      <div class="card stat" onclick="showToast('1 项风险，点击项目表查看详情')">
-        <h3>风险项</h3>
-        <div class="big-number red">1</div>
-        <div class="sub">点击查看</div>
+      <div class="card stat" onclick="showToast('客户尚未拉动的零件，重点关注')">
+        <h3>未拉动零件</h3>
+        <div class="big-number yellow" id="boardNotPulled">0</div>
+        <div class="sub">🟡 待客户拉动</div>
       </div>
     </div>
 
     <div class="card">
-      <h3 style="color:var(--muted);font-size:14px;font-weight:500;margin-bottom:12px">项目状态一览（点击行展开详情）</h3>
-      <table>
-        <tr><th>项目</th><th>状态</th><th>备注</th></tr>
-        <tr class="proj-row" onclick="toggleDetail(this)">
-          <td>VWCO 巴西卡车</td><td><span class="status st-live">✅ 进行中</span></td><td>物流成本表 / 包装方案表</td>
-        </tr>
-        <tr class="detail-row" style="display:none">
-          <td colspan="3"><div class="detail-panel">
-            <h4>📦 VWCO 巴西卡车项目</h4>
-            <ul>
-              <li><strong>内容：</strong>物流成本表 + 包装方案表 + 报价</li>
-              <li><strong>当前状态：</strong>表格中英对照版已交付，待填写</li>
-              <li><strong>下一步：</strong>确认运输方式 → 填写数据 → 邮件发送</li>
-            </ul>
-          </div></td>
-        </tr>
-        <tr class="proj-row" onclick="toggleDetail(this)">
-          <td>VFe32 小海绵（凯华）</td><td><span class="status st-live">✅ 量产</span></td><td>8K套/月</td>
-        </tr>
-        <tr class="detail-row" style="display:none">
-          <td colspan="3"><div class="detail-panel">
-            <h4>🧽 VFe32 小海绵（浙江凯华）</h4>
-            <ul>
-              <li><strong>年净利：</strong>约 20.3 万</li>
-              <li><strong>利润率：</strong>约 27.4%</li>
-              <li><strong>产能：</strong>8K套/月</li>
-            </ul>
-          </div></td>
-        </tr>
-        <tr class="proj-row" onclick="toggleDetail(this)">
-          <td>Limo Green 吸音棉</td><td><span class="status st-wait">🔄 备料中</span></td><td>已备料，待打样</td>
-        </tr>
-        <tr class="detail-row" style="display:none">
-          <td colspan="3"><div class="detail-panel">
-            <h4>🔊 Limo Green 吸音棉</h4>
-            <ul>
-              <li><strong>状态：</strong>原材料已备料</li>
-              <li><strong>下一步：</strong>等待打样安排</li>
-            </ul>
-          </div></td>
-        </tr>
-        <tr class="proj-row" onclick="toggleDetail(this)">
-          <td>Limo Green 海绵</td><td><span class="status st-wait">🔄 外协打样</span></td><td>待打样结果</td>
-        </tr>
-        <tr class="detail-row" style="display:none">
-          <td colspan="3"><div class="detail-panel">
-            <h4>🧽 Limo Green 海绵（外协）</h4>
-            <ul>
-              <li><strong>状态：</strong>外协打样进行中</li>
-              <li><strong>备注：</strong>外协询价为财务职责，邮件不点名经办人</li>
-            </ul>
-          </div></td>
-        </tr>
-        <tr class="proj-row" onclick="toggleDetail(this)">
-          <td>示例风险项</td><td><span class="status st-risk">⚠️ 风险</span></td><td>示例数据，替换为真实内容</td>
-        </tr>
-        <tr class="detail-row" style="display:none">
-          <td colspan="3"><div class="detail-panel">
-            <h4>⚠️ 风险项示例</h4>
-            <ul>
-              <li><strong>说明：</strong>这行是演示数据，用来展示风险状态样式</li>
-              <li><strong>操作：</strong>把真实项目/风险填进来即可</li>
-            </ul>
-          </div></td>
-        </tr>
-      </table>
+      <h3 style="color:var(--muted);font-size:14px;font-weight:500;margin-bottom:12px">项目状态一览（点击行展开详情 · 含零件拉动状态）</h3>
+      <div id="boardTableWrap"></div>
     </div>
   </div>
 
@@ -918,6 +854,66 @@ function showToast(msg) {
   showToast._timer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(100px)', 2000);
 }
 
+// ===== 首页项目看板渲染（数据驱动，复用 PROJECT_DATA） =====
+function renderBoard() {
+  const wrap = document.getElementById('boardTableWrap');
+  const projects = PROJECT_DATA.projects;
+  const allParts = projects.flatMap(p => p.parts || []);
+  const nPulled = allParts.filter(pt => pt.pulled).length;
+
+  document.getElementById('boardProjTotal').textContent = projects.length;
+  document.getElementById('boardPartTotal').textContent = allParts.length;
+  document.getElementById('boardPulled').textContent = nPulled;
+  document.getElementById('boardNotPulled').textContent = allParts.length - nPulled;
+
+  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>零件</th><th>APQP</th><th>状态</th><th>下一步</th></tr>';
+  projects.forEach(p => {
+    const nP = (p.parts || []).length;
+    const nPul = (p.parts || []).filter(pt => pt.pulled).length;
+    const cur = p.phases.find(ph => ph.status === 'doing') || p.phases.find(ph => ph.status === 'late') || p.phases[p.phases.length - 1];
+    const partsRows = (p.parts || []).map(pt => `<tr>
+      <td>${pt.name}</td>
+      <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
+      <td style="color:var(--muted);font-size:11px">含税 ¥${(pt.priceTax ?? 0).toFixed(2)}</td>
+      <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
+    </tr>`).join('');
+    const tlRows = (p.timeline || []).map(t => `<tr>
+      <td>${t.date}</td>
+      <td>${t.event}</td>
+      <td>${t.status === 'done' ? '<span class="status st-live">✅ 完成</span>' : '<span class="status st-blue">🔄 进行中</span>'}</td>
+    </tr>`).join('');
+    html += `<tr class="fin-row" onclick="toggleApqpDetail(this)">
+      <td class="part">${p.name}</td>
+      <td>${p.customer}</td>
+      <td>${p.oem ? `<span class="status st-blue" style="font-weight:700">${p.oem}</span>` : '—'}</td>
+      <td><span style="font-size:12px">${nP}个零件 · <span style="color:var(--green)">${nPul}已拉动</span>/<span style="color:var(--yellow)">${nP - nPul}未拉</span></span></td>
+      <td>${p.phase}/5</td>
+      <td>${apqpStatusBadge(p.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${p.nextStep || ''}</td>
+      <td class="fin-toggle">▸ 展开</td>
+    </tr>`;
+    html += `<tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner">
+      <h4>🚀 ${p.name} · 项目详情</h4>
+      <table class="sub-table">
+        <tr><th>项目</th><th>客户</th><th>主机厂</th><th>内部询价</th><th>当前阶段</th></tr>
+        <tr><td>${p.name}</td><td>${p.customer}</td><td>${p.oem || '—'}</td><td>${p.rfqDate || '—'}</td><td>${cur ? `${cur.phase}. ${cur.name}` : '—'}</td></tr>
+      </table>
+      ${partsRows ? `<h4 style="margin-top:14px">🧩 零件清单（${nP}个）</h4>
+      <table class="sub-table">
+        <tr><th>零件名称</th><th>物料编码</th><th>含税价</th><th>状态</th></tr>
+        ${partsRows}
+      </table>` : ''}
+      ${tlRows ? `<h4 style="margin-top:14px">📅 时间线</h4>
+      <table class="sub-table">
+        <tr><th>日期</th><th>事件</th><th>状态</th></tr>
+        ${tlRows}
+      </table>` : ''}
+    </div></td></tr>`;
+  });
+  html += '</table>';
+  wrap.innerHTML = html;
+}
+
 // ===== 月拉动计划渲染 =====
 const statusMap = {
   live: '<span class="status st-live">✅ 已确认</span>',
@@ -1350,8 +1346,9 @@ function toggleApqpDetail(row) {
   const detailRow = row.nextElementSibling;
   if (!detailRow || !detailRow.classList.contains('detail-row')) return;
   const isHidden = detailRow.style.display === 'none';
-  document.querySelectorAll('#apqpTableWrap .detail-row').forEach(r => r.style.display = 'none');
-  document.querySelectorAll('#apqpTableWrap .fin-row').forEach(r => r.classList.remove('active'));
+  const wrap = row.closest('.tab-content') || document;
+  wrap.querySelectorAll('.detail-row').forEach(r => r.style.display = 'none');
+  wrap.querySelectorAll('.fin-row').forEach(r => r.classList.remove('active'));
   if (isHidden) {
     detailRow.style.display = '';
     row.classList.add('active');
@@ -1675,6 +1672,7 @@ if (sessionStorage.getItem('dashboard_unlocked') === '1') {
   lockPass.focus();
 }
 
+renderBoard();
 renderMonthPicker();
 renderPull();
 renderPo();
