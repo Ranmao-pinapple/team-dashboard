@@ -616,22 +616,22 @@
   <div class="tab-content" id="tab-non2026">
     <div class="grid" id="non2026StatGrid">
       <div class="card stat">
-        <h3>6月发货数量</h3>
+        <h3 id="non2026LabelQty6">发货数量</h3>
         <div class="big-number blue" id="non2026Qty6">—</div>
         <div class="sub">海泰集团 · 销货出库</div>
       </div>
       <div class="card stat">
-        <h3>6月发货收入</h3>
+        <h3 id="non2026LabelRev6">发货收入</h3>
         <div class="big-number blue" id="non2026Rev6">—</div>
         <div class="sub">未税金额（元）</div>
       </div>
       <div class="card stat">
-        <h3>7月开票数量</h3>
+        <h3 id="non2026LabelQty7">开票数量</h3>
         <div class="big-number purple" id="non2026Qty7">—</div>
         <div class="sub">已开票部分</div>
       </div>
       <div class="card stat">
-        <h3>7月开票金额</h3>
+        <h3 id="non2026LabelAmt7">开票金额</h3>
         <div class="big-number purple" id="non2026Amt7">—</div>
         <div class="sub">未税金额（元）</div>
       </div>
@@ -643,6 +643,11 @@
         <span style="color:var(--muted)">※ 6月发货 vs 7月开票 · 差异=已发货未开票部分，需跟进</span>
       </div>
       <div class="updated" id="updatedLabelNon2026">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="non2026PeriodBar">
+      <button class="active" data-p="202606" onclick="setNon2026Period('202606')">5月发货 vs 6月开票</button>
+      <button data-p="202607" onclick="setNon2026Period('202607')">6月发货 vs 7月开票</button>
     </div>
 
     <div class="filters" id="non2026FilterBar">
@@ -1804,6 +1809,14 @@ function setTaskFilter(f) {
 
 // ===== 非26年量产项目渲染（海泰集团） =====
 let currentNon2026Filter = 'all';
+let currentNon2026Period = NON2026_DATA.periods && NON2026_DATA.periods.length ? NON2026_DATA.periods[0].id : null;
+function setNon2026Period(pid) {
+  currentNon2026Period = pid;
+  document.querySelectorAll('#non2026PeriodBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.p === pid);
+  });
+  renderNon2026();
+}
 function setNon2026Filter(f) {
   currentNon2026Filter = f;
   document.querySelectorAll('#non2026FilterBar button').forEach(b => {
@@ -1813,19 +1826,40 @@ function setNon2026Filter(f) {
 }
 function renderNon2026() {
   const d = NON2026_DATA;
-  const t = d.totals || {};
+  const periods = d.periods || [];
+  const per = periods.find(p => p.id === currentNon2026Period) || periods[0] || {};
+  const t = per.totals || {};
+  const rowsAll = per.rows || [];
+
+  // 动态卡标题: 从 period label 提取月份 (如 "5月发货 vs 6月开票")
+  const m = (per.label || '').match(/(\d+)月发货.*?(\d+)月开票/);
+  const m1 = m ? m[1] + '月' : '';
+  const m2 = m ? m[2] + '月' : '';
+  document.getElementById('non2026LabelQty6').textContent = `${m1}发货数量`;
+  document.getElementById('non2026LabelRev6').textContent = `${m1}发货收入`;
+  document.getElementById('non2026LabelQty7').textContent = `${m2}开票数量`;
+  document.getElementById('non2026LabelAmt7').textContent = `${m2}开票金额`;
+
   document.getElementById('non2026Qty6').textContent = (t.qty6 || 0).toLocaleString();
   document.getElementById('non2026Rev6').textContent = '¥' + (t.rev6 || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   document.getElementById('non2026Qty7').textContent = (t.qty7 || 0).toLocaleString();
   document.getElementById('non2026Amt7').textContent = '¥' + (t.amt7 || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  document.getElementById('updatedLabelNon2026').textContent = `最后更新：${d.updatedAt} · ${d.customer} · ${d.module}`;
+  document.getElementById('updatedLabelNon2026').textContent = `最后更新：${d.updatedAt} · ${d.customer} · ${d.module} · ${per.label || ''}`;
+
+  // 客户筛选按钮动态生成
+  const custs = [...new Set(rowsAll.map(r => r.cust))];
+  let fbtns = `<button class="${currentNon2026Filter === 'all' ? 'active' : ''}" data-f="all" onclick="setNon2026Filter('all')">全部</button>`;
+  custs.forEach(c => {
+    fbtns += `<button class="${currentNon2026Filter === c ? 'active' : ''}" data-f="${c}" onclick="setNon2026Filter('${c}')">${c}</button>`;
+  });
+  document.getElementById('non2026FilterBar').innerHTML = fbtns;
 
   const wrap = document.getElementById('non2026TableWrap');
-  let rows = d.rows || [];
+  let rows = rowsAll;
   if (currentNon2026Filter !== 'all') rows = rows.filter(r => r.cust === currentNon2026Filter);
 
-  let html = `<div style="margin-bottom:8px;font-size:12px;color:var(--muted)">${d.note}</div>`;
-  html += `<table><tr><th>客户</th><th>品号</th><th>品名</th><th>规格</th><th>售价(未税)</th><th>6月发货数量</th><th>6月发货收入</th><th>7月开票数量</th><th>7月开票金额</th><th>数量差异</th><th>金额差异</th></tr>`;
+  let html = `<div style="margin-bottom:8px;font-size:12px;color:var(--muted)">${per.note || ''}</div>`;
+  html += `<table><tr><th>客户</th><th>品号</th><th>品名</th><th>规格</th><th>售价(未税)</th><th>${m1}发货数量</th><th>${m1}发货收入</th><th>${m2}开票数量</th><th>${m2}开票金额</th><th>数量差异</th><th>金额差异</th></tr>`;
   rows.forEach(r => {
     const bad = r.diffQty < 0;
     const diffQtyCls = bad ? ' style="color:var(--red);font-weight:600"' : '';
