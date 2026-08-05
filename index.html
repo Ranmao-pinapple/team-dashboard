@@ -361,6 +361,7 @@
     <button class="tab-btn" onclick="switchTab('finance')">💰 对账开票</button>
     <button class="tab-btn" onclick="switchTab('apqp')">🚀 项目管理</button>
     <button class="tab-btn" onclick="switchTab('task')">📌 任务待办</button>
+    <button class="tab-btn" onclick="switchTab('non2026')">📦 非26年量产项目</button>
   </div>
 
   <!-- ========== Tab 1: 项目看板 ========== -->
@@ -609,6 +610,48 @@
     </div>
 
     <div class="card" id="taskTableWrap" style="padding:12px"></div>
+  </div>
+
+  <!-- ========== Tab 7: 非26年量产项目 ========== -->
+  <div class="tab-content" id="tab-non2026">
+    <div class="grid" id="non2026StatGrid">
+      <div class="card stat">
+        <h3>6月发货数量</h3>
+        <div class="big-number blue" id="non2026Qty6">—</div>
+        <div class="sub">海泰集团 · 销货出库</div>
+      </div>
+      <div class="card stat">
+        <h3>6月发货收入</h3>
+        <div class="big-number blue" id="non2026Rev6">—</div>
+        <div class="sub">未税金额（元）</div>
+      </div>
+      <div class="card stat">
+        <h3>7月开票数量</h3>
+        <div class="big-number purple" id="non2026Qty7">—</div>
+        <div class="sub">已开票部分</div>
+      </div>
+      <div class="card stat">
+        <h3>7月开票金额</h3>
+        <div class="big-number purple" id="non2026Amt7">—</div>
+        <div class="sub">未税金额（元）</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--accent)"></span>数量/金额差异</span>
+        <span style="color:var(--muted)">※ 6月发货 vs 7月开票 · 差异=已发货未开票部分，需跟进</span>
+      </div>
+      <div class="updated" id="updatedLabelNon2026">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="non2026FilterBar">
+      <button class="active" data-f="all" onclick="setNon2026Filter('all')">全部</button>
+      <button data-f="苏州海泰" onclick="setNon2026Filter('苏州海泰')">苏州海泰</button>
+      <button data-f="郑州海泰" onclick="setNon2026Filter('郑州海泰')">郑州海泰</button>
+    </div>
+
+    <div class="card" id="non2026TableWrap" style="padding:12px"></div>
   </div>
 
   <div class="footer">
@@ -902,12 +945,23 @@ const TASK_DATA = {
   ]
 };
 
+// ===== 非26年量产项目数据块（白猫脚本自动更新区域） =====
+// 海泰集团 · 6月销货出库 vs 7月开票对比
+const NON2026_DATA = {
+  updatedAt: "2026-08-05",
+  customer: "海泰集团",
+  module: "非26年量产项目",
+  note: "6月销货出库 vs 7月开票对比（营销四部数据）",
+  totals: {qty6: 0, rev6: 0, qty7: 0, amt7: 0, diffQty: 0, diffAmt: 0},
+  rows: []
+};
+
 // ===== Tab 切换 =====
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => {
-    const label = { project: '项目看板', pull: '月拉动', po: '订单台账', finance: '对账开票', apqp: '项目管理', task: '任务待办' };
+    const label = { project: '项目看板', pull: '月拉动', po: '订单台账', finance: '对账开票', apqp: '项目管理', task: '任务待办', non2026: '非26年量产项目' };
     if (b.textContent.includes(label[name] || '')) {
       b.classList.add('active');
     }
@@ -1725,6 +1779,57 @@ function setTaskFilter(f) {
   renderTask();
 }
 
+// ===== 非26年量产项目渲染（海泰集团） =====
+let currentNon2026Filter = 'all';
+function setNon2026Filter(f) {
+  currentNon2026Filter = f;
+  document.querySelectorAll('#non2026FilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderNon2026();
+}
+function renderNon2026() {
+  const d = NON2026_DATA;
+  const t = d.totals || {};
+  document.getElementById('non2026Qty6').textContent = (t.qty6 || 0).toLocaleString();
+  document.getElementById('non2026Rev6').textContent = '¥' + (t.rev6 || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  document.getElementById('non2026Qty7').textContent = (t.qty7 || 0).toLocaleString();
+  document.getElementById('non2026Amt7').textContent = '¥' + (t.amt7 || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  document.getElementById('updatedLabelNon2026').textContent = `最后更新：${d.updatedAt} · ${d.customer} · ${d.module}`;
+
+  const wrap = document.getElementById('non2026TableWrap');
+  let rows = d.rows || [];
+  if (currentNon2026Filter !== 'all') rows = rows.filter(r => r.cust === currentNon2026Filter);
+
+  let html = `<div style="margin-bottom:8px;font-size:12px;color:var(--muted)">${d.note}</div>`;
+  html += `<table><tr><th>客户</th><th>品号</th><th>品名</th><th>规格</th><th>售价(未税)</th><th>6月发货数量</th><th>6月发货收入</th><th>7月开票数量</th><th>7月开票金额</th><th>数量差异</th><th>金额差异</th></tr>`;
+  rows.forEach(r => {
+    const bad = r.diffQty < 0;
+    const diffQtyCls = bad ? ' style="color:var(--red);font-weight:600"' : '';
+    const diffAmtCls = r.diffAmt < 0 ? ' style="color:var(--red);font-weight:600"' : '';
+    html += `<tr>
+      <td>${r.cust}</td><td>${r.code}</td><td style="text-align:left">${r.part}</td><td>${r.spec}</td>
+      <td>${r.price.toFixed(4)}</td><td>${r.qty6.toLocaleString()}</td>
+      <td>¥${r.rev6.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+      <td>${r.qty7.toLocaleString()}</td>
+      <td>¥${r.amt7.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+      <td${diffQtyCls}>${r.diffQty.toLocaleString()}</td>
+      <td${diffAmtCls}>¥${r.diffAmt.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+    </tr>`;
+  });
+  // 合计行
+  const tq6 = t.qty6 || 0, tr6 = t.rev6 || 0, tq7 = t.qty7 || 0, ta7 = t.amt7 || 0, tdq = t.diffQty || 0, tda = t.diffAmt || 0;
+  html += `<tr style="font-weight:700;background:rgba(23,26,32,.05)">
+    <td>合计</td><td colspan="3">${rows.length} 个零件</td><td></td>
+    <td>${tq6.toLocaleString()}</td><td>¥${tr6.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+    <td>${tq7.toLocaleString()}</td><td>¥${ta7.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+    <td style="color:${tdq < 0 ? 'var(--red)' : ''}">${tdq.toLocaleString()}</td>
+    <td style="color:${tda < 0 ? 'var(--red)' : ''}">¥${tda.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+  </tr>`;
+  html += `</table>`;
+  wrap.innerHTML = html;
+}
+
 // ===== 密码锁逻辑 =====
 const PAGE_PASSWORD = "tairui999"; // ← 修改这里即可换密码
 const lockScreen = document.getElementById('lockScreen');
@@ -1759,6 +1864,7 @@ renderPo();
 renderFinance();
 renderApqp();
 renderTask();
+renderNon2026();
 </script>
 </body>
 </html>
