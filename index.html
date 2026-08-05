@@ -817,7 +817,7 @@ const PO_DATA = {
 // 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
 // APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
 const PROJECT_DATA = {
-  updatedAt: "2026-08-04",
+  updatedAt: "2026-08-05",
   projects: [
     {
       name: "VFe32", customer: "凯华", oem: "VINFAST", product: "19个零件",
@@ -844,12 +844,12 @@ const PROJECT_DATA = {
       parts: [{"code": "510000000000016599", "name": "VF-LIMO7 RHD-中间中通右风管隔音棉-BIN32472013AA", "priceTax": 0.8471, "pulled": true}, {"code": "510000000000016600", "name": "VF-LIMO7 RHD-左侧中通右风管隔音棉-BIN32472016AA", "priceTax": 3.616, "pulled": true}, {"code": "510000000000016601", "name": "VF-LIMO7 RHD-中间中通左风管隔音棉-BIN32472017AA", "priceTax": 1.1392, "pulled": true}, {"code": "510000000000016602", "name": "VF-LIMO7_RHD-右侧中通风管隔音棉-BIN32472018AA", "priceTax": 3.6559, "pulled": true}, {"code": "510000000000013930", "name": "VF-LIMO 7_RHD-左下挡脚板隔音垫-BIN32551820AA", "priceTax": 0.73, "pulled": true}]
     },
     {
-      name: "ZH5EM", customer: "凯华", oem: "SAIC", product: "待补充",
+      name: "ZH5EM", customer: "凯华", oem: "SAIC", product: "前舱储物盒 10零件(8泡棉+2蘑菇塔扣)",
       status: "active", rfqDate: "", phase: 1,
-      nextStep: "待补充：内部询价日期 / 零件清单 / 进度",
-      phases: [{"phase": 1, "name": "计划和确定项目", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
-      timeline: [],
-      parts: []
+      nextStep: "内部询价进行中：外协供应商 常州广裕橡塑(海绵)/惠州兰谷(搭扣)，待定内部询价日期与报价",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "零件清单已收到(10件)，收益分析完成，外协询价中"}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-08-05", "event": "零件清单与收益分析完成", "status": "done"}, {"date": "2026-08-05", "event": "外协询价启动(广裕橡塑/兰谷电子)", "status": "in_progress"}],
+      parts: [{"code": "510000000000016964", "name": "ZH5EM前舱储物盒泡棉1(12268515-2)", "priceTax": 0.7, "pulled": false}, {"code": "510000000000016965", "name": "ZH5EM前舱储物盒泡棉2(12268515-3)", "priceTax": 0.18, "pulled": false}, {"code": "510000000000016966", "name": "ZH5EM前舱储物盒泡棉3(12268515-4)", "priceTax": 0.15, "pulled": false}, {"code": "510000000000016970", "name": "ZH5EM前舱储物盒泡棉4(12268515-8)", "priceTax": 0.15, "pulled": false}, {"code": "510000000000016972", "name": "ZH5EM前舱储物盒堵盖泡棉(12591755-2)", "priceTax": 0.3, "pulled": false}, {"code": "510000000000016974", "name": "ZH5EM前舱储物盒堵盖泡棉(12426494-2)", "priceTax": 0.07, "pulled": false}, {"code": "510000000000016973", "name": "ZH5EM前舱储物盒右侧堵盖泡棉(12426495-2)", "priceTax": 0.4, "pulled": false}, {"code": "510000000000017022", "name": "ZH5EM前舱储物盒泡棉5(12268515-10)", "priceTax": 0.05, "pulled": false}, {"code": "510000000000016967", "name": "ZH5EM前舱储物盒蘑菇塔扣(12268515-5)", "priceTax": 1.2, "pulled": false}, {"code": "510000000000016969", "name": "ZH5EM前舱储物盒蘑菇塔扣(12268515-7)", "priceTax": 1.0, "pulled": false}]
     },
     {
       name: "SHD", customer: "凯华", oem: "SAIC", product: "待补充",
