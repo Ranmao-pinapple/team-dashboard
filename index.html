@@ -648,6 +648,7 @@
     <div class="filters" id="non2026PeriodBar">
       <button class="active" data-p="202606" onclick="setNon2026Period('202606')">5月发货 vs 6月开票</button>
       <button data-p="202607" onclick="setNon2026Period('202607')">6月发货 vs 7月开票</button>
+      <button data-p="merged" onclick="setNon2026Period('merged')">🔴 两期合并·未开票缺口</button>
     </div>
 
     <div class="filters" id="non2026FilterBar">
@@ -964,50 +965,23 @@ const NON2026_DATA = {
   updatedAt: "2026-08-05",
   customer: "海泰集团",
   module: "非26年量产项目",
-  periods: [
-    {
-      id: "202606", label: "5月发货 vs 6月开票",
-      note: "5月销货出库 vs 6月开票对比（营销四部数据）",
-      totals: {qty6: 196800, rev6: 240592.98, qty7: 122500, amt7: 200291.0, diffQty: -74300, diffAmt: -40301.98},
-      rows: [
-      { cust: "上海海泰", code: "1010200207", part: "隔音棉-01(双组分）", spec: "BQF92806-01", price: 1.3782, qty6: 28000, rev6: 38589.6, qty7: 14000, amt7: 19294.8, diffQty: -14000, diffAmt: -19294.8 },
-      { cust: "上海海泰", code: "1010200208", part: "隔音棉-02(双组分）", spec: "BQF92806-02", price: 0.2464, qty6: 34000, rev6: 8377.6, qty7: 17000, amt7: 4188.8, diffQty: -17000, diffAmt: -4188.8 },
-      { cust: "上海海泰", code: "1010200209", part: "隔音棉-03(双组分）", spec: "BQF92806-03", price: 0.1369, qty6: 34000, rev6: 4654.6, qty7: 17000, amt7: 2327.3, diffQty: -17000, diffAmt: -2327.3 },
-      { cust: "上海海泰", code: "1010200210", part: "隔音棉-01(双组分）", spec: "BQF97110-01", price: 1.3873, qty6: 6000, rev6: 8323.8, qty7: 3000, amt7: 4161.9, diffQty: -3000, diffAmt: -4161.9 },
-      { cust: "苏州海泰", code: "1010100550", part: "左后轮罩吸音棉", spec: "57G-867-765-02", price: 1.9206, qty6: 6000, rev6: 11523.6, qty7: 3000, amt7: 5589, diffQty: -3000, diffAmt: -5934.6 },
-      { cust: "苏州海泰", code: "1010101218", part: "右后轮罩吸音棉", spec: "57G-867-766-02", price: 1.863, qty6: 6000, rev6: 11178, qty7: 3000, amt7: 5589, diffQty: -3000, diffAmt: -5589 },
-      { cust: "苏州海泰", code: "1010101407", part: "左C柱上饰板吸音棉", spec: "LAJ-50060207", price: 0.541, qty6: 40000, rev6: 21640, qty7: 20000, amt7: 25600, diffQty: -20000, diffAmt: 3960 },
-      { cust: "郑州海泰", code: "1010101233", part: "C柱上吸音棉（左）", spec: "10030011-02", price: 0.7621, qty6: 8000, rev6: 6096.8, qty7: 7200, amt7: 5487.12, diffQty: -800, diffAmt: -609.68 },
-      { cust: "郑州海泰", code: "1010101235", part: "D柱上吸音棉（左）", spec: "10030013-02", price: 1.5807, qty6: 5000, rev6: 7903.5, qty7: 6800, amt7: 10748.76, diffQty: 1800, diffAmt: 2845.26 },
-      { cust: "郑州海泰", code: "1010101236", part: "D柱上吸音棉（右1）", spec: "10030014-02-01", price: 0.3575, qty6: 5200, rev6: 1859, qty7: 6400, amt7: 2288, diffQty: 1200, diffAmt: 429 },
-      { cust: "郑州海泰", code: "1010101237", part: "D柱上吸音棉（右2）", spec: "10030014-02-02", price: 0.6586, qty6: 5200, rev6: 3424.72, qty7: 6400, amt7: 4215.04, diffQty: 1200, diffAmt: 790.32 },
-      { cust: "郑州海泰", code: "1010101238", part: "行李箱门槛吸音棉", spec: "10030029-02", price: 0.7809, qty6: 4000, rev6: 3123.6, qty7: 5500, amt7: 4294.95, diffQty: 1500, diffAmt: 1171.35 },
-      { cust: "郑州海泰", code: "1010200211", part: "左侧吸音棉1(双组分）", spec: "10030025-03-01", price: 8.7504, qty6: 6000, rev6: 52502.4, qty7: 4500, amt7: 39376.8, diffQty: -1500, diffAmt: -13125.6 },
-      { cust: "郑州海泰", code: "1010200212", part: "左侧吸音棉2(双组分）", spec: "10030025-03-02", price: 2.9921, qty6: 6000, rev6: 17952.6, qty7: 4500, amt7: 13464.45, diffQty: -1500, diffAmt: -4488.15 },
-      { cust: "郑州海泰", code: "1010200213", part: "右侧吸音棉(双组分）", spec: "10030026-03", price: 12.7774, qty6: 3400, rev6: 43443.16, qty7: 4200, amt7: 53665.08, diffQty: 800, diffAmt: 10221.92 }
-      ]
-    },
-    {
-      id: "202607", label: "6月发货 vs 7月开票",
-      note: "6月销货出库 vs 7月开票对比（营销四部数据）",
-      totals: {qty6: 144680, rev6: 450428.83, qty7: 91490, amt7: 244115.47, diffQty: -53190, diffAmt: -206313.36},
-      rows: [
-      { cust: "苏州海泰", code: "1010100550", part: "左后轮罩吸音棉", spec: "57G-867-765-02", price: 1.9206, qty6: 3000, rev6: 5761.8, qty7: 3000, amt7: 5589, diffQty: 0, diffAmt: -172.8 },
-      { cust: "苏州海泰", code: "1010101218", part: "右后轮罩吸音棉", spec: "57G-867-766-02", price: 1.863, qty6: 3000, rev6: 5589, qty7: 3000, amt7: 5589, diffQty: 0, diffAmt: 0 },
-      { cust: "苏州海泰", code: "1010101407", part: "左C柱上饰板吸音棉", spec: "LAJ-50060207", price: 1.28, qty6: 19200, rev6: 24576, qty7: 9600, amt7: 12288, diffQty: -9600, diffAmt: -12288 },
-      { cust: "郑州海泰", code: "1010100338", part: "吸音棉左1", spec: "10870505-01", price: 8.4829, qty6: 240, rev6: 2035.9, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1017.95 },
-      { cust: "郑州海泰", code: "1010101233", part: "C柱上吸音棉（左）", spec: "10030011-02", price: 0.7621, qty6: 21200, rev6: 16156.52, qty7: 16000, amt7: 12193.6, diffQty: -5200, diffAmt: -3962.92 },
-      { cust: "郑州海泰", code: "1010101235", part: "D柱上吸音棉（左）", spec: "10030013-02", price: 1.5807, qty6: 11600, rev6: 18336.12, qty7: 10000, amt7: 15807, diffQty: -1600, diffAmt: -2529.12 },
-      { cust: "郑州海泰", code: "1010101236", part: "D柱上吸音棉（右1）", spec: "10030014-02-01", price: 0.3575, qty6: 11200, rev6: 4004, qty7: 10000, amt7: 3575, diffQty: -1200, diffAmt: -429 },
-      { cust: "郑州海泰", code: "1010101237", part: "D柱上吸音棉（右2）", spec: "10030014-02-02", price: 0.6586, qty6: 11200, rev6: 7376.32, qty7: 10000, amt7: 6586, diffQty: -1200, diffAmt: -790.32 },
-      { cust: "郑州海泰", code: "1010101238", part: "行李箱门槛吸音棉", spec: "10030029-02", price: 0.7809, qty6: 20500, rev6: 16008.45, qty7: 8000, amt7: 6247.2, diffQty: -12500, diffAmt: -9761.25 },
-      { cust: "郑州海泰", code: "1010200211", part: "左侧吸音棉1(双组分）", spec: "10030025-03-01", price: 8.7504, qty6: 14000, rev6: 122505.6, qty7: 7000, amt7: 61252.8, diffQty: -7000, diffAmt: -61252.8 },
-      { cust: "郑州海泰", code: "1010200212", part: "左侧吸音棉2(双组分）", spec: "10030025-03-02", price: 2.9921, qty6: 14800, rev6: 44283.08, qty7: 7400, amt7: 22141.54, diffQty: -7400, diffAmt: -22141.54 },
-      { cust: "郑州海泰", code: "1010200213", part: "右侧吸音棉(双组分）", spec: "10030026-03", price: 12.7774, qty6: 14200, rev6: 181439.08, qty7: 7100, amt7: 90719.54, diffQty: -7100, diffAmt: -90719.54 },
-      { cust: "郑州海泰", code: "1010200292", part: "吸音棉右1", spec: "10870512-01（150^箱）", price: 0.6439, qty6: 300, rev6: 193.17, qty7: 150, amt7: 90.89, diffQty: -150, diffAmt: -102.28 },
-      { cust: "郑州海泰", code: "1010200294", part: "吸音棉右3", spec: "10870512-03（60^箱）", price: 9.0158, qty6: 240, rev6: 2163.79, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1145.84 }
-      ]
-    }
+  note: "6月销货出库 vs 7月开票对比（营销四部数据）",
+  totals: {qty6: 144680, rev6: 450428.83, qty7: 91490, amt7: 244115.47, diffQty: -53190, diffAmt: -206313.36},
+  rows: [
+    { cust: "苏州海泰", code: "1010100550", part: "左后轮罩吸音棉", spec: "57G-867-765-02", price: 1.9206, qty6: 3000, rev6: 5761.8, qty7: 3000, amt7: 5589, diffQty: 0, diffAmt: -172.8 },
+    { cust: "苏州海泰", code: "1010101218", part: "右后轮罩吸音棉", spec: "57G-867-766-02", price: 1.863, qty6: 3000, rev6: 5589, qty7: 3000, amt7: 5589, diffQty: 0, diffAmt: 0 },
+    { cust: "苏州海泰", code: "1010101407", part: "左C柱上饰板吸音棉", spec: "LAJ-50060207", price: 1.28, qty6: 19200, rev6: 24576, qty7: 9600, amt7: 12288, diffQty: -9600, diffAmt: -12288 },
+    { cust: "郑州海泰", code: "1010100338", part: "吸音棉左1", spec: "10870505-01", price: 8.4829, qty6: 240, rev6: 2035.9, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1017.95 },
+    { cust: "郑州海泰", code: "1010101233", part: "C柱上吸音棉（左）", spec: "10030011-02", price: 0.7621, qty6: 21200, rev6: 16156.52, qty7: 16000, amt7: 12193.6, diffQty: -5200, diffAmt: -3962.92 },
+    { cust: "郑州海泰", code: "1010101235", part: "D柱上吸音棉（左）", spec: "10030013-02", price: 1.5807, qty6: 11600, rev6: 18336.12, qty7: 10000, amt7: 15807, diffQty: -1600, diffAmt: -2529.12 },
+    { cust: "郑州海泰", code: "1010101236", part: "D柱上吸音棉（右1）", spec: "10030014-02-01", price: 0.3575, qty6: 11200, rev6: 4004, qty7: 10000, amt7: 3575, diffQty: -1200, diffAmt: -429 },
+    { cust: "郑州海泰", code: "1010101237", part: "D柱上吸音棉（右2）", spec: "10030014-02-02", price: 0.6586, qty6: 11200, rev6: 7376.32, qty7: 10000, amt7: 6586, diffQty: -1200, diffAmt: -790.32 },
+    { cust: "郑州海泰", code: "1010101238", part: "行李箱门槛吸音棉", spec: "10030029-02", price: 0.7809, qty6: 20500, rev6: 16008.45, qty7: 8000, amt7: 6247.2, diffQty: -12500, diffAmt: -9761.25 },
+    { cust: "郑州海泰", code: "1010200211", part: "左侧吸音棉1(双组分）", spec: "10030025-03-01", price: 8.7504, qty6: 14000, rev6: 122505.6, qty7: 7000, amt7: 61252.8, diffQty: -7000, diffAmt: -61252.8 },
+    { cust: "郑州海泰", code: "1010200212", part: "左侧吸音棉2(双组分）", spec: "10030025-03-02", price: 2.9921, qty6: 14800, rev6: 44283.08, qty7: 7400, amt7: 22141.54, diffQty: -7400, diffAmt: -22141.54 },
+    { cust: "郑州海泰", code: "1010200213", part: "右侧吸音棉(双组分）", spec: "10030026-03", price: 12.7774, qty6: 14200, rev6: 181439.08, qty7: 7100, amt7: 90719.54, diffQty: -7100, diffAmt: -90719.54 },
+    { cust: "郑州海泰", code: "1010200292", part: "吸音棉右1", spec: "10870512-01（150^箱）", price: 0.6439, qty6: 300, rev6: 193.17, qty7: 150, amt7: 90.89, diffQty: -150, diffAmt: -102.28 },
+    { cust: "郑州海泰", code: "1010200294", part: "吸音棉右3", spec: "10870512-03（60^箱）", price: 9.0158, qty6: 240, rev6: 2163.79, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1145.84 }
   ]
 };
 
@@ -1859,9 +1833,10 @@ function renderNon2026() {
   const rowsAll = per.rows || [];
 
   // 动态卡标题: 从 period label 提取月份 (如 "5月发货 vs 6月开票")
+  const isMerged = per.id === 'merged';
   const m = (per.label || '').match(/(\d+)月发货.*?(\d+)月开票/);
-  const m1 = m ? m[1] + '月' : '';
-  const m2 = m ? m[2] + '月' : '';
+  const m1 = isMerged ? '累计' : (m ? m[1] + '月' : '');
+  const m2 = isMerged ? '累计' : (m ? m[2] + '月' : '');
   document.getElementById('non2026LabelQty6').textContent = `${m1}发货数量`;
   document.getElementById('non2026LabelRev6').textContent = `${m1}发货收入`;
   document.getElementById('non2026LabelQty7').textContent = `${m2}开票数量`;
