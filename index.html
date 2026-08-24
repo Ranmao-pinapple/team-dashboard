@@ -1850,7 +1850,7 @@ function renderPull() {
       let planSum = 0, actSum = 0;
       for (let d = 0; d < dim; d++) { planSum += arr[d] || 0; actSum += act[d] || 0; }
       const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
-      const pTag = r.makeType ? `<span class="tag ${r.makeType === '自制' ? 'tag-make' : 'tag-out'}">${r.makeType}</span>${r.supplier ? `<span class="tag tag-supplier">${r.supplier}</span>` : ''}` : '';
+      const pTag = r.makeType ? `<span class="tag ${r.makeType === '自制' ? 'tag-make' : 'tag-out'}">${r.makeType}</span>${r.supplier ? `<span class="tag tag-supplier" style="color:${r.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${r.supplier}</span>` : ''}` : '';
       html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part">${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
       html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
       for (let d = 0; d < dim; d++) {
@@ -2089,7 +2089,7 @@ function renderPo() {
     const qtySum = items.reduce((s, o) => s + o.qty, 0);
     const totalSum = items.reduce((s, o) => s + o.total, 0);
     const subRows = items.map(o => `<tr>
-      <td>${o.part}${o.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : o.makeType === '外协' ? '<span class="tag tag-out">外协</span>' : ''}${o.supplier ? `<span class="tag" style="background:#f0f2f5;color:#666;border:1px solid #e0e2e6">${o.supplier}</span>` : ''}</td><td style="font-size:11px">${o.partCode}</td>
+      <td>${o.part}${o.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : o.makeType === '外协' ? '<span class="tag tag-out">外协</span>' : ''}${o.supplier ? `<span class="tag tag-supplier" style="color:${o.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${o.supplier}</span>` : ''}</td><td style="font-size:11px">${o.partCode}</td>
       <td class="part">${o.qty.toLocaleString()} 件</td>
       <td>¥${o.unitPrice.toFixed(2)}</td>
       <td class="part">¥${o.total.toLocaleString('zh-CN')}</td>
