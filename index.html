@@ -293,12 +293,16 @@
   #tableWrap .tag-make, #poTableWrap .tag-make { background:#e6f6ec; color:#137a3b; border:1px solid #b7e3c8; }
   #tableWrap .tag-out, #poTableWrap .tag-out { background:#fef3e2; color:#b45309; border:1px solid #f5d9a8; }
   #tableWrap .tag-supplier, #poTableWrap .tag-supplier { background:#f0f2f5; color:#555; border:1px solid #e0e2e6; }
-  #tableWrap .type-filter-bar { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:10px 2px 2px; }
-  #tableWrap .type-legend { display:inline-flex; gap:10px; align-items:center; font-size:11px; color:#666; }
-  #tableWrap .type-filter { display:inline-flex; gap:6px; }
-  #tableWrap .type-filter button { font-size:11px; padding:3px 10px; border:1px solid #d9d9dd; background:#fff; border-radius:4px; cursor:pointer; color:#444; }
-  #tableWrap .type-filter button:hover { border-color:#e82127; }
-  #tableWrap .type-filter button.active { background:#e82127; border-color:#e82127; color:#fff; font-weight:600; }
+  #tableWrap .type-filter-bar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 16px; margin:12px 0 8px; padding:10px 14px; background:#fafafa; border:1px solid #ececef; border-radius:8px; }
+  #tableWrap .type-legend { display:inline-flex; gap:18px; align-items:center; font-size:12px; color:#555; }
+  #tableWrap .legend-item { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  #tableWrap .dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex:none; }
+  #tableWrap .dot-make { background:#137a3b; box-shadow:0 0 0 2px #e6f6ec; }
+  #tableWrap .dot-out { background:#b45309; box-shadow:0 0 0 2px #fef3e2; }
+  #tableWrap .type-filter { display:inline-flex; gap:8px; }
+  #tableWrap .type-filter button { font-size:12px; padding:5px 14px; border:1px solid #d9d9dd; background:#fff; border-radius:6px; cursor:pointer; color:#444; transition:all .15s; }
+  #tableWrap .type-filter button:hover { border-color:#e82127; color:#e82127; background:#fff7f7; }
+  #tableWrap .type-filter button.active { background:#e82127; border-color:#e82127; color:#fff; font-weight:600; box-shadow:0 1px 4px rgba(232,33,39,.25); }
   #tableWrap tr.proj-part td { background: #ffffff; }
 
   #monthPicker button { border-radius: 99px; font-weight: 600; position: relative; }
@@ -1802,7 +1806,7 @@ function renderPull() {
     `<div class="ps-card"><div class="ps-label">月计划总量</div><div class="ps-num">${grandPlan.toLocaleString()}</div><div class="ps-sub">件</div></div>` +
     `<div class="ps-card"><div class="ps-label">月实际总量</div><div class="ps-num">${grandAct.toLocaleString()}</div><div class="ps-sub">${grandAct > 0 ? '件' : '待对账'}</div></div>` +
     `<div class="ps-card ps-acc"><div class="ps-label">总达成率</div><div class="ps-num">${gRateTxt}</div><div class="ps-bar"><i class="${gRk}" style="width:${Math.min(grandRate, 100)}%"></i></div><div class="ps-sub">计划 vs 实际</div></div>` +
-    `<div class="type-filter-bar" style="width:100%"><span class="type-legend"><span class="tag tag-make" style="margin-left:0">自制</span>本公司生产&nbsp;·&nbsp;<span class="tag tag-out" style="margin-left:0">外协</span>外协加工</span><span class="type-filter"><button class="${pullTypeFilter === 'all' ? 'active' : ''}" onclick="setPullFilter('all')">全部</button><button class="${pullTypeFilter === 'make' ? 'active' : ''}" onclick="setPullFilter('make')">只看自制</button><button class="${pullTypeFilter === 'out' ? 'active' : ''}" onclick="setPullFilter('out')">只看外协</button></span></div>`;
+    `<div class="type-filter-bar"><span class="type-legend"><span class="legend-item"><span class="dot dot-make"></span>自制 · 本公司生产</span><span class="legend-item"><span class="dot dot-out"></span>外协 · 外协加工</span></span><span class="type-filter"><button class="${pullTypeFilter === 'all' ? 'active' : ''}" onclick="setPullFilter('all')">全部</button><button class="${pullTypeFilter === 'make' ? 'active' : ''}" onclick="setPullFilter('make')">只看自制</button><button class="${pullTypeFilter === 'out' ? 'active' : ''}" onclick="setPullFilter('out')">只看外协</button></span></div>`;
 
   let html = '<table><thead><tr><th>项目</th><th>零件</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
   const wk = ['日', '一', '二', '三', '四', '五', '六'];
