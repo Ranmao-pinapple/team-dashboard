@@ -289,6 +289,15 @@
   #tableWrap tr.proj-group-row:hover td { background: rgba(232,33,39,.05); }
   #tableWrap .proj-caret { display: inline-block; width: 14px; color: #e82127; font-size: 10px; transition: transform .15s; }
   #tableWrap .proj-count { color: #9a9aa0; font-size: 10px; font-weight: 500; margin-left: 6px; }
+  #tableWrap .tag { display:inline-block; font-size:10px; font-weight:600; padding:1px 6px; border-radius:3px; margin-left:5px; vertical-align:1px; white-space:nowrap; }
+  #tableWrap .tag-make { background:#e6f6ec; color:#137a3b; border:1px solid #b7e3c8; }
+  #tableWrap .tag-out { background:#fef3e2; color:#b45309; border:1px solid #f5d9a8; }
+  #tableWrap .type-filter-bar { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:10px 2px 2px; }
+  #tableWrap .type-legend { display:inline-flex; gap:10px; align-items:center; font-size:11px; color:#666; }
+  #tableWrap .type-filter { display:inline-flex; gap:6px; }
+  #tableWrap .type-filter button { font-size:11px; padding:3px 10px; border:1px solid #d9d9dd; background:#fff; border-radius:4px; cursor:pointer; color:#444; }
+  #tableWrap .type-filter button:hover { border-color:#e82127; }
+  #tableWrap .type-filter button.active { background:#e82127; border-color:#e82127; color:#fff; font-weight:600; }
   #tableWrap tr.proj-part td { background: #ffffff; }
 
   #monthPicker button { border-radius: 99px; font-weight: 600; position: relative; }
@@ -1346,13 +1355,19 @@ function rateClass(rate) {
   return 'rate-low';
 }
 
+let pullTypeFilter = 'all';
+function setPullFilter(t) { pullTypeFilter = t; renderPull(); }
+
 function renderPull() {
   const wrap = document.getElementById('tableWrap');
   const dim = daysInMonth(PULL_DATA.year, currentMonth);
-  const hasAnyData = PULL_DATA.rows.some(r => r.daily[currentMonth]);
+  const srcRows = pullTypeFilter === 'make' ? PULL_DATA.rows.filter(r => r.makeType === '自制')
+    : pullTypeFilter === 'out' ? PULL_DATA.rows.filter(r => r.makeType === '外协')
+    : PULL_DATA.rows;
+  const hasAnyData = srcRows.some(r => r.daily[currentMonth]);
 
   if (!hasAnyData) {
-    wrap.innerHTML = `<div class="empty-note">📭 ${currentMonth}月暂无按天拉动数据 —— 待白猫接入订单信息后自动填充</div>`;
+    wrap.innerHTML = `<div class="empty-note">📭 ${currentMonth}月${pullTypeFilter !== 'all' ? '该筛选条件下' : ''}暂无按天拉动数据 —— 待白猫接入订单信息后自动填充</div>`;
     return;
   }
 
@@ -1361,7 +1376,7 @@ function renderPull() {
 
   // —— 按项目分组 ——
   const projOrder = [], projOf = {};
-  PULL_DATA.rows.forEach(r => {
+  srcRows.forEach(r => {
     const arr = r.daily[currentMonth];
     if (!arr) return;
     const p = r.project || r.proj || '未分组';
@@ -1384,7 +1399,8 @@ function renderPull() {
     `<div class="ps-card"><div class="ps-label">在产项目</div><div class="ps-num">${nProj}</div><div class="ps-sub">${nRows} 个零件 · ${currentMonth}月按天拉动</div></div>` +
     `<div class="ps-card"><div class="ps-label">月计划总量</div><div class="ps-num">${grandPlan.toLocaleString()}</div><div class="ps-sub">件</div></div>` +
     `<div class="ps-card"><div class="ps-label">月实际总量</div><div class="ps-num">${grandAct.toLocaleString()}</div><div class="ps-sub">${grandAct > 0 ? '件' : '待对账'}</div></div>` +
-    `<div class="ps-card ps-acc"><div class="ps-label">总达成率</div><div class="ps-num">${gRateTxt}</div><div class="ps-bar"><i class="${gRk}" style="width:${Math.min(grandRate, 100)}%"></i></div><div class="ps-sub">计划 vs 实际</div></div>`;
+    `<div class="ps-card ps-acc"><div class="ps-label">总达成率</div><div class="ps-num">${gRateTxt}</div><div class="ps-bar"><i class="${gRk}" style="width:${Math.min(grandRate, 100)}%"></i></div><div class="ps-sub">计划 vs 实际</div></div>` +
+    `<div class="type-filter-bar" style="width:100%"><span class="type-legend"><span class="tag tag-make" style="margin-left:0">自制</span>本公司生产&nbsp;·&nbsp;<span class="tag tag-out" style="margin-left:0">外协</span>外协加工</span><span class="type-filter"><button class="${pullTypeFilter === 'all' ? 'active' : ''}" onclick="setPullFilter('all')">全部</button><button class="${pullTypeFilter === 'make' ? 'active' : ''}" onclick="setPullFilter('make')">只看自制</button><button class="${pullTypeFilter === 'out' ? 'active' : ''}" onclick="setPullFilter('out')">只看外协</button></span></div>`;
 
   let html = '<table><thead><tr><th>项目</th><th>零件</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
   const wk = ['日', '一', '二', '三', '四', '五', '六'];
@@ -1411,7 +1427,9 @@ function renderPull() {
     });
     const prate = pPlanSum > 0 ? Math.round((pActSum / pPlanSum) * 100) : 0;
     const pid = 'proj' + p.replace(/[^A-Za-z0-9]/g, '');
-    html += `<tr class="proj-group-row" onclick="toggleProj(this, '${pid}')"><td class="part"><span class="proj-caret">▸</span> ${p} <span class="proj-count">${rows.length}件</span></td><td class="proj">—</td><td></td>`;
+    const nMake = rows.filter(r => r.makeType === '自制').length;
+    const nOut = rows.length - nMake;
+    html += `<tr class="proj-group-row" onclick="toggleProj(this, '${pid}')"><td class="part"><span class="proj-caret">▸</span> ${p} <span class="proj-count">${rows.length}件</span>${nMake ? `<span class="tag tag-make">自制${nMake}</span>` : ''}${nOut ? `<span class="tag tag-out">外协${nOut}</span>` : ''}</td><td class="proj">—</td><td></td>`;
     html += `<td class="num">${pPlanSum.toLocaleString()}</td><td class="num">${pActSum > 0 ? pActSum.toLocaleString() : '—'}</td>`;
     html += `<td class="rate ${rateClass(prate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(prate)}"><i style="width:${Math.min(prate, 100)}%"></i></div>${pPlanSum > 0 && pActSum > 0 ? prate + '%' : '—'}</div></td>`;
     for (let d = 0; d < dim; d++) {
@@ -1430,7 +1448,9 @@ function renderPull() {
       let planSum = 0, actSum = 0;
       for (let d = 0; d < dim; d++) { planSum += arr[d] || 0; actSum += act[d] || 0; }
       const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
-      html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part">${r.part}</td><td>${statusMap[r.status]}</td>`;
+      const pTag = r.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : r.makeType === '外协' ? '<span class="tag tag-out">外协</span>' : '';
+      const pSup = r.supplier ? ` title="供应商：${r.supplier}"` : '';
+      html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part"${pSup}>${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
       html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
       for (let d = 0; d < dim; d++) {
         const plan = arr[d] || 0, a = act[d] || 0;
