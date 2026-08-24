@@ -1452,9 +1452,8 @@ function renderPull() {
       let planSum = 0, actSum = 0;
       for (let d = 0; d < dim; d++) { planSum += arr[d] || 0; actSum += act[d] || 0; }
       const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
-      const pTag = r.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : r.makeType === '外协' ? '<span class="tag tag-out">外协</span>' : '';
-      const pSup = r.supplier ? ` title="供应商：${r.supplier}"` : '';
-      html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part"${pSup}>${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
+      const pTag = r.makeType ? `<span class="tag ${r.makeType === '自制' ? 'tag-make' : 'tag-out'}">${r.makeType}${r.supplier ? ' ' + r.supplier : ''}</span>` : '';
+      html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part">${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
       html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
       for (let d = 0; d < dim; d++) {
         const plan = arr[d] || 0, a = act[d] || 0;
