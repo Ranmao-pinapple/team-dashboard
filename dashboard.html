@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>臻畅/泰瑞 · 销售四部工作站</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --card: #f6f6f7;
+    --card-hover: #ededee;
+    --border: #e0e0e2;
+    --text: #171a20;
+    --muted: #5c5e62;
+    --accent: #e82127;
+    --green: #12a150;
+    --yellow: #b45309;
+    --red: #e82127;
+    --purple: #7c3aed;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1300px; margin: 0 auto; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  .subtitle { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .badge-live { background: rgba(18,161,80,.12); color: var(--green); border: 1px solid var(--green); }
+
+  /* Tab 导航 */
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    padding: 9px 22px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .tab-btn:hover { border-color: var(--accent); }
+  .tab-btn.active { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    cursor: default;
+  }
+  .stat h3 { font-size: 13px; color: var(--muted); font-weight: 500; margin-bottom: 10px; }
+  .big-number { font-size: 34px; font-weight: 700; }
+  .stat .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .green { color: var(--green); }
+  .yellow { color: var(--yellow); }
+  .red { color: var(--red); }
+  .blue { color: var(--accent); }
+  .purple { color: var(--purple); }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: center; color: var(--muted); font-size: 11px; font-weight: 600;
+    padding: 6px 3px; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; }
+  th.today { color: var(--yellow); }
+  th.weekend { color: #c4c4c6; }
+  td { padding: 5px 3px; font-size: 12px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  td.today { background: rgba(180,83,9,.10); box-shadow: inset 0 0 0 1px var(--yellow); border-radius: 4px; }
+  td.weekend { color: #c4c4c6; }
+  tr:hover td { background: rgba(232,33,39,.04); }
+  .part { font-weight: 600; font-size: 13px; }
+  .proj { color: var(--muted); font-size: 11px; }
+  .proj-row { cursor: pointer; transition: background .15s ease; }
+  .proj-row:hover { background: rgba(232,33,39,.06); }
+  .detail-row td { background: rgba(23,26,32,.04); padding: 0; }
+  .detail-panel { padding: 16px 20px; border-left: 3px solid var(--accent); margin: 4px 12px; background: rgba(232,33,39,.05); border-radius: 0 8px 8px 0; }
+  .detail-panel h4 { color: var(--accent); font-size: 14px; margin-bottom: 8px; }
+  .detail-panel ul { list-style: none; }
+  .detail-panel li { font-size: 13px; color: var(--muted); padding: 3px 0; }
+  .detail-panel li strong { color: var(--text); font-weight: 500; }
+  .fin-row { cursor: pointer; transition: background .15s ease; }
+  .fin-row:hover { background: rgba(232,33,39,.06); }
+  .fin-row.active { background: rgba(232,33,39,.08); }
+  .fin-toggle { color: var(--accent); font-size: 12px; font-weight: 600; }
+  .detail-inner { padding: 14px 20px; border-left: 3px solid var(--accent); margin: 4px 12px; background: rgba(232,33,39,.04); border-radius: 0 8px 8px 0; }
+  .detail-inner h4 { color: var(--accent); font-size: 13px; margin-bottom: 8px; }
+  .sub-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .sub-table th { text-align: left; color: var(--muted); padding: 5px 8px; border-bottom: 2px solid var(--border); font-weight: 600; white-space: nowrap; }
+  .sub-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  .detail-total { margin-top: 10px; color: var(--accent); font-weight: 700; font-size: 12px; }
+
+  .total-row td { border-top: 2px solid var(--border); font-weight: 700; color: var(--accent); }
+  .cell-pair { line-height: 1.25; }
+  .cell-pair .plan { color: var(--green); font-weight: 600; font-size: 12px; }
+  .cell-pair .act { color: var(--accent); font-size: 11px; }
+  .cell-pair .act.miss { color: var(--red); }
+  .cell-pair .act.hit { color: var(--green); }
+  .cell-zero { color: #c4c4c6; }
+  .rate { font-size: 12px; font-weight: 700; }
+  .rate-high { color: var(--green); }
+  .rate-mid { color: var(--yellow); }
+  .rate-low { color: var(--red); }
+
+  .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .st-live { background: rgba(18,161,80,.12); color: var(--green); }
+  .st-plan { background: rgba(232,33,39,.10); color: var(--accent); }
+  .st-wait { background: rgba(180,83,9,.12); color: var(--yellow); }
+  .st-pending { background: rgba(180,83,9,.12); color: var(--yellow); }
+  .st-confirmed { background: rgba(232,33,39,.10); color: var(--accent); }
+  .st-invoiced { background: rgba(124,58,237,.12); color: var(--purple); }
+  .st-paid { background: rgba(18,161,80,.12); color: var(--green); }
+  .st-partial { background: rgba(180,83,9,.12); color: var(--yellow); }
+  .st-overdue { background: rgba(232,33,39,.12); color: var(--red); }
+  .st-risk { background: rgba(232,33,39,.12); color: var(--red); }
+  .st-blue { background: rgba(37,99,235,.12); color: #2563eb; }
+
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+  }
+  .legend { font-size: 12px; color: var(--muted); }
+  .legend span { margin-right: 12px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .updated { color: var(--muted); font-size: 12px; }
+  .month-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .month-picker button {
+    padding: 6px 14px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .month-picker button:hover { border-color: var(--accent); }
+  .month-picker button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .filters button {
+    padding: 6px 14px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .filters button:hover { border-color: var(--accent); }
+  .filters button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
+  .empty-note { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+  /* ===== 项目管理 · 视图切换 + 甘特图 ===== */
+  .view-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+  .view-bar button {
+    padding: 6px 14px;
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .view-bar button:hover { border-color: var(--accent); }
+  .view-bar button.active { background: var(--accent); color: #ffffff; font-weight: 700; border-color: var(--accent); }
+
+  .gantt-scroll { overflow-x: auto; }
+  .gantt { min-width: 860px; }
+  .gantt-head { display: grid; grid-template-columns: 220px 1fr; border-bottom: 2px solid var(--border); }
+  .gantt-head .gantt-axis { position: relative; height: 28px; }
+  .gantt-row { display: grid; grid-template-columns: 220px 1fr; border-bottom: 1px solid var(--border); min-height: 34px; }
+  .gantt-row.proj { background: var(--card); font-weight: 700; }
+  .gantt-row .gantt-label { padding: 8px 10px; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border); }
+  .gantt-row .gantt-cell { position: relative; }
+  .gantt-tick { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--border); z-index: 1; }
+  .gantt-tick.now { border-left: 2px solid var(--accent); z-index: 3; }
+  .gantt-bar { position: absolute; top: 8px; height: 18px; border-radius: 9px; font-size: 10px; line-height: 18px; padding: 0 6px; color: #fff; white-space: nowrap; overflow: hidden; z-index: 2; }
+  .gantt-bar.done { background: var(--green); }
+  .gantt-bar.doing { background: #2563eb; animation: blink 1.2s infinite; }
+  .gantt-bar.todo { background: #c4c4c6; }
+  .gantt-bar.late { background: var(--red); }
+  .gantt-bar span { display: block; transform: scale(.95); transform-origin: left center; }
+
+  /* ===== 月拉动计划 · 高级感升级（仅作用于拉动页签） ===== */
+  #tab-pull .toolbar { margin-bottom: 12px; }
+  #pullStats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  #pullStats .ps-card {
+    background: linear-gradient(180deg, #ffffff, #f7f7f8);
+    border: 1px solid #e8e8ea; border-radius: 14px; padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(23,26,32,.05);
+  }
+  #pullStats .ps-card .ps-label { font-size: 11px; color: #8a8a8e; font-weight: 600; letter-spacing: .06em; }
+  #pullStats .ps-card .ps-num {
+    font-size: 28px; font-weight: 800; color: #171a20; margin-top: 4px;
+    font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+  }
+  #pullStats .ps-card .ps-sub { font-size: 11px; color: #9a9aa0; margin-top: 6px; }
+  #pullStats .ps-card.ps-acc {
+    background: linear-gradient(135deg, #e82127, #b3121a);
+    border-color: transparent; box-shadow: 0 4px 14px rgba(232,33,39,.28);
+  }
+  #pullStats .ps-card.ps-acc .ps-label { color: rgba(255,255,255,.72); }
+  #pullStats .ps-card.ps-acc .ps-num { color: #ffffff; }
+  #pullStats .ps-card.ps-acc .ps-sub { color: rgba(255,255,255,.55); }
+  #pullStats .ps-bar { height: 6px; background: #ececee; border-radius: 99px; margin-top: 10px; overflow: hidden; }
+  #pullStats .ps-bar i { display: block; height: 100%; border-radius: 99px; transition: width .6s ease; }
+  #pullStats .ps-bar i.rate-high { background: #16a34a; }
+  #pullStats .ps-bar i.rate-mid { background: #eab308; }
+  #pullStats .ps-bar i.rate-low { background: #e82127; }
+  #pullStats .ps-card.ps-acc .ps-bar { background: rgba(255,255,255,.22); }
+  #pullStats .ps-card.ps-acc .ps-bar i { background: #ffffff; }
+
+  #tableWrap { max-height: 74vh; overflow: auto; border-radius: 16px; box-shadow: 0 2px 14px rgba(23,26,32,.06); scrollbar-width: thin; }
+  #tableWrap table { border-collapse: separate; border-spacing: 0; min-width: max-content; }
+  #tableWrap thead th {
+    position: sticky; top: 0; z-index: 3;
+    background: #fafafa; color: #171a20; font-weight: 700; font-size: 11px;
+    padding: 10px 4px 8px; border-bottom: 2px solid #171a20;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  #tableWrap thead th .wk { display: block; font-size: 9px; color: #9a9aa0; font-weight: 500; margin-top: 2px; }
+  #tableWrap thead th.today { background: #171a20; color: #ffffff; }
+  #tableWrap thead th.today .wk { color: #e8e8ea; }
+  #tableWrap thead th.weekend { color: #b5b5ba; }
+  #tableWrap tbody td {
+    padding: 7px 4px; font-size: 12px; border-bottom: 1px solid #f0f0f2;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  #tableWrap tbody tr:hover td { background: rgba(232,33,39,.035); }
+  #tableWrap td.today { background: rgba(232,33,39,.06); box-shadow: inset 0 0 0 1px rgba(232,33,39,.22); border-radius: 6px; }
+  #tableWrap td.weekend { background: #fafafa; color: #b5b5ba; }
+  #tableWrap .part { font-weight: 700; font-size: 12.5px; color: #171a20; }
+  #tableWrap .proj { font-size: 10px; color: #9a9aa0; }
+  #tableWrap .num { font-weight: 600; color: #171a20; }
+  #tableWrap .cell-pair { line-height: 1.35; }
+  #tableWrap .cell-pair .plan { color: #171a20; font-weight: 700; font-size: 11.5px; }
+  #tableWrap .cell-pair .plan.z { color: #d4d4d8; font-weight: 500; }
+  #tableWrap .cell-pair .act { color: #e82127; font-size: 10.5px; font-weight: 600; }
+  #tableWrap .cell-pair .act.z { color: #d4d4d8; font-weight: 400; }
+  #tableWrap .cell-pair .act.miss { color: #d4262e; }
+  #tableWrap .cell-pair .act.miss::before { content: '▼'; font-size: 8px; margin-right: 2px; }
+  #tableWrap .cell-pair .act.hit { color: #16a34a; }
+  #tableWrap .rate-wrap { display: inline-flex; align-items: center; gap: 6px; }
+  #tableWrap .rate-bar { width: 44px; height: 5px; background: #ececee; border-radius: 99px; overflow: hidden; flex: none; }
+  #tableWrap .rate-bar i { display: block; height: 100%; border-radius: 99px; }
+  #tableWrap .rate-bar.rate-high i { background: #16a34a; }
+  #tableWrap .rate-bar.rate-mid i { background: #eab308; }
+  #tableWrap .rate-bar.rate-low i { background: #e82127; }
+  #tableWrap .rate { font-size: 11.5px; font-weight: 700; }
+  #tableWrap tr.total-row td {
+    background: #171a20; color: #ffffff; font-weight: 700; border-top: none;
+    position: sticky; bottom: 0; z-index: 2;
+  }
+  #tableWrap tr.total-row td:first-child { border-radius: 10px 0 0 10px; }
+  #tableWrap tr.total-row td:last-child { border-radius: 0 10px 10px 0; }
+  #tableWrap tr.total-row .cell-pair .plan { color: #f5f5f6; }
+  #tableWrap tr.total-row .cell-pair .plan.z { color: rgba(255,255,255,.35); }
+  #tableWrap tr.total-row .cell-pair .act { color: #ff8a8d; }
+  #tableWrap tr.total-row .cell-pair .act.z { color: rgba(255,255,255,.35); }
+  #tableWrap tr.total-row .cell-pair .act.miss::before { content: ''; }
+  #tableWrap tr.total-row .rate { color: #ffffff; }
+  #tableWrap tr.total-row .rate-bar { background: rgba(255,255,255,.22); }
+  #tableWrap tr.total-row .rate-bar i { background: #ffffff; }
+
+  #tableWrap tr.proj-group-row { cursor: pointer; }
+  #tableWrap tr.proj-group-row td { background: #f4f4f6; border-top: 1px solid #e8e8ea; border-bottom: 1px solid #e8e8ea; }
+  #tableWrap tr.proj-group-row td:first-child { box-shadow: inset 3px 0 0 #e82127; }
+  #tableWrap tr.proj-group-row:hover td { background: rgba(232,33,39,.05); }
+  #tableWrap .proj-caret { display: inline-block; width: 14px; color: #e82127; font-size: 10px; transition: transform .15s; }
+  #tableWrap .proj-count { color: #9a9aa0; font-size: 10px; font-weight: 500; margin-left: 6px; }
+  #tableWrap .tag, #poTableWrap .tag { display:inline-block; font-size:10px; font-weight:600; padding:1px 6px; border-radius:3px; margin-left:5px; vertical-align:1px; white-space:nowrap; }
+  #tableWrap .tag-make, #poTableWrap .tag-make { background:#e6f6ec; color:#137a3b; border:1px solid #b7e3c8; }
+  #tableWrap .tag-out, #poTableWrap .tag-out { background:#fef3e2; color:#b45309; border:1px solid #f5d9a8; }
+  #tableWrap .tag-supplier, #poTableWrap .tag-supplier { background:#f0f2f5; color:#555; border:1px solid #e0e2e6; }
+  #tableWrap .type-filter-bar { display:flex; align-items:center; gap:8px; margin:12px 0 8px; padding:10px 14px; background:#fafafa; border:1px solid #ececef; border-radius:8px; overflow-x:auto; white-space:nowrap; }
+  #tableWrap .type-legend { display:inline-flex; gap:8px; align-items:center; flex:none; }
+  #tableWrap .legend-item { display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:4px 10px; border-radius:6px; font-weight:500; white-space:nowrap; }
+  #tableWrap .legend-item.lg-make { background:#e6f6ec; color:#137a3b; }
+  #tableWrap .legend-item.lg-out { background:#fef3e2; color:#b45309; }
+  #tableWrap .dot { width:8px; height:8px; border-radius:50%; flex:none; }
+  #tableWrap .dot-make { background:#137a3b; }
+  #tableWrap .dot-out { background:#b45309; }
+  #tableWrap .type-sep { flex:none; width:1px; height:22px; background:#e0e0e3; margin:0 4px; }
+  #tableWrap .type-filter { display:inline-flex; gap:8px; flex:none; }
+  #tableWrap .type-filter button { font-size:12px; padding:4px 12px; border:1px solid transparent; border-radius:6px; cursor:pointer; transition:all .18s; white-space:nowrap; }
+  #tableWrap .type-filter button.btn-all { background:#f0f2f5; color:#555; }
+  #tableWrap .type-filter button.btn-make { background:#e6f6ec; color:#137a3b; }
+  #tableWrap .type-filter button.btn-out { background:#fef3e2; color:#b45309; }
+  #tableWrap .type-filter button:hover { filter:brightness(.94); box-shadow:0 1px 3px rgba(0,0,0,.1); }
+  #tableWrap .type-filter button.active { outline:2px solid currentColor; outline-offset:1px; font-weight:600; }
+  #tableWrap tr.proj-part td { background: #ffffff; }
+
+  #monthPicker button { border-radius: 99px; font-weight: 600; position: relative; }
+  #monthPicker button.active { background: linear-gradient(135deg, #e82127, #b3121a); box-shadow: 0 2px 8px rgba(232,33,39,.35); }
+  #monthPicker button::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: transparent; }
+  #monthPicker button.has::after { background: #d4d4d8; }
+  #monthPicker button.has.active::after { background: #ffffff; }
+  @media (max-width: 720px) { #pullStats { grid-template-columns: repeat(2, 1fr); } }
+
+  .footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
+
+  /* ===== 密码锁 ===== */
+  #lockScreen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .lock-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 340px;
+    text-align: center;
+  }
+  .lock-box .lock-icon { font-size: 48px; margin-bottom: 12px; }
+  .lock-box h2 { font-size: 20px; margin-bottom: 6px; }
+  .lock-box p { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .lock-box input {
+    width: 100%; padding: 12px 16px;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; outline: none; margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .lock-box input:focus { border-color: var(--accent); }
+  .lock-box button {
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #ffffff;
+    border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: opacity .15s;
+  }
+  .lock-box button:hover { opacity: .85; }
+  .lock-err { color: var(--red); font-size: 13px; min-height: 18px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>销售四部工作站 · 访问受限</h2>
+    <p>请输入访问密码</p>
+    <input type="password" id="lockPass" placeholder="访问密码" onkeydown="if(event.key==='Enter')tryUnlock()">
+    <div class="lock-err" id="lockErr"></div>
+    <button onclick="tryUnlock()">进入看板</button>
+  </div>
+</div>
+
+<div class="container" style="display:none" id="mainContent">
+  <h1>📊 臻畅/泰瑞 · 销售四部工作站 <span class="badge badge-live">● LIVE</span></h1>
+  <p class="subtitle">项目 / 拉动计划 / 对账开票 · 一站式 · 白猫自动更新</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('project')">🏠 项目看板</button>
+    <button class="tab-btn" onclick="switchTab('pull')">📅 月拉动计划</button>
+    <button class="tab-btn" onclick="switchTab('po')">📋 订单台账</button>
+    <button class="tab-btn" onclick="switchTab('finance')">💰 对账开票</button>
+    <button class="tab-btn" onclick="switchTab('apqp')">🚀 项目管理</button>
+    <button class="tab-btn" onclick="switchTab('task')">📌 任务待办</button>
+    <button class="tab-btn" onclick="switchTab('non2026')">📦 非26年量产项目</button>
+  </div>
+
+  <!-- ========== Tab 1: 项目看板 ========== -->
+  <div class="tab-content active" id="tab-project">
+    <div class="grid">
+      <div class="card stat" onclick="showToast('凯华平台项目总数')">
+        <h3>平台项目</h3>
+        <div class="big-number blue" id="boardProjTotal">0</div>
+        <div class="sub">VFe32 / BC03 / LEV1</div>
+      </div>
+      <div class="card stat" onclick="showToast('零件总数')">
+        <h3>零件总数</h3>
+        <div class="big-number green" id="boardPartTotal">0</div>
+        <div class="sub">点击展开查看</div>
+      </div>
+      <div class="card stat" onclick="showToast('客户已开始拉动的零件数')">
+        <h3>已拉动零件</h3>
+        <div class="big-number green" id="boardPulled">0</div>
+        <div class="sub">🟢 有订单/对账</div>
+      </div>
+      <div class="card stat" onclick="showToast('客户尚未拉动的零件，重点关注')">
+        <h3>未拉动零件</h3>
+        <div class="big-number yellow" id="boardNotPulled">0</div>
+        <div class="sub">🟡 待客户拉动</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--muted);font-size:14px;font-weight:500;margin-bottom:12px">项目状态一览（点击行展开详情 · 含零件拉动状态）</h3>
+      <div id="boardTableWrap"></div>
+    </div>
+  </div>
+
+  <!-- ========== Tab 2: 月拉动计划 ========== -->
+  <div class="tab-content" id="tab-pull">
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:#171a20"></span>计划</span>
+        <span><span class="dot" style="background:var(--accent)"></span>实际</span>
+        <span><span class="dot" style="background:var(--red)"></span>未达标 ▼</span>
+        <span><span class="dot" style="background:var(--red);box-shadow:0 0 0 2px rgba(232,33,39,.25)"></span>今天</span>
+        <span><span class="dot" style="background:#c4c4c6"></span>周末/无计划</span>
+      </div>
+      <div class="updated" id="updatedLabelPull">最后更新：--</div>
+    </div>
+
+    <div class="month-picker" id="monthPicker"></div>
+
+    <div id="pullStats"></div>
+
+    <div class="card" id="tableWrap" style="padding:14px 12px"></div>
+  </div>
+
+  <!-- ========== Tab 3: 订单台账 ========== -->
+  <div class="tab-content" id="tab-po">
+    <div class="grid" id="poStatGrid">
+      <div class="card stat">
+        <h3>订单总数</h3>
+        <div class="big-number blue" id="poCount">—</div>
+        <div class="sub">采购订单累计</div>
+      </div>
+      <div class="card stat">
+        <h3>待交付数量</h3>
+        <div class="big-number yellow" id="poQty">—</div>
+        <div class="sub">未完成交付</div>
+      </div>
+      <div class="card stat">
+        <h3>订单金额(含税)</h3>
+        <div class="big-number green" id="poAmount">—</div>
+        <div class="sub">累计订单金额</div>
+      </div>
+      <div class="card stat">
+        <h3>待确认订单</h3>
+        <div class="big-number purple" id="poPending">—</div>
+        <div class="sub">收到未回传确认</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--accent)"></span>已接收</span>
+        <span><span class="dot" style="background:var(--green)"></span>已确认</span>
+        <span><span class="dot" style="background:var(--purple)"></span>已交付</span>
+        <span><span class="dot" style="background:var(--yellow)"></span>待确认</span>
+        <span style="color:var(--muted)">※ 交期为系统生成，仅供参考</span>
+      </div>
+      <div class="updated" id="updatedLabelPo">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="poFilterBar">
+      <button class="active" data-f="all" onclick="setPoFilter('all')">全部</button>
+      <button data-f="received" onclick="setPoFilter('received')">已接收</button>
+      <button data-f="confirmed" onclick="setPoFilter('confirmed')">已确认</button>
+      <button data-f="delivered" onclick="setPoFilter('delivered')">已交付</button>
+      <button data-f="pending" onclick="setPoFilter('pending')">待确认</button>
+      <span style="border-left:1px solid #d9d9dd;margin:0 6px"></span>
+      <button class="active" data-t="all" onclick="setPoTypeFilter('all')">全部零件</button>
+      <button data-t="make" onclick="setPoTypeFilter('make')">🏭 自制</button>
+      <button data-t="out" onclick="setPoTypeFilter('out')">🤝 外协</button>
+    </div>
+
+    <div class="card" id="poTableWrap" style="padding:12px"></div>
+  </div>
+
+  <!-- ========== Tab 4: 对账开票 ========== -->
+  <div class="tab-content" id="tab-finance">
+    <div class="grid" id="statGrid">
+      <div class="card stat">
+        <h3>待对账金额</h3>
+        <div class="big-number yellow" id="sPending">—</div>
+        <div class="sub">已发货未对账</div>
+      </div>
+      <div class="card stat">
+        <h3>待开票金额</h3>
+        <div class="big-number blue" id="sConfirmed">—</div>
+        <div class="sub">已对账未开票</div>
+      </div>
+      <div class="card stat">
+        <h3>已开票金额</h3>
+        <div class="big-number purple" id="sInvoiced">—</div>
+        <div class="sub">已开票待回款</div>
+      </div>
+      <div class="card stat">
+        <h3>已回款金额</h3>
+        <div class="big-number green" id="sPaid">—</div>
+        <div class="sub">含部分回款</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--yellow)"></span>待对账</span>
+        <span><span class="dot" style="background:var(--accent)"></span>已对账</span>
+        <span><span class="dot" style="background:var(--purple)"></span>已开票</span>
+        <span><span class="dot" style="background:var(--green)"></span>已回款</span>
+        <span><span class="dot" style="background:var(--red)"></span>逾期</span>
+      </div>
+      <div class="updated" id="updatedLabelFinance">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="filterBar">
+      <button class="active" data-f="all" onclick="setFilter('all')">全部</button>
+      <button data-f="pending" onclick="setFilter('pending')">待对账</button>
+      <button data-f="confirmed" onclick="setFilter('confirmed')">已对账</button>
+      <button data-f="invoiced" onclick="setFilter('invoiced')">已开票</button>
+      <button data-f="paid" onclick="setFilter('paid')">已回款</button>
+      <button data-f="overdue" onclick="setFilter('overdue')">⚠ 逾期</button>
+    </div>
+
+    <div class="card" id="tableWrapFinance" style="padding:12px"></div>
+  </div>
+
+  <!-- ========== Tab 5: 项目管理 (APQP) ========== -->
+  <div class="tab-content" id="tab-apqp">
+    <div class="grid" id="apqpStatGrid">
+      <div class="card stat">
+        <h3>进行中项目</h3>
+        <div class="big-number blue" id="apqpActive">—</div>
+        <div class="sub">APQP 未到量产</div>
+      </div>
+      <div class="card stat">
+        <h3>已量产项目</h3>
+        <div class="big-number green" id="apqpLive">—</div>
+        <div class="sub">SOP 后量产</div>
+      </div>
+      <div class="card stat">
+        <h3>风险/待跟进</h3>
+        <div class="big-number yellow" id="apqpRisk">—</div>
+        <div class="sub">进度延期或卡点</div>
+      </div>
+      <div class="card stat">
+        <h3>APQP 阶段</h3>
+        <div class="big-number purple" id="apqpPhaseCount">5</div>
+        <div class="sub">1立项 2产品 3过程 4确认 5反馈</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--green)"></span>已完成</span>
+        <span><span class="dot" style="background:var(--accent)"></span>进行中</span>
+        <span><span class="dot" style="background:#c4c4c6"></span>未开始</span>
+        <span><span class="dot" style="background:var(--red)"></span>延期</span>
+        <span style="color:var(--muted)">※ 点击项目行展开 APQP 阶段明细 + 时间线</span>
+      </div>
+      <div class="updated" id="updatedLabelApqp">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="apqpFilterBar">
+      <button class="active" data-f="all" onclick="setApqpFilter('all')">全部</button>
+      <button data-f="active" onclick="setApqpFilter('active')">开发中</button>
+      <button data-f="live" onclick="setApqpFilter('live')">已量产</button>
+      <button data-f="risk" onclick="setApqpFilter('risk')">⚠ 风险</button>
+    </div>
+
+    <div class="view-bar">
+      <button class="active" data-v="table" onclick="setApqpView('table')">📊 表格视图</button>
+      <button data-v="gantt" onclick="setApqpView('gantt')">📈 甘特图</button>
+    </div>
+
+    <div class="card" id="apqpTableWrap" style="padding:12px"></div>
+    <div class="card" id="apqpGanttWrap" style="padding:16px;display:none"></div>
+  </div>
+
+  <!-- ========== Tab 6: 任务待办 ========== -->
+  <div class="tab-content" id="tab-task">
+    <div class="grid" id="taskStatGrid">
+      <div class="card stat">
+        <h3>总任务</h3>
+        <div class="big-number blue" id="taskTotal">—</div>
+        <div class="sub">当前待办池</div>
+      </div>
+      <div class="card stat">
+        <h3>进行中</h3>
+        <div class="big-number purple" id="taskDoing">—</div>
+        <div class="sub">正在执行</div>
+      </div>
+      <div class="card stat">
+        <h3>本周到期</h3>
+        <div class="big-number yellow" id="taskDue">—</div>
+        <div class="sub">7天内截止</div>
+      </div>
+      <div class="card stat">
+        <h3>已完成</h3>
+        <div class="big-number green" id="taskDone">—</div>
+        <div class="sub">累计完成</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--red)"></span>P0 紧急</span>
+        <span><span class="dot" style="background:var(--yellow)"></span>P1 重要</span>
+        <span><span class="dot" style="background:#2563eb"></span>P2 常规</span>
+        <span><span class="dot" style="background:#c4c4c6"></span>P3 低优</span>
+        <span style="color:var(--muted)">※ 点击任务行展开详情</span>
+      </div>
+      <div class="updated" id="updatedLabelTask">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="taskFilterBar">
+      <button class="active" data-f="all" onclick="setTaskFilter('all')">全部</button>
+      <button data-f="todo" onclick="setTaskFilter('todo')">待办</button>
+      <button data-f="doing" onclick="setTaskFilter('doing')">进行中</button>
+      <button data-f="done" onclick="setTaskFilter('done')">已完成</button>
+      <button data-f="P0" onclick="setTaskFilter('P0')">🔴 P0</button>
+      <button data-f="P1" onclick="setTaskFilter('P1')">🟠 P1</button>
+      <button data-f="P2" onclick="setTaskFilter('P2')">🔵 P2</button>
+      <button data-f="P3" onclick="setTaskFilter('P3')">⚪ P3</button>
+    </div>
+
+    <div class="card" id="taskTableWrap" style="padding:12px"></div>
+  </div>
+
+  <!-- ========== Tab 7: 非26年量产项目 ========== -->
+  <div class="tab-content" id="tab-non2026">
+    <div class="grid" id="non2026StatGrid">
+      <div class="card stat">
+        <h3 id="non2026LabelQty6">发货数量</h3>
+        <div class="big-number blue" id="non2026Qty6">—</div>
+        <div class="sub">海泰集团 · 销货出库</div>
+      </div>
+      <div class="card stat">
+        <h3 id="non2026LabelRev6">发货收入</h3>
+        <div class="big-number blue" id="non2026Rev6">—</div>
+        <div class="sub">未税金额（元）</div>
+      </div>
+      <div class="card stat">
+        <h3 id="non2026LabelQty7">开票数量</h3>
+        <div class="big-number purple" id="non2026Qty7">—</div>
+        <div class="sub">已开票部分</div>
+      </div>
+      <div class="card stat">
+        <h3 id="non2026LabelAmt7">开票金额</h3>
+        <div class="big-number purple" id="non2026Amt7">—</div>
+        <div class="sub">未税金额（元）</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:var(--accent)"></span>数量/金额差异</span>
+        <span style="color:var(--muted)">※ 6月发货 vs 7月开票 · 差异=已发货未开票部分，需跟进</span>
+      </div>
+      <div class="updated" id="updatedLabelNon2026">最后更新：--</div>
+    </div>
+
+    <div class="filters" id="non2026PeriodBar">
+      <button class="active" data-p="202606" onclick="setNon2026Period('202606')">5月发货 vs 6月开票</button>
+      <button data-p="202607" onclick="setNon2026Period('202607')">6月发货 vs 7月开票</button>
+      <button data-p="merged" onclick="setNon2026Period('merged')">🔴 两期合并·未开票缺口</button>
+    </div>
+
+    <div class="filters" id="non2026FilterBar">
+      <button class="active" data-f="all" onclick="setNon2026Filter('all')">全部</button>
+      <button data-f="苏州海泰" onclick="setNon2026Filter('苏州海泰')">苏州海泰</button>
+      <button data-f="郑州海泰" onclick="setNon2026Filter('郑州海泰')">郑州海泰</button>
+    </div>
+
+    <div class="card" id="non2026TableWrap" style="padding:12px"></div>
+  </div>
+
+  <div class="footer">
+    由 白猫 (Hermes Agent) 自动更新 · 数据源：订单/财务信息
+  </div>
+</div>
+
+<div class="toast" id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;color:var(--muted);transition:transform .3s ease;z-index:100;pointer-events:none"></div>
+
+<script>
+// ===== 月拉动计划数据块（白猫脚本自动更新区域） =====
+const PULL_DATA = {
+  updatedAt: "2026-08-24",
+  year: 2026,
+  rows: [
+    {
+      part: "VF-LIMO7 挡脚板隔音垫",
+      project: "LEV1",
+      proj: "凯华",
+      status: "live",
+      makeType: "自制",
+      supplier: "上海泰瑞",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2840, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1600],
+        9: [0, 0, 0, 0, 0, 0, 2000, 0, 0, 0, 0, 0, 0, 2000, 0, 0, 0, 0, 0, 0, 1100, 0, 0, 0, 0, 0, 0, 0, 0, 2840, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 11275, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 2000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 840, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32风管外部隔音棉 32AA",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "自制",
+      supplier: "上海泰瑞",
+      daily: {
+        5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1850],
+        9: [0, 0, 0, 0, 0, 0, 2600, 0, 0, 0, 0, 0, 0, 2500, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 4743, 0]
+      },
+      actual: {
+        5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4000],
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32风管外部隔音棉 62AA",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "自制",
+      supplier: "上海泰瑞",
+      daily: {
+        5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 982],
+        9: [0, 0, 0, 0, 0, 0, 2600, 0, 0, 0, 0, 0, 0, 2500, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 3252, 0]
+      },
+      actual: {
+        5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4000],
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32风管外部隔音棉 211AA",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "自制",
+      supplier: "上海泰瑞",
+      daily: {
+        5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 2500, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4000],
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 3291, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VF-LIMO7 中间中通右风管隔音棉 13AA",
+      project: "LEV1",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "江苏诚丰",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 550, 550, 550, 550, 550, 0, 0, 0, 0, 0, 0, 1040, 0, 0, 0],
+        7: [0, 1040, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2422, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 549, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 2250, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VF-LIMO7 左侧中通右风管隔音棉 16AA",
+      project: "LEV1",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "江苏诚丰",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 550, 550, 550, 550, 550, 0, 0, 0, 0, 0, 0, 1040, 0, 0, 0],
+        7: [0, 1040, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 660, 0, 0, 0, 0, 0, 0, 3000],
+        9: [0, 0, 0, 0, 0, 0, 2000, 0, 0, 0, 0, 0, 0, 2000, 0, 0, 0, 0, 0, 0, 2000, 0, 0, 0, 0, 0, 0, 0, 0, 2282, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 549, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 2250, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VF-LIMO7 中间中通左风管隔音棉 17AA",
+      project: "LEV1",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "江苏诚丰",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 550, 550, 550, 550, 550, 0, 0, 0, 0, 0, 0, 1040, 0, 0, 0],
+        7: [0, 1040, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2322, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 549, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 2250, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VF-LIMO7 右侧中通风管隔音棉 18AA",
+      project: "LEV1",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "江苏诚丰",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 550, 550, 550, 550, 550, 0, 0, 0, 0, 0, 0, 1130, 0, 0, 0],
+        7: [0, 1130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 450, 0, 0, 0, 0, 0, 0, 2000],
+        9: [0, 0, 0, 0, 0, 0, 2500, 0, 0, 0, 0, 0, 0, 2500, 0, 0, 0, 0, 0, 0, 2000, 0, 0, 0, 0, 0, 0, 0, 0, 2272, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 549, 0, 0, 0, 0, 2110, 0, 0, 0, 0, 2340, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32前通风盖板本体海绵条6x10x1301.3",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4000, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32后三角板泡棉10×10×203mm",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 1200, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 2600, 0, 0, 0, 0, 0, 0, 0, 0, 5800, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3976, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32海绵条10x10x1842.8mm",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1761, 0, 0, 0, 0, 0, 0, 0, 0, 761, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1811, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32防水海绵22×10.5×5mm BEX7302010AA",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3100, 0, 0, 0, 0, 0, 0, 0, 0, 3100, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32防水海绵-侧裙 BEX7302070AA",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19000],
+        9: [0, 0, 0, 0, 0, 0, 30000, 0, 0, 0, 0, 0, 0, 28400, 0, 0, 0, 0, 0, 0, 25600, 0, 0, 0, 0, 0, 0, 0, 0, 51000, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32后保险杠安装支架密封圈 BEX73010103h",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2176],
+        9: [0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 2600, 0, 0, 0, 0, 0, 0, 0, 0, 6176, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32前端海绵条 BIN73051010AA",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 2098, 0, 0, 0, 0, 0, 0, 2500, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 3752, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32前除霜风管海绵条3",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 1998, 0, 0, 0, 0, 0, 0, 2500, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 3752, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "BC03-吹面风隔音棉 BIN73631211AA",
+      project: "BC03",
+      proj: "凯华",
+      status: "live",
+      makeType: "自制",
+      supplier: "上海泰瑞",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1900, 0, 0, 0, 0, 0, 0, 1200],
+        9: [0, 0, 0, 0, 0, 0, 1100, 0, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1965, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32后扰流板内部海绵条",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 0, 0, 0, 0, 0, 0, 5000],
+        9: [0, 0, 0, 0, 0, 0, 5000, 0, 0, 0, 0, 0, 0, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12000, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32防水垫圈",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32风管接口海绵条 1054",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32前除霜风管海绵条1",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32风管接口海绵条 1056",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32后背门扣手盖板本体防水条3x4x1120mm",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32前除霜风管海绵条2",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "VFe32售后件防水海绵",
+      project: "VFe32",
+      proj: "凯华",
+      status: "live",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒泡棉1(12268515-2)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒泡棉2(12268515-3)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒泡棉3(12268515-4)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒泡棉4(12268515-8)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒堵盖泡棉(12591755-2)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒堵盖泡棉(12426494-2)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒右侧堵盖泡棉(12426495-2)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒泡棉5(12268515-10)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒蘑菇塔扣(12268515-5)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    {
+      part: "ZH5EM前舱储物盒蘑菇塔扣(12268515-7)",
+      project: "ZH5EM",
+      proj: "凯华",
+      status: "wait",
+      makeType: "外协",
+      supplier: "宁波互盛",
+      daily: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      actual: {
+        6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    }
+  ]
+};
+
+// ===== 对账开票数据块（白猫脚本自动更新区域） =====
+const FINANCE_DATA = {
+  updatedAt: "2026-08-05",
+  rows: [
+    { cust: "浙江凯华", proj: "VFe32", period: "2026-06-25", shipped: 19876.11, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "5-6月对账单(靖凯模塑抬头)，6.25对账，待确认", details: [{"date": "2026-05-31", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011053", "spec": "BIN73031332AA", "qty": 4000, "unit_price_tax": 0.79, "total_tax": 3160.0}, {"date": "2026-05-31", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011055", "spec": "BIN73031362AA", "qty": 4000, "unit_price_tax": 0.6, "total_tax": 2400.0}, {"date": "2026-05-31", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011049", "spec": "BIN73031211AA", "qty": 4000, "unit_price_tax": 2.6, "total_tax": 10400.0}, {"date": "2026-06-10", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011049", "spec": "BIN73031211AA", "qty": 1000, "unit_price_tax": 2.6, "total_tax": 2600.0}, {"date": "2026-06-24", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011049", "spec": "BIN73031211AA", "qty": 1500, "unit_price_tax": 2.6, "total_tax": 3900.0}] },
+    { cust: "浙江凯华", proj: "LEV1", period: "2026-06-25", shipped: 50426.27, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "5-6月对账单(靖凯模塑抬头)，6.25对账，待确认", details: [{"date": "2026-06-10", "part": "VF-LIMO 7_RHD-左下挡脚板隔音垫", "part_code": "510000000000013930", "spec": "BIN32551820AA", "qty": 11275, "unit_price_tax": 0.73, "total_tax": 8230.75}, {"date": "2026-06-17", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 260, "unit_price_tax": 0.85, "total_tax": 221.0}, {"date": "2026-06-17", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 260, "unit_price_tax": 3.62, "total_tax": 941.2}, {"date": "2026-06-17", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 260, "unit_price_tax": 1.14, "total_tax": 296.4}, {"date": "2026-06-17", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 260, "unit_price_tax": 3.66, "total_tax": 951.6}, {"date": "2026-06-19", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 549, "unit_price_tax": 0.85, "total_tax": 466.65}, {"date": "2026-06-19", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 549, "unit_price_tax": 3.62, "total_tax": 1987.38}, {"date": "2026-06-19", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 549, "unit_price_tax": 1.14, "total_tax": 625.86}, {"date": "2026-06-19", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 549, "unit_price_tax": 3.66, "total_tax": 2009.34}, {"date": "2026-06-24", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 2200, "unit_price_tax": 0.85, "total_tax": 1870.0}, {"date": "2026-06-24", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 2200, "unit_price_tax": 3.62, "total_tax": 7964.0}, {"date": "2026-06-24", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 2200, "unit_price_tax": 1.14, "total_tax": 2508.0}, {"date": "2026-06-24", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 2110, "unit_price_tax": 3.66, "total_tax": 7722.6}, {"date": "2026-06-29", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 2250, "unit_price_tax": 0.85, "total_tax": 1912.5}, {"date": "2026-06-29", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 2250, "unit_price_tax": 3.62, "total_tax": 8145.0}, {"date": "2026-06-29", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 2250, "unit_price_tax": 1.14, "total_tax": 2565.0}, {"date": "2026-06-29", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 2340, "unit_price_tax": 3.66, "total_tax": 8564.4}] },
+    { cust: "浙江凯华", proj: "VFe32", period: "2026-07-25", shipped: 7572.21, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "7月对账单(凯华抬头)，7.25对账，待确认", details: [{"date": "2026-07-05", "part": "VFe32风管外部隔音棉", "part_code": "510000000000011049", "spec": "BIN73031211AA", "qty": 3291, "unit_price_tax": 2.6, "total_tax": 8556.6}] },
+    { cust: "浙江凯华", proj: "LEV1", period: "2026-07-25", shipped: 25902.65, recon: "pending", invoiced: 0, invoiceNo: "", invoiceDate: "", paid: 0, overdue: false, remark: "7月对账单(凯华抬头)，7.25对账，待确认", details: [{"date": "2026-07-05", "part": "VF-LIMO 7_RHD-左下挡脚板隔音垫", "part_code": "510000000000013930", "spec": "BIN32551820AA", "qty": 2000, "unit_price_tax": 0.73, "total_tax": 1460.0}, {"date": "2026-07-18", "part": "VF-LIMO7 RHD-中间中通右风管隔音棉", "part_code": "510000000000016599", "spec": "BIN32472013AA", "qty": 3000, "unit_price_tax": 0.85, "total_tax": 2550.0}, {"date": "2026-07-18", "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉", "part_code": "510000000000016600", "spec": "BIN32472016AA", "qty": 3000, "unit_price_tax": 3.62, "total_tax": 10860.0}, {"date": "2026-07-18", "part": "VF-LIMO7 RHD-中间中通左风管隔音棉", "part_code": "510000000000016601", "spec": "BIN32472017AA", "qty": 3000, "unit_price_tax": 1.14, "total_tax": 3420.0}, {"date": "2026-07-18", "part": "VF-LIMO7_RHD-右侧中通风管隔音棉", "part_code": "510000000000016602", "spec": "BIN32472018AA", "qty": 3000, "unit_price_tax": 3.66, "total_tax": 10980.0}] }
+  ]
+};
+
+// ===== 订单台账数据块（白猫脚本自动更新区域） =====
+// status: received(已接收) / confirmed(已确认回传) / delivered(已交付) / pending(待确认)
+const PO_DATA = {
+  updatedAt: "2026-08-24",
+  orders: [
+    { po: "4500118027", date: "2026-05-30", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031211AA", partCode: "510000000000011049", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 4000, unitPrice: 1.0, total: 4000.0, taxRate: 13, delivery: "2026-07-30", payment: "立即付款", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500118027", date: "2026-05-30", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031332AA", partCode: "510000000000011053", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 4000, unitPrice: 1.0, total: 4000.0, taxRate: 13, delivery: "2026-07-30", payment: "立即付款", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500118027", date: "2026-05-30", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031362AA", partCode: "510000000000011055", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 4000, unitPrice: 1.0, total: 4000.0, taxRate: 13, delivery: "2026-07-30", payment: "立即付款", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500118671", date: "2026-06-05", customer: "浙江凯华", part: "VF-LIMO 7_RHD-左下挡脚板隔音垫 BIN32551820AA", partCode: "510000000000013930", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 11275, unitPrice: 0.73, total: 8230.75, taxRate: 13, delivery: "2026-07-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500118691", date: "2026-06-06", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031211AA", partCode: "510000000000011049", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 2475, unitPrice: 2.6, total: 6435.0, taxRate: 13, delivery: "2026-07-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500119045", date: "2026-06-10", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031211AA", partCode: "510000000000011049", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 4791, unitPrice: 2.6, total: 12456.6, taxRate: 13, delivery: "2026-08-31", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500122238", date: "2026-07-17", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031362AA", partCode: "510000000000011055", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 3984, unitPrice: 0.6, total: 2390.4, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500122238", date: "2026-07-17", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031332AA", partCode: "510000000000011053", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 3361, unitPrice: 0.79, total: 2655.19, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123030", date: "2026-07-25", customer: "浙江凯华", part: "VFe32后三角板泡棉10×10×203mm BEX73020410AA", partCode: "510000000000011148", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 3976, unitPrice: 0.34, total: 1351.84, taxRate: 13, delivery: "2026-08-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123030", date: "2026-07-25", customer: "浙江凯华", part: "VFe32海绵条10x10x1842.8mm BEX73090103AA", partCode: "510000000000011036", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 1811, unitPrice: 1.84, total: 3332.24, taxRate: 13, delivery: "2026-08-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123030", date: "2026-07-25", customer: "浙江凯华", part: "VF-LIMO 7_RHD-左下挡脚板隔音垫 BIN32551820AA", partCode: "510000000000013930", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 3860, unitPrice: 0.73, total: 2817.8, taxRate: 13, delivery: "2026-08-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123139", date: "2026-07-27", customer: "浙江凯华", part: "VFe32前通风盖板本体海绵条6x10x1301.3", partCode: "510000000000011034", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 4000, unitPrice: 1.0, total: 4000.0, taxRate: 13, delivery: "2026-08-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123617", date: "2026-08-01", customer: "浙江凯华", part: "VFe32前端海绵条BIN73031026AA", partCode: "510000000000011030", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 1046, unitPrice: 0.9, total: 941.4, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123617", date: "2026-08-01", customer: "浙江凯华", part: "VFe32前除霜风管海绵条3B IN73031304AA", partCode: "510000000000011052", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 1046, unitPrice: 0.65, total: 679.9, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123617", date: "2026-08-01", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031332AA", partCode: "510000000000011053", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 346, unitPrice: 0.79, total: 273.34, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123617", date: "2026-08-01", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031362AA", partCode: "510000000000011055", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 346, unitPrice: 0.6, total: 207.6, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500123617", date: "2026-08-01", customer: "浙江凯华", part: "BCO3-BIN73631211AA-吹面风隔音棉", partCode: "510000000000015797", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 248, unitPrice: 2.6, total: 644.8, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32防水海绵22x10.5x6mm BEX73020104AA", partCode: "510000000000011006", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 3100, unitPrice: 0.1, total: 310.0, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VF-LIMO 7_RHD-左下挡脚板隔音垫 BIN32551820AA", partCode: "510000000000013930", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 2840, unitPrice: 0.73, total: 2073.2, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32防水海绵-侧裙 BEX73020703AA", partCode: "510000000000011011", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 51000, unitPrice: 0.05, total: 2550.0, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32后保险杠安装支架密封圈 BEX73010103AA", partCode: "510000000000010921", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 6176, unitPrice: 0.05, total: 308.8, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32后三角板泡棉10×10×203mm BEX73020410AA", partCode: "510000000000011148", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 5800, unitPrice: 0.34, total: 1972.0, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32海绵条10x10x1842.8mm BEX73090103AA", partCode: "510000000000011036", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 761, unitPrice: 1.84, total: 1400.24, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32前端海绵条BIN73031026AA", partCode: "510000000000011030", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 3752, unitPrice: 0.9, total: 3376.8, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031332AA", partCode: "510000000000011053", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 4743, unitPrice: 0.79, total: 3746.97, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32风管外部隔音棉 BIN73031362AA", partCode: "510000000000011055", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 3252, unitPrice: 0.6, total: 1951.2, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32前除霜风管海绵条3B IN73031304AA", partCode: "510000000000011052", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 3752, unitPrice: 0.65, total: 2438.8, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "BCO3-BIN73631211AA-吹面风隔音棉", partCode: "510000000000015797", spec: "", makeType: "自制", supplier: "上海泰瑞", qty: 1965, unitPrice: 2.6, total: 5109.0, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VF-LIMO 7_RHD-中间中通右风管隔音棉 BIN3247201", partCode: "510000000000016599", spec: "", makeType: "外协", supplier: "江苏诚丰", qty: 2422, unitPrice: 0.85, total: 2058.7, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VF-LIMO 7_RHD-左侧中通风管隔音棉 BIN32472016A", partCode: "510000000000016600", spec: "", makeType: "外协", supplier: "江苏诚丰", qty: 2282, unitPrice: 3.62, total: 8260.84, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VF-LIMO 7_RHD-中间中通左风管隔音棉 BIN3247201", partCode: "510000000000016601", spec: "", makeType: "外协", supplier: "江苏诚丰", qty: 2322, unitPrice: 1.14, total: 2647.08, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VF-LIMO 7_RHD-右侧中通风管隔音棉 BIN32472018A", partCode: "510000000000016602", spec: "", makeType: "外协", supplier: "江苏诚丰", qty: 2272, unitPrice: 3.66, total: 8315.52, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" },
+    { po: "4500125579", date: "2026-08-24", customer: "浙江凯华", part: "VFe32后扰流板内部海绵条 BEX73090010AA", partCode: "510000000000010920", spec: "", makeType: "外协", supplier: "宁波互盛", qty: 12000, unitPrice: 1.37, total: 16440.0, taxRate: 13, delivery: "2026-09-30", payment: "票到90天", status: "received", remark: "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准" }
+  ]
+};
+
+// ===== 项目管理数据块（白猫脚本自动更新区域） =====
+// 项目 status: active(开发中) / live(量产) / risk(风险) / wait(暂停)
+// 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
+// APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
+const PROJECT_DATA = {
+  updatedAt: "2026-08-05",
+  projects: [
+    {
+      name: "VFe32", customer: "凯华", oem: "VINFAST", product: "19个零件",
+      status: "live", rfqDate: "2026-05-25", phase: 5,
+      nextStep: "量产供货 8K套/月，年净利约20.3万(切换件)",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-06-04", "actualDate": "2026-06-02", "remark": "内部询价→报价→定点(切换件)"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-07-20", "actualDate": "2026-07-15", "remark": "图纸确认/样件认可"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-07-25", "actualDate": "2026-07-22", "remark": "模压工装/裁切工艺"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-07-30", "actualDate": "2026-07-28", "remark": "PPAP/试产确认"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-08-05", "actualDate": "2026-07-31", "remark": "SOP量产(切换件)"}],
+      timeline: [{"date": "2026-05-25", "event": "内部询价", "status": "done"}, {"date": "2026-06-09", "event": "报价提交", "status": "done"}, {"date": "2026-07-15", "event": "客户定点", "status": "done"}, {"date": "2026-07-31", "event": "SOP量产(切换件)", "status": "done"}],
+      parts: [{"code": "510000000000011053", "name": "VFe32风管外部隔音棉BIN73031332AA", "priceTax": 0.79, "pulled": true}, {"code": "510000000000011055", "name": "VFe32风管外部隔音棉BIN73031362AA", "priceTax": 0.6, "pulled": true}, {"code": "510000000000011049", "name": "VFe32风管外部隔音棉BIN73031211AA", "priceTax": 2.6, "pulled": true}, {"code": "510000000000011011", "name": "VFe32防水海绵-侧裙", "priceTax": 0.05, "pulled": false}, {"code": "510000000000010920", "name": "VFe32后扰流板内部海绵条", "priceTax": 1.37, "pulled": false}, {"code": "510000000000011034", "name": "VFe32前通风盖板本体海绵条6x10x1301.3", "priceTax": 1, "pulled": false}, {"code": "510000000000010921", "name": "VFe32后保险杠安装支架密封圈", "priceTax": 0.05, "pulled": false}, {"code": "510000000000011148", "name": "VFe32后三角板泡棉10×10×203mm", "priceTax": 0.34, "pulled": true}, {"code": "510000000000011052", "name": "VFe32前除霜风管海绵条3", "priceTax": 0.65, "pulled": true}, {"code": "510000000000011030", "name": "VFe32前端海绵条", "priceTax": 0.9, "pulled": true}, {"code": "510000000000010919", "name": "VFe32防水垫圈", "priceTax": 0.05, "pulled": false}, {"code": "510000000000011054", "name": "VFe32风管接口海绵条", "priceTax": 0.48, "pulled": false}, {"code": "510000000000011050", "name": "VFe32前除霜风管海绵条1", "priceTax": 0.46, "pulled": false}, {"code": "510000000000011006", "name": "VFe32防水海绵22x10.5x6mm", "priceTax": 0.1, "pulled": false}, {"code": "510000000000011056", "name": "VFe32风管接口海绵条", "priceTax": 0.52, "pulled": false}, {"code": "510000000000011035", "name": "VFe32后背门扣手盖板本体防水条3x4x1120mm", "priceTax": 0.4, "pulled": false}, {"code": "510000000000011051", "name": "VFe32前除霜风管海绵条2", "priceTax": 0.46, "pulled": false}, {"code": "320000000000011426", "name": "VFe32售后件防水海绵", "priceTax": 0.05, "pulled": false}, {"code": "510000000000011036", "name": "VFe32海绵条", "priceTax": 1.84, "pulled": true}]
+    },
+    {
+      name: "BC03", customer: "凯华", oem: "VINFAST", product: "1个零件",
+      status: "live", rfqDate: "2026-05-10", phase: 5,
+      nextStep: "已量产（吹面风隔音棉 BIN73631211AA）",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-05-20", "actualDate": "2026-05-18", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-06-10", "actualDate": "2026-06-08", "remark": "图纸/规格确认"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-07-01", "actualDate": "2026-06-30", "remark": "裁切工艺确认"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-08-15", "actualDate": "2026-08-02", "remark": "首批订单交付确认，转入量产"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-08-10", "actualDate": "2026-08-03", "remark": "SOP量产"}],
+      timeline: [{"date": "2026-05-10", "event": "内部询价", "status": "done"}, {"date": "2026-05-25", "event": "报价提交", "status": "done"}, {"date": "2026-06-15", "event": "客户定点", "status": "done"}, {"date": "2026-08-01", "event": "首批订单（248件）", "status": "doing"}, {"date": "2026-08-03", "event": "SOP量产", "status": "done"}],
+      parts: [{"code": "510000000000015797", "name": "BC03吹面风隔音棉-BIN73631211AA", "priceTax": 2.6, "pulled": true}]
+    },
+    {
+      name: "LEV1", customer: "凯华", oem: "VINFAST", product: "5个零件",
+      status: "live", rfqDate: "2026-05-12", phase: 5,
+      nextStep: "已量产对账（BIN32472013/16/17/18AA, 32551820AA）",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-05-30", "actualDate": "2026-05-28", "remark": "内部询价→报价→定点"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-06-05", "actualDate": "2026-06-03", "remark": "图纸确认(切换件)"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-06-08", "actualDate": "2026-06-06", "remark": "裁切工艺/胶带贴合"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-06-10", "actualDate": "2026-06-08", "remark": "PPAP/试产"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-06-15", "actualDate": "2026-06-10", "remark": "SOP量产，5-6月已对账"}],
+      timeline: [{"date": "2026-05-12", "event": "内部询价", "status": "done"}, {"date": "2026-05-26", "event": "报价提交", "status": "done"}, {"date": "2026-06-03", "event": "客户定点", "status": "done"}, {"date": "2026-06-10", "event": "SOP量产(切换件)", "status": "done"}],
+      parts: [{"code": "510000000000016599", "name": "VF-LIMO7 RHD-中间中通右风管隔音棉-BIN32472013AA", "priceTax": 0.8471, "pulled": true}, {"code": "510000000000016600", "name": "VF-LIMO7 RHD-左侧中通右风管隔音棉-BIN32472016AA", "priceTax": 3.616, "pulled": true}, {"code": "510000000000016601", "name": "VF-LIMO7 RHD-中间中通左风管隔音棉-BIN32472017AA", "priceTax": 1.1392, "pulled": true}, {"code": "510000000000016602", "name": "VF-LIMO7_RHD-右侧中通风管隔音棉-BIN32472018AA", "priceTax": 3.6559, "pulled": true}, {"code": "510000000000013930", "name": "VF-LIMO 7_RHD-左下挡脚板隔音垫-BIN32551820AA", "priceTax": 0.73, "pulled": true}]
+    },
+    {
+      name: "ZH5EM", customer: "凯华", oem: "SAIC", product: "前舱储物盒 10零件(8泡棉+2蘑菇塔扣)",
+      status: "active", rfqDate: "", phase: 1,
+      nextStep: "内部询价进行中：海绵外协 宁波互盛，待定内部询价日期与报价",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "零件清单已收到(10件)，收益分析完成，海绵外协宁波互盛询价中"}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-08-05", "event": "零件清单与收益分析完成", "status": "done"}, {"date": "2026-08-05", "event": "外协询价启动(广裕橡塑/兰谷电子)", "status": "in_progress"}],
+      parts: [{"code": "510000000000016964", "name": "ZH5EM前舱储物盒泡棉1(12268515-2)", "priceTax": 0.7, "pulled": false}, {"code": "510000000000016965", "name": "ZH5EM前舱储物盒泡棉2(12268515-3)", "priceTax": 0.18, "pulled": false}, {"code": "510000000000016966", "name": "ZH5EM前舱储物盒泡棉3(12268515-4)", "priceTax": 0.15, "pulled": false}, {"code": "510000000000016970", "name": "ZH5EM前舱储物盒泡棉4(12268515-8)", "priceTax": 0.15, "pulled": false}, {"code": "510000000000016972", "name": "ZH5EM前舱储物盒堵盖泡棉(12591755-2)", "priceTax": 0.3, "pulled": false}, {"code": "510000000000016974", "name": "ZH5EM前舱储物盒堵盖泡棉(12426494-2)", "priceTax": 0.07, "pulled": false}, {"code": "510000000000016973", "name": "ZH5EM前舱储物盒右侧堵盖泡棉(12426495-2)", "priceTax": 0.4, "pulled": false}, {"code": "510000000000017022", "name": "ZH5EM前舱储物盒泡棉5(12268515-10)", "priceTax": 0.05, "pulled": false}, {"code": "510000000000016967", "name": "ZH5EM前舱储物盒蘑菇塔扣(12268515-5)", "priceTax": 1.2, "pulled": false}, {"code": "510000000000016969", "name": "ZH5EM前舱储物盒蘑菇塔扣(12268515-7)", "priceTax": 1.0, "pulled": false}]
+    },
+    {
+      name: "SHD", customer: "凯华", oem: "SAIC", product: "毛毡 1个零件",
+      status: "active", rfqDate: "", phase: 1,
+      nextStep: "待补充：内部询价日期 / 零件清单 / 进度",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [],
+      parts: []
+    },
+    {
+      name: "VWCO", customer: "巴西大众(VWCO)", oem: "VW", product: "篷布 5个零件",
+      status: "active", rfqDate: "", phase: 1,
+      nextStep: "NDA已签；现阶段需提供大众集团下的审核证明",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "NDA已签，开发中；待提供大众集团审核证明(供应商资质)"}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-08-05", "event": "项目登记：NDA已签，产品篷布，开发中", "status": "done"}],
+      parts: []
+    },
+    {
+      name: "AL01", customer: "凯华", oem: "VINFAST", product: "海绵 6个零件",
+      status: "active", rfqDate: "", phase: 1,
+      nextStep: "待补充：内部询价日期 / 零件清单 / 进度",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [],
+      parts: []
+    },
+    {
+      name: "VFe32-3M海绵胶", customer: "凯华", oem: "VINFAST", product: "3M海绵胶",
+      status: "active", rfqDate: "", phase: 2,
+      nextStep: "图纸已收到，准备供小样 20片",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "2026-07-28", "remark": "项目启动，图纸确认"}, {"phase": 2, "name": "产品设计和开发", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "图纸已收到(7.28)，准备供小样20片"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-07-28", "event": "图纸已收到", "status": "done"}, {"date": "2026-08-05", "event": "准备供小样20片", "status": "in_progress"}],
+      parts: []
+    },
+    {
+      name: "蔚来风管海绵", customer: "浙江鑫凯", oem: "蔚来(NIO)", product: "风管海绵",
+      status: "active", rfqDate: "", phase: 2,
+      nextStep: "材料报价已报；寄材料样阶段",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "", "remark": "项目启动"}, {"phase": 2, "name": "产品设计和开发", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "材料报价已报，寄材料样中"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-08-05", "event": "材料报价已报", "status": "done"}, {"date": "2026-08-05", "event": "寄材料样阶段", "status": "in_progress"}],
+      parts: []
+    }
+  ]
+};
+
+// ===== 任务待办数据块（白猫脚本自动更新区域） =====
+// status: todo(待办) / doing(进行中) / done(已完成)
+// priority: P0(紧急) / P1(重要) / P2(常规) / P3(低优)
+const TASK_DATA = {
+  updatedAt: "2026-08-04",
+  tasks: [
+    { id: "T001", title: "VWCO物流成本表填写", project: "VWCO 巴西卡车", owner: "Zane", priority: "P0", due: "2026-08-10", status: "doing", remark: "确认运输方式后填写，中英对照版已交付" },
+    { id: "T002", title: "VWCO包装方案表填写", project: "VWCO 巴西卡车", owner: "Zane", priority: "P1", due: "2026-08-15", status: "todo", remark: "待物流数据确认后联动填写" },
+    { id: "T003", title: "VWCO报价邮件发送", project: "VWCO 巴西卡车", owner: "Zane", priority: "P0", due: "2026-08-12", status: "todo", remark: "两表填完后统一邮件发送" },
+    { id: "T004", title: "Limo Green 海绵外协打样跟进", project: "Limo Green 海绵（外协）", owner: "Zane", priority: "P0", due: "2026-08-05", status: "doing", remark: "已超计划3天，催外协反馈打样结果" },
+    { id: "T005", title: "Limo Green 吸音棉打样安排", project: "Limo Green 吸音棉", owner: "Zane", priority: "P1", due: "2026-08-14", status: "todo", remark: "备料已完成，待安排打样" },
+    { id: "T006", title: "凯华7月对账单确认", project: "VFe32 小海绵（凯华）", owner: "财务", priority: "P1", due: "2026-08-06", status: "doing", remark: "7月对账单待客户确认，确认后开票" },
+    { id: "T007", title: "VFe32 8月拉动计划核对", project: "VFe32 小海绵（凯华）", owner: "Zane", priority: "P2", due: "2026-08-08", status: "todo", remark: "与订单台账交叉核对数量" },
+    { id: "T008", title: "凯华逾期回款催收", project: "VFe32 小海绵（凯华）", owner: "Zane", priority: "P0", due: "2026-08-07", status: "todo", remark: "INV-202606-018 开票已超30天，催款" },
+    { id: "T009", title: "7月对账单财务录入", project: "内部", owner: "白猫", priority: "P2", due: "2026-08-05", status: "doing", remark: "对账单确认后录入财务看板" },
+    { id: "T010", title: "周报汇总", project: "内部", owner: "Zane", priority: "P3", due: "2026-08-08", status: "todo", remark: "每周五下班前输出" }
+  ]
+};
+
+// ===== 非26年量产项目数据块（白猫脚本自动更新区域） =====
+// 海泰集团 · 6月销货出库 vs 7月开票对比
+const NON2026_DATA = {
+  updatedAt: "2026-08-05",
+  customer: "海泰集团",
+  module: "非26年量产项目",
+  periods: [
+    {
+      id: "202606", label: "5月发货 vs 6月开票",
+      note: "5月销货出库 vs 6月开票对比（营销四部数据）",
+      totals: {qty6: 196800, rev6: 240592.98, qty7: 122500, amt7: 200291.0, diffQty: -74300, diffAmt: -40301.98},
+      rows: [
+      { cust: "上海海泰", code: "1010200207", part: "隔音棉-01(双组分）", spec: "BQF92806-01", price: 1.3782, qty6: 28000, rev6: 38589.6, qty7: 14000, amt7: 19294.8, diffQty: -14000, diffAmt: -19294.8 },
+      { cust: "上海海泰", code: "1010200208", part: "隔音棉-02(双组分）", spec: "BQF92806-02", price: 0.2464, qty6: 34000, rev6: 8377.6, qty7: 17000, amt7: 4188.8, diffQty: -17000, diffAmt: -4188.8 },
+      { cust: "上海海泰", code: "1010200209", part: "隔音棉-03(双组分）", spec: "BQF92806-03", price: 0.1369, qty6: 34000, rev6: 4654.6, qty7: 17000, amt7: 2327.3, diffQty: -17000, diffAmt: -2327.3 },
+      { cust: "上海海泰", code: "1010200210", part: "隔音棉-01(双组分）", spec: "BQF97110-01", price: 1.3873, qty6: 6000, rev6: 8323.8, qty7: 3000, amt7: 4161.9, diffQty: -3000, diffAmt: -4161.9 },
+      { cust: "苏州海泰", code: "1010100550", part: "左后轮罩吸音棉", spec: "57G-867-765-02", price: 1.9206, qty6: 6000, rev6: 11523.6, qty7: 3000, amt7: 5589, diffQty: -3000, diffAmt: -5934.6 },
+      { cust: "苏州海泰", code: "1010101218", part: "右后轮罩吸音棉", spec: "57G-867-766-02", price: 1.863, qty6: 6000, rev6: 11178, qty7: 3000, amt7: 5589, diffQty: -3000, diffAmt: -5589 },
+      { cust: "苏州海泰", code: "1010101407", part: "左C柱上饰板吸音棉", spec: "LAJ-50060207", price: 0.541, qty6: 40000, rev6: 21640, qty7: 20000, amt7: 25600, diffQty: -20000, diffAmt: 3960 },
+      { cust: "郑州海泰", code: "1010101233", part: "C柱上吸音棉（左）", spec: "10030011-02", price: 0.7621, qty6: 8000, rev6: 6096.8, qty7: 7200, amt7: 5487.12, diffQty: -800, diffAmt: -609.68 },
+      { cust: "郑州海泰", code: "1010101235", part: "D柱上吸音棉（左）", spec: "10030013-02", price: 1.5807, qty6: 5000, rev6: 7903.5, qty7: 6800, amt7: 10748.76, diffQty: 1800, diffAmt: 2845.26 },
+      { cust: "郑州海泰", code: "1010101236", part: "D柱上吸音棉（右1）", spec: "10030014-02-01", price: 0.3575, qty6: 5200, rev6: 1859, qty7: 6400, amt7: 2288, diffQty: 1200, diffAmt: 429 },
+      { cust: "郑州海泰", code: "1010101237", part: "D柱上吸音棉（右2）", spec: "10030014-02-02", price: 0.6586, qty6: 5200, rev6: 3424.72, qty7: 6400, amt7: 4215.04, diffQty: 1200, diffAmt: 790.32 },
+      { cust: "郑州海泰", code: "1010101238", part: "行李箱门槛吸音棉", spec: "10030029-02", price: 0.7809, qty6: 4000, rev6: 3123.6, qty7: 5500, amt7: 4294.95, diffQty: 1500, diffAmt: 1171.35 },
+      { cust: "郑州海泰", code: "1010200211", part: "左侧吸音棉1(双组分）", spec: "10030025-03-01", price: 8.7504, qty6: 6000, rev6: 52502.4, qty7: 4500, amt7: 39376.8, diffQty: -1500, diffAmt: -13125.6 },
+      { cust: "郑州海泰", code: "1010200212", part: "左侧吸音棉2(双组分）", spec: "10030025-03-02", price: 2.9921, qty6: 6000, rev6: 17952.6, qty7: 4500, amt7: 13464.45, diffQty: -1500, diffAmt: -4488.15 },
+      { cust: "郑州海泰", code: "1010200213", part: "右侧吸音棉(双组分）", spec: "10030026-03", price: 12.7774, qty6: 3400, rev6: 43443.16, qty7: 4200, amt7: 53665.08, diffQty: 800, diffAmt: 10221.92 }
+      ]
+    },
+    {
+      id: "202607", label: "6月发货 vs 7月开票",
+      note: "6月销货出库 vs 7月开票对比（营销四部数据）",
+      totals: {qty6: 144680, rev6: 450428.83, qty7: 91490, amt7: 244115.47, diffQty: -53190, diffAmt: -206313.36},
+      rows: [
+      { cust: "苏州海泰", code: "1010100550", part: "左后轮罩吸音棉", spec: "57G-867-765-02", price: 1.9206, qty6: 3000, rev6: 5761.8, qty7: 3000, amt7: 5589, diffQty: 0, diffAmt: -172.8 },
+      { cust: "苏州海泰", code: "1010101218", part: "右后轮罩吸音棉", spec: "57G-867-766-02", price: 1.863, qty6: 3000, rev6: 5589, qty7: 3000, amt7: 5589, diffQty: 0, diffAmt: 0 },
+      { cust: "苏州海泰", code: "1010101407", part: "左C柱上饰板吸音棉", spec: "LAJ-50060207", price: 1.28, qty6: 19200, rev6: 24576, qty7: 9600, amt7: 12288, diffQty: -9600, diffAmt: -12288 },
+      { cust: "郑州海泰", code: "1010100338", part: "吸音棉左1", spec: "10870505-01", price: 8.4829, qty6: 240, rev6: 2035.9, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1017.95 },
+      { cust: "郑州海泰", code: "1010101233", part: "C柱上吸音棉（左）", spec: "10030011-02", price: 0.7621, qty6: 21200, rev6: 16156.52, qty7: 16000, amt7: 12193.6, diffQty: -5200, diffAmt: -3962.92 },
+      { cust: "郑州海泰", code: "1010101235", part: "D柱上吸音棉（左）", spec: "10030013-02", price: 1.5807, qty6: 11600, rev6: 18336.12, qty7: 10000, amt7: 15807, diffQty: -1600, diffAmt: -2529.12 },
+      { cust: "郑州海泰", code: "1010101236", part: "D柱上吸音棉（右1）", spec: "10030014-02-01", price: 0.3575, qty6: 11200, rev6: 4004, qty7: 10000, amt7: 3575, diffQty: -1200, diffAmt: -429 },
+      { cust: "郑州海泰", code: "1010101237", part: "D柱上吸音棉（右2）", spec: "10030014-02-02", price: 0.6586, qty6: 11200, rev6: 7376.32, qty7: 10000, amt7: 6586, diffQty: -1200, diffAmt: -790.32 },
+      { cust: "郑州海泰", code: "1010101238", part: "行李箱门槛吸音棉", spec: "10030029-02", price: 0.7809, qty6: 20500, rev6: 16008.45, qty7: 8000, amt7: 6247.2, diffQty: -12500, diffAmt: -9761.25 },
+      { cust: "郑州海泰", code: "1010200211", part: "左侧吸音棉1(双组分）", spec: "10030025-03-01", price: 8.7504, qty6: 14000, rev6: 122505.6, qty7: 7000, amt7: 61252.8, diffQty: -7000, diffAmt: -61252.8 },
+      { cust: "郑州海泰", code: "1010200212", part: "左侧吸音棉2(双组分）", spec: "10030025-03-02", price: 2.9921, qty6: 14800, rev6: 44283.08, qty7: 7400, amt7: 22141.54, diffQty: -7400, diffAmt: -22141.54 },
+      { cust: "郑州海泰", code: "1010200213", part: "右侧吸音棉(双组分）", spec: "10030026-03", price: 12.7774, qty6: 14200, rev6: 181439.08, qty7: 7100, amt7: 90719.54, diffQty: -7100, diffAmt: -90719.54 },
+      { cust: "郑州海泰", code: "1010200292", part: "吸音棉右1", spec: "10870512-01（150^箱）", price: 0.6439, qty6: 300, rev6: 193.17, qty7: 150, amt7: 90.89, diffQty: -150, diffAmt: -102.28 },
+      { cust: "郑州海泰", code: "1010200294", part: "吸音棉右3", spec: "10870512-03（60^箱）", price: 9.0158, qty6: 240, rev6: 2163.79, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1145.84 }
+      ]
+    },
+    {
+      id: "merged", label: "两期合并·未开票缺口",
+      note: "5-6月累计发货 vs 6-7月累计开票（两期合并，按零件汇总）",
+      totals: {qty6: 341480, rev6: 691021.81, qty7: 213990, amt7: 444406.47, diffQty: -127490, diffAmt: -246615.34},
+      rows: [
+      { cust: "郑州海泰", code: "1010200213", part: "右侧吸音棉(双组分）", spec: "10030026-03", price: 12.7774, qty6: 17600, rev6: 224882.24, qty7: 11300, amt7: 144384.62, diffQty: -6300, diffAmt: -80497.62 },
+      { cust: "郑州海泰", code: "1010200211", part: "左侧吸音棉1(双组分）", spec: "10030025-03-01", price: 8.7504, qty6: 20000, rev6: 175008.0, qty7: 11500, amt7: 100629.6, diffQty: -8500, diffAmt: -74378.4 },
+      { cust: "郑州海泰", code: "1010200212", part: "左侧吸音棉2(双组分）", spec: "10030025-03-02", price: 2.9921, qty6: 20800, rev6: 62235.68, qty7: 11900, amt7: 35605.99, diffQty: -8900, diffAmt: -26629.69 },
+      { cust: "上海海泰", code: "1010200207", part: "隔音棉-01(双组分）", spec: "BQF92806-01", price: 1.3782, qty6: 28000, rev6: 38589.6, qty7: 14000, amt7: 19294.8, diffQty: -14000, diffAmt: -19294.8 },
+      { cust: "郑州海泰", code: "1010101238", part: "行李箱门槛吸音棉", spec: "10030029-02", price: 0.7809, qty6: 24500, rev6: 19132.05, qty7: 13500, amt7: 10542.15, diffQty: -11000, diffAmt: -8589.9 },
+      { cust: "苏州海泰", code: "1010101407", part: "左C柱上饰板吸音棉", spec: "LAJ-50060207", price: 0.7807, qty6: 59200, rev6: 46216.0, qty7: 29600, amt7: 37888.0, diffQty: -29600, diffAmt: -8328.0 },
+      { cust: "苏州海泰", code: "1010100550", part: "左后轮罩吸音棉", spec: "57G-867-765-02", price: 1.9206, qty6: 9000, rev6: 17285.4, qty7: 6000, amt7: 11178.0, diffQty: -3000, diffAmt: -6107.4 },
+      { cust: "苏州海泰", code: "1010101218", part: "右后轮罩吸音棉", spec: "57G-867-766-02", price: 1.863, qty6: 9000, rev6: 16767.0, qty7: 6000, amt7: 11178.0, diffQty: -3000, diffAmt: -5589.0 },
+      { cust: "郑州海泰", code: "1010101233", part: "C柱上吸音棉（左）", spec: "10030011-02", price: 0.7621, qty6: 29200, rev6: 22253.32, qty7: 23200, amt7: 17680.72, diffQty: -6000, diffAmt: -4572.6 },
+      { cust: "上海海泰", code: "1010200208", part: "隔音棉-02(双组分）", spec: "BQF92806-02", price: 0.2464, qty6: 34000, rev6: 8377.6, qty7: 17000, amt7: 4188.8, diffQty: -17000, diffAmt: -4188.8 },
+      { cust: "上海海泰", code: "1010200210", part: "隔音棉-01(双组分）", spec: "BQF97110-01", price: 1.3873, qty6: 6000, rev6: 8323.8, qty7: 3000, amt7: 4161.9, diffQty: -3000, diffAmt: -4161.9 },
+      { cust: "上海海泰", code: "1010200209", part: "隔音棉-03(双组分）", spec: "BQF92806-03", price: 0.1369, qty6: 34000, rev6: 4654.6, qty7: 17000, amt7: 2327.3, diffQty: -17000, diffAmt: -2327.3 },
+      { cust: "郑州海泰", code: "1010200294", part: "吸音棉右3", spec: "10870512-03（60^箱）", price: 9.0158, qty6: 240, rev6: 2163.79, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1145.84 },
+      { cust: "郑州海泰", code: "1010100338", part: "吸音棉左1", spec: "10870505-01", price: 8.4829, qty6: 240, rev6: 2035.9, qty7: 120, amt7: 1017.95, diffQty: -120, diffAmt: -1017.95 },
+      { cust: "郑州海泰", code: "1010200292", part: "吸音棉右1", spec: "10870512-01（150^箱）", price: 0.6439, qty6: 300, rev6: 193.17, qty7: 150, amt7: 90.89, diffQty: -150, diffAmt: -102.28 },
+      { cust: "郑州海泰", code: "1010101236", part: "D柱上吸音棉（右1）", spec: "10030014-02-01", price: 0.3575, qty6: 16400, rev6: 5863.0, qty7: 16400, amt7: 5863.0, diffQty: 0, diffAmt: 0.0 },
+      { cust: "郑州海泰", code: "1010101237", part: "D柱上吸音棉（右2）", spec: "10030014-02-02", price: 0.6586, qty6: 16400, rev6: 10801.04, qty7: 16400, amt7: 10801.04, diffQty: 0, diffAmt: 0.0 },
+      { cust: "郑州海泰", code: "1010101235", part: "D柱上吸音棉（左）", spec: "10030013-02", price: 1.5807, qty6: 16600, rev6: 26239.62, qty7: 16800, amt7: 26555.76, diffQty: 200, diffAmt: 316.14 }
+      ]
+    }
+  ]
+};
+
+// ===== Tab 切换 =====
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    const label = { project: '项目看板', pull: '月拉动', po: '订单台账', finance: '对账开票', apqp: '项目管理', task: '任务待办', non2026: '非26年量产项目' };
+    if (b.textContent.includes(label[name] || '')) {
+      b.classList.add('active');
+    }
+  });
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ===== 项目看板交互 =====
+function toggleDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('.detail-row').forEach(r => {
+    if (r !== detailRow) r.style.display = 'none';
+  });
+  detailRow.style.display = isHidden ? '' : 'none';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(100px)', 2000);
+}
+
+// ===== 首页项目看板渲染（数据驱动，复用 PROJECT_DATA） =====
+function renderBoard() {
+  const wrap = document.getElementById('boardTableWrap');
+  const projects = PROJECT_DATA.projects;
+  const allParts = projects.flatMap(p => p.parts || []);
+  const nPulled = allParts.filter(pt => pt.pulled).length;
+
+  document.getElementById('boardProjTotal').textContent = projects.length;
+  document.getElementById('boardPartTotal').textContent = allParts.length;
+  document.getElementById('boardPulled').textContent = nPulled;
+  document.getElementById('boardNotPulled').textContent = allParts.length - nPulled;
+
+  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>零件</th><th>APQP</th><th>状态</th><th>下一步</th></tr>';
+  projects.forEach(p => {
+    const nP = (p.parts || []).length;
+    const nPul = (p.parts || []).filter(pt => pt.pulled).length;
+    const cur = p.phases.find(ph => ph.status === 'doing') || p.phases.find(ph => ph.status === 'late') || p.phases[p.phases.length - 1];
+    const partsRows = (p.parts || []).map(pt => `<tr>
+      <td>${pt.name}</td>
+      <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
+      <td style="color:var(--muted);font-size:11px">含税 ¥${(pt.priceTax ?? 0).toFixed(2)}</td>
+      <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
+    </tr>`).join('');
+    const tlRows = (p.timeline || []).map(t => `<tr>
+      <td>${t.date}</td>
+      <td>${t.event}</td>
+      <td>${t.status === 'done' ? '<span class="status st-live">✅ 完成</span>' : '<span class="status st-blue">🔄 进行中</span>'}</td>
+    </tr>`).join('');
+    html += `<tr class="fin-row" onclick="toggleApqpDetail(this)">
+      <td class="part">${p.name}</td>
+      <td>${p.customer}</td>
+      <td>${p.oem ? `<span class="status st-blue" style="font-weight:700">${p.oem}</span>` : '—'}</td>
+      <td><span style="font-size:12px">${nP}个零件 · <span style="color:var(--green)">${nPul}已拉动</span>/<span style="color:var(--yellow)">${nP - nPul}未拉</span></span></td>
+      <td>${p.phase}/5</td>
+      <td>${apqpStatusBadge(p.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${p.nextStep || ''}</td>
+      <td class="fin-toggle">▸ 展开</td>
+    </tr>`;
+    html += `<tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner">
+      <h4>🚀 ${p.name} · 项目详情</h4>
+      <table class="sub-table">
+        <tr><th>项目</th><th>客户</th><th>主机厂</th><th>内部询价</th><th>当前阶段</th></tr>
+        <tr><td>${p.name}</td><td>${p.customer}</td><td>${p.oem || '—'}</td><td>${p.rfqDate || '—'}</td><td>${cur ? `${cur.phase}. ${cur.name}` : '—'}</td></tr>
+      </table>
+      ${partsRows ? `<h4 style="margin-top:14px">🧩 零件清单（${nP}个）</h4>
+      <table class="sub-table">
+        <tr><th>零件名称</th><th>物料编码</th><th>含税价</th><th>状态</th></tr>
+        ${partsRows}
+      </table>` : ''}
+      ${tlRows ? `<h4 style="margin-top:14px">📅 时间线</h4>
+      <table class="sub-table">
+        <tr><th>日期</th><th>事件</th><th>状态</th></tr>
+        ${tlRows}
+      </table>` : ''}
+    </div></td></tr>`;
+  });
+  html += '</table>';
+  wrap.innerHTML = html;
+}
+
+// ===== 月拉动计划渲染 =====
+const statusMap = {
+  live: '<span class="status st-live">✅ 已确认</span>',
+  plan: '<span class="status st-plan">🔵 预测</span>',
+  wait: '<span class="status st-wait">🔄 待定</span>'
+};
+
+let currentMonth = new Date().getMonth() + 1;
+const today = new Date();
+
+function daysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
+function renderMonthPicker() {
+  const wrap = document.getElementById('monthPicker');
+  let html = '';
+  for (let m = 1; m <= 12; m++) {
+    const hasData = PULL_DATA.rows.some(r => r.daily[m]);
+    html += `<button class="${m === currentMonth ? 'active' : ''}${hasData ? ' has' : ''}" onclick="selectMonth(${m})">${m}月</button>`;
+  }
+  wrap.innerHTML = html;
+}
+
+function selectMonth(m) {
+  currentMonth = m;
+  document.querySelectorAll('#monthPicker button').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent) === m);
+  });
+  renderPull();
+}
+
+function rateClass(rate) {
+  if (rate >= 100) return 'rate-high';
+  if (rate >= 90) return 'rate-mid';
+  return 'rate-low';
+}
+
+let pullTypeFilter = 'all';
+function setPullFilter(t) { pullTypeFilter = t; renderPull(); }
+
+function renderPull() {
+  const wrap = document.getElementById('tableWrap');
+  const dim = daysInMonth(PULL_DATA.year, currentMonth);
+  const srcRows = pullTypeFilter === 'make' ? PULL_DATA.rows.filter(r => r.makeType === '自制')
+    : pullTypeFilter === 'out' ? PULL_DATA.rows.filter(r => r.makeType === '外协')
+    : PULL_DATA.rows;
+  const hasAnyData = srcRows.some(r => r.daily[currentMonth]);
+
+  if (!hasAnyData) {
+    wrap.innerHTML = `<div class="empty-note">📭 ${currentMonth}月${pullTypeFilter !== 'all' ? '该筛选条件下' : ''}暂无按天拉动数据 —— 待白猫接入订单信息后自动填充</div>`;
+    return;
+  }
+
+  const planTotals = new Array(dim).fill(0);
+  const actTotals = new Array(dim).fill(0);
+
+  // —— 按项目分组 ——
+  const projOrder = [], projOf = {};
+  srcRows.forEach(r => {
+    const arr = r.daily[currentMonth];
+    if (!arr) return;
+    const p = r.project || r.proj || '未分组';
+    if (!projOf[p]) { projOf[p] = []; projOrder.push(p); }
+    projOf[p].push(r);
+  });
+
+  // —— 统计卡总览 ——
+  let nRows = 0, grandPlan = 0, grandAct = 0;
+  projOrder.forEach(p => projOf[p].forEach(r => {
+    nRows++;
+    const arr = r.daily[currentMonth], act = r.actual[currentMonth] || [];
+    for (let d = 0; d < dim; d++) { grandPlan += arr[d] || 0; grandAct += act[d] || 0; }
+  }));
+  const nProj = projOrder.length;
+  const grandRate = grandPlan > 0 ? Math.round((grandAct / grandPlan) * 100) : 0;
+  const gRateTxt = grandPlan > 0 && grandAct > 0 ? grandRate + '%' : '—';
+  const gRk = grandRate >= 100 ? 'rate-high' : grandRate >= 90 ? 'rate-mid' : 'rate-low';
+  document.getElementById('pullStats').innerHTML =
+    `<div class="ps-card"><div class="ps-label">在产项目</div><div class="ps-num">${nProj}</div><div class="ps-sub">${nRows} 个零件 · ${currentMonth}月按天拉动</div></div>` +
+    `<div class="ps-card"><div class="ps-label">月计划总量</div><div class="ps-num">${grandPlan.toLocaleString()}</div><div class="ps-sub">件</div></div>` +
+    `<div class="ps-card"><div class="ps-label">月实际总量</div><div class="ps-num">${grandAct.toLocaleString()}</div><div class="ps-sub">${grandAct > 0 ? '件' : '待对账'}</div></div>` +
+    `<div class="ps-card ps-acc"><div class="ps-label">总达成率</div><div class="ps-num">${gRateTxt}</div><div class="ps-bar"><i class="${gRk}" style="width:${Math.min(grandRate, 100)}%"></i></div><div class="ps-sub">计划 vs 实际</div></div>` +
+    `<div class="type-filter-bar"><span class="type-legend"><span class="legend-item lg-make"><span class="dot dot-make"></span>自制 · 本公司生产</span><span class="legend-item lg-out"><span class="dot dot-out"></span>外协 · 外协加工</span></span><span class="type-sep"></span><span class="type-filter"><button class="btn-all ${pullTypeFilter === 'all' ? 'active' : ''}" onclick="setPullFilter('all')">全部</button><button class="btn-make ${pullTypeFilter === 'make' ? 'active' : ''}" onclick="setPullFilter('make')">只看自制</button><button class="btn-out ${pullTypeFilter === 'out' ? 'active' : ''}" onclick="setPullFilter('out')">只看外协</button></span></div>`;
+
+  let html = '<table><thead><tr><th>项目</th><th>零件</th><th>状态</th><th>月计划</th><th>月实际</th><th>达成率</th>';
+  const wk = ['日', '一', '二', '三', '四', '五', '六'];
+  for (let d = 1; d <= dim; d++) {
+    const dt = new Date(PULL_DATA.year, currentMonth - 1, d);
+    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+    const isToday = dt.toDateString() === today.toDateString();
+    html += `<th class="${isToday ? 'today' : isWeekend ? 'weekend' : ''}">${d}${isToday ? '★' : ''}<span class="wk">周${wk[dt.getDay()]}</span></th>`;
+  }
+  html += '</tr></thead><tbody>';
+
+  // —— 项目行(汇总) + 零件明细行(默认折叠) ——
+  projOrder.forEach(p => {
+    const rows = projOf[p];
+    const pPlan = new Array(dim).fill(0), pAct = new Array(dim).fill(0);
+    let pPlanSum = 0, pActSum = 0;
+    rows.forEach(r => {
+      const arr = r.daily[currentMonth], act = r.actual[currentMonth] || [];
+      for (let d = 0; d < dim; d++) {
+        pPlan[d] += arr[d] || 0; pAct[d] += act[d] || 0;
+        pPlanSum += arr[d] || 0; pActSum += act[d] || 0;
+        planTotals[d] += arr[d] || 0; actTotals[d] += act[d] || 0;
+      }
+    });
+    const prate = pPlanSum > 0 ? Math.round((pActSum / pPlanSum) * 100) : 0;
+    const pid = 'proj' + p.replace(/[^A-Za-z0-9]/g, '');
+    const nMake = rows.filter(r => r.makeType === '自制').length;
+    const nOut = rows.length - nMake;
+    html += `<tr class="proj-group-row" onclick="toggleProj(this, '${pid}')"><td class="part"><span class="proj-caret">▸</span> ${p} <span class="proj-count">${rows.length}件</span>${nMake ? `<span class="tag tag-make">自制${nMake}</span>` : ''}${nOut ? `<span class="tag tag-out">外协${nOut}</span>` : ''}</td><td class="proj">—</td><td></td>`;
+    html += `<td class="num">${pPlanSum.toLocaleString()}</td><td class="num">${pActSum > 0 ? pActSum.toLocaleString() : '—'}</td>`;
+    html += `<td class="rate ${rateClass(prate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(prate)}"><i style="width:${Math.min(prate, 100)}%"></i></div>${pPlanSum > 0 && pActSum > 0 ? prate + '%' : '—'}</div></td>`;
+    for (let d = 0; d < dim; d++) {
+      const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
+      const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+      const isToday = dt.toDateString() === today.toDateString();
+      let cls = isToday ? 'today' : '';
+      if (isWeekend && pPlan[d] === 0) cls += ' weekend';
+      const miss = pAct[d] < pPlan[d];
+      html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${pPlan[d] > 0 ? '' : 'z'}">${pPlan[d] > 0 ? pPlan[d].toLocaleString() : '—'}</div><div class="act ${pAct[d] > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${pAct[d] > 0 ? pAct[d].toLocaleString() : '—'}</div></div></td>`;
+    }
+    html += '</tr>';
+
+    rows.forEach(r => {
+      const arr = r.daily[currentMonth], act = r.actual[currentMonth] || [];
+      let planSum = 0, actSum = 0;
+      for (let d = 0; d < dim; d++) { planSum += arr[d] || 0; actSum += act[d] || 0; }
+      const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
+      const pTag = r.makeType ? `<span class="tag ${r.makeType === '自制' ? 'tag-make' : 'tag-out'}">${r.makeType}</span>${r.supplier ? `<span class="tag tag-supplier" style="color:${r.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${r.supplier}</span>` : ''}` : '';
+      html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part">${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
+      html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
+      for (let d = 0; d < dim; d++) {
+        const plan = arr[d] || 0, a = act[d] || 0;
+        const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
+        const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+        const isToday = dt.toDateString() === today.toDateString();
+        let cls = isToday ? 'today' : '';
+        if (isWeekend && plan === 0) cls += ' weekend';
+        const miss = a < plan;
+        html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${plan > 0 ? '' : 'z'}">${plan > 0 ? plan.toLocaleString() : '—'}</div><div class="act ${a > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${a > 0 ? a.toLocaleString() : '—'}</div></div></td>`;
+      }
+      html += '</tr>';
+    });
+  });
+
+  // —— 当日合计（全部零件） ——
+  html += '<tr class="total-row"><td colspan="3">当日合计 · 全部零件</td><td id="totalPlanCell"></td><td id="totalActCell"></td><td id="totalRateCell"></td>';
+  for (let d = 0; d < dim; d++) {
+    const dt = new Date(PULL_DATA.year, currentMonth - 1, d + 1);
+    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+    const isToday = dt.toDateString() === today.toDateString();
+    let cls = isToday ? 'today' : '';
+    if (isWeekend && planTotals[d] === 0) cls += ' weekend';
+    const miss = actTotals[d] < planTotals[d];
+    html += `<td class="${cls.trim()}"><div class="cell-pair"><div class="plan ${planTotals[d] > 0 ? '' : 'z'}">${planTotals[d] > 0 ? planTotals[d].toLocaleString() : '—'}</div><div class="act ${actTotals[d] > 0 ? (miss ? 'miss' : 'hit') : 'z'}">${actTotals[d] > 0 ? actTotals[d].toLocaleString() : '—'}</div></div></td>`;
+  }
+  html += '</tr></tbody>';
+  wrap.innerHTML = html;
+
+  document.getElementById('totalPlanCell').textContent = grandPlan.toLocaleString();
+  document.getElementById('totalActCell').textContent = grandAct > 0 ? grandAct.toLocaleString() : '—';
+  const totalRate = grandPlan > 0 ? Math.round((grandAct / grandPlan) * 100) : 0;
+  document.getElementById('totalRateCell').innerHTML = `<span class="rate ${rateClass(totalRate)}">${grandPlan > 0 && grandAct > 0 ? totalRate + '%' : '—'}</span>`;
+  document.getElementById('updatedLabelPull').textContent = `最后更新：${PULL_DATA.updatedAt} · ${PULL_DATA.year}年`;
+}
+
+// 点击项目行 → 展开/折叠该项目的零件明细
+function toggleProj(row, pid) {
+  const parts = document.querySelectorAll('tr.proj-part.' + pid);
+  const hidden = !parts.length || parts[0].style.display === 'none';
+  parts.forEach(tr => tr.style.display = hidden ? '' : 'none');
+  row.querySelector('.proj-caret').textContent = hidden ? '▾' : '▸';
+}
+
+// ===== 财务渲染 =====
+let currentFilter = 'all';
+
+function money(v) {
+  return '¥' + Number(v || 0).toLocaleString('zh-CN');
+}
+
+function reconBadge(r) {
+  const map = {
+    pending: '<span class="status st-pending">🟡 待对账</span>',
+    confirmed: '<span class="status st-confirmed">🔵 已对账</span>',
+    invoiced: '<span class="status st-invoiced">🟣 已开票</span>',
+    paid: '<span class="status st-paid">✅ 已回款</span>'
+  };
+  return map[r] || map.pending;
+}
+
+function paidBadge(row) {
+  if (row.recon === 'paid') return '<span class="status st-paid">✅ 已回款</span>';
+  if (row.paid > 0) return '<span class="status st-partial">🟡 部分回款</span>';
+  if (row.recon === 'invoiced') {
+    return row.overdue
+      ? '<span class="status st-overdue">🔴 逾期</span>'
+      : '<span class="status st-invoiced">🟣 待回款</span>';
+  }
+  return '<span style="color:#c4c4c6">—</span>';
+}
+
+function stage(row) {
+  if (row.recon === 'paid') return 'paid';
+  if (row.recon === 'invoiced') return row.overdue ? 'overdue' : 'invoiced';
+  return row.recon;
+}
+
+function renderStats() {
+  let pending = 0, confirmed = 0, invoiced = 0, paid = 0;
+  FINANCE_DATA.rows.forEach(r => {
+    if (r.recon === 'pending') pending += r.shipped;
+    else if (r.recon === 'confirmed') confirmed += r.shipped;
+    else if (r.recon === 'invoiced') invoiced += (r.invoiced - r.paid);
+    else if (r.recon === 'paid') paid += r.paid;
+  });
+  document.getElementById('sPending').textContent = money(pending);
+  document.getElementById('sConfirmed').textContent = money(confirmed);
+  document.getElementById('sInvoiced').textContent = money(invoiced);
+  document.getElementById('sPaid').textContent = money(paid);
+}
+
+function toggleFinDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('#tableWrapFinance .detail-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('#tableWrapFinance .fin-row').forEach(r => r.classList.remove('active'));
+  if (isHidden) {
+    detailRow.style.display = '';
+    row.classList.add('active');
+  }
+}
+
+function renderFinance() {
+  const wrap = document.getElementById('tableWrapFinance');
+  let rows = FINANCE_DATA.rows;
+  if (currentFilter !== 'all') {
+    rows = rows.filter(r => stage(r) === currentFilter);
+  }
+
+  let html = '<table><tr><th>客户</th><th>项目</th><th>账期</th><th>发货金额</th><th>对账状态</th><th>开票金额</th><th>发票号</th><th>开票日期</th><th>回款状态</th><th>已回款</th><th>备注</th><th></th></tr>';
+  rows.forEach(r => {
+    const hasDetail = r.details && r.details.length;
+    const clickAttr = hasDetail ? ' class="fin-row" onclick="toggleFinDetail(this)"' : '';
+    const toggleCell = hasDetail
+      ? '<td class="fin-toggle">▸ 明细</td>'
+      : '<td style="color:#c4c4c6">—</td>';
+    html += `<tr${clickAttr}>
+      <td class="part">${r.cust}</td>
+      <td>${r.proj}</td>
+      <td>${r.period}</td>
+      <td class="part">${money(r.shipped)}</td>
+      <td>${reconBadge(r.recon)}</td>
+      <td class="part">${r.invoiced ? money(r.invoiced) : '—'}</td>
+      <td>${r.invoiceNo || '—'}</td>
+      <td>${r.invoiceDate || '—'}</td>
+      <td>${paidBadge(r)}</td>
+      <td class="part">${r.paid ? money(r.paid) : '—'}</td>
+      <td style="color:var(--muted);font-size:12px">${r.remark || ''}</td>
+      ${toggleCell}
+    </tr>`;
+    if (hasDetail) {
+      const qtySum = r.details.reduce((s, d) => s + d.qty, 0);
+      const amtSum = r.details.reduce((s, d) => s + d.total_tax, 0);
+      const subRows = r.details.map(d => `<tr>
+        <td>${d.date}</td><td>${d.part}</td><td>${d.part_code}</td><td>${d.spec || ''}</td>
+        <td class="part">${d.qty}</td><td class="part">${d.unit_price_tax}</td><td class="part">${money(d.total_tax)}</td>
+      </tr>`).join('');
+      html += `<tr class="detail-row" style="display:none"><td colspan="12"><div class="detail-inner">
+        <h4>📦 ${r.proj} · 发货明细（${r.period}）</h4>
+        <table class="sub-table">
+          <tr><th>送货日期</th><th>物料名称</th><th>物料号</th><th>规格</th><th>数量(件)</th><th>含税单价</th><th>含税金额</th></tr>
+          ${subRows}
+        </table>
+        <div class="detail-total">合计：${qtySum} 件 ｜ 含税 ¥${Number(amtSum).toLocaleString('zh-CN', {minimumFractionDigits: 2})}</div>
+      </div></td></tr>`;
+    }
+  });
+  if (!rows.length) html += '<tr><td colspan="12" style="color:var(--muted);padding:24px">该筛选条件下暂无数据</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderStats();
+  document.getElementById('updatedLabelFinance').textContent = `最后更新：${FINANCE_DATA.updatedAt}`;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('#filterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderFinance();
+}
+
+// ===== 订单台账渲染 =====
+let currentPoFilter = 'all';
+let poTypeFilter = 'all';
+function setPoTypeFilter(t) {
+  poTypeFilter = t;
+  document.querySelectorAll('#poFilterBar button[data-t]').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+  renderPo();
+}
+
+function poStatusBadge(s) {
+  const map = {
+    received: '<span class="status st-confirmed">🔵 已接收</span>',
+    confirmed: '<span class="status st-paid">✅ 已确认</span>',
+    delivered: '<span class="status st-invoiced">🟣 已交付</span>',
+    pending: '<span class="status st-pending">🟡 待确认</span>'
+  };
+  return map[s] || map.pending;
+}
+
+function renderPoStats() {
+  const orders = PO_DATA.orders;
+  let count = new Set(orders.map(o => o.po)).size;
+  let qty = 0, amount = 0;
+  const pendPo = new Set();
+  orders.forEach(o => {
+    if (o.status !== 'delivered') qty += o.qty;
+    amount += o.total;
+    if (o.status === 'pending' || o.status === 'received') pendPo.add(o.po);
+  });
+  let pendingCount = pendPo.size;
+  document.getElementById('poCount').textContent = count;
+  document.getElementById('poQty').textContent = qty.toLocaleString() + ' 件';
+  document.getElementById('poAmount').textContent = '¥' + amount.toLocaleString('zh-CN');
+  document.getElementById('poPending').textContent = pendingCount;
+}
+
+function togglePoDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('#poTableWrap .detail-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('#poTableWrap .fin-row').forEach(r => r.classList.remove('active'));
+  if (isHidden) {
+    detailRow.style.display = '';
+    row.classList.add('active');
+  }
+}
+
+function renderPo() {
+  const wrap = document.getElementById('poTableWrap');
+  let orders = PO_DATA.orders;
+  if (currentPoFilter !== 'all') {
+    orders = orders.filter(o => o.status === currentPoFilter);
+  }
+  if (poTypeFilter === 'make') orders = orders.filter(o => o.makeType === '自制');
+  else if (poTypeFilter === 'out') orders = orders.filter(o => o.makeType === '外协');
+
+  // 按PO号聚合：一个PO一行，展开显示物料明细
+  const groups = {};
+  orders.forEach(o => {
+    (groups[o.po] = groups[o.po] || []).push(o);
+  });
+  const poList = Object.keys(groups).map(po => groups[po]);
+
+  let html = '<table><tr><th>订单编号</th><th>订单日期</th><th>客户</th><th>零件数</th><th>数量</th><th>含税总额</th><th>税率</th><th>系统交期</th><th>付款条件</th><th>状态</th><th>备注</th><th></th></tr>';
+  poList.forEach(items => {
+    const first = items[0];
+    const qtySum = items.reduce((s, o) => s + o.qty, 0);
+    const totalSum = items.reduce((s, o) => s + o.total, 0);
+    const subRows = items.map(o => `<tr>
+      <td>${o.part}${o.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : o.makeType === '外协' ? '<span class="tag tag-out">外协</span>' : ''}${o.supplier ? `<span class="tag tag-supplier" style="color:${o.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${o.supplier}</span>` : ''}</td><td style="font-size:11px">${o.partCode}</td>
+      <td class="part">${o.qty.toLocaleString()} 件</td>
+      <td>¥${o.unitPrice.toFixed(2)}</td>
+      <td class="part">¥${o.total.toLocaleString('zh-CN')}</td>
+    </tr>`).join('');
+    html += `<tr class="fin-row" onclick="togglePoDetail(this)">
+      <td class="part">${first.po}</td>
+      <td>${first.date}</td>
+      <td class="part">${first.customer}</td>
+      <td class="part">${items.length} 种 ${items.some(o => o.makeType) ? `<span class="tag tag-make">自制${items.filter(o => o.makeType === '自制').length}</span><span class="tag tag-out">外协${items.filter(o => o.makeType === '外协').length}</span>` : ''}</td>
+      <td class="part">${qtySum.toLocaleString()} 件</td>
+      <td class="part">¥${totalSum.toLocaleString('zh-CN')}</td>
+      <td>${first.taxRate}%</td>
+      <td style="color:var(--muted)">${first.delivery || '—'}</td>
+      <td>${first.payment}</td>
+      <td>${poStatusBadge(first.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${first.remark || ''}</td>
+      <td class="fin-toggle">▸ 明细</td>
+    </tr>`;
+    html += `<tr class="detail-row" style="display:none"><td colspan="12"><div class="detail-inner">
+      <h4>📦 ${first.po} · 物料明细（${items.length} 种）</h4>
+      <table class="sub-table">
+        <tr><th>零件名称</th><th>物料编码</th><th>数量</th><th>含税单价</th><th>含税金额</th></tr>
+        ${subRows}
+      </table>
+    </div></td></tr>`;
+  });
+  if (!poList.length) html += '<tr><td colspan="12" style="color:var(--muted);padding:24px">该筛选条件下暂无订单</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderPoStats();
+  document.getElementById('updatedLabelPo').textContent = `最后更新：${PO_DATA.updatedAt}`;
+}
+
+function setPoFilter(f) {
+  currentPoFilter = f;
+  document.querySelectorAll('#poFilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderPo();
+}
+
+// ===== 项目管理 (APQP) 渲染 =====
+const APQP_STAGES = ['计划和确定项目', '产品设计和开发', '过程设计和开发', '产品和过程确认', '反馈评定纠正'];
+
+function apqpStatusBadge(s) {
+  const map = {
+    active: '<span class="status st-blue">🔵 开发中</span>',
+    live: '<span class="status st-live">✅ 量产</span>',
+    risk: '<span class="status st-risk">⚠️ 风险</span>',
+    wait: '<span class="status st-wait">🔄 暂停</span>'
+  };
+  return map[s] || map.wait;
+}
+
+function apqpPhaseBadge(s) {
+  const map = {
+    done: '<span class="status st-live">✅ 完成</span>',
+    doing: '<span class="status st-blue">🔵 进行中</span>',
+    todo: '<span class="status st-wait">⚪ 未开始</span>',
+    late: '<span class="status st-risk">🔴 延期</span>'
+  };
+  return map[s] || map.todo;
+}
+
+function apqpPhaseDots(p) {
+  // 五阶段进度条：done绿 / doing蓝 / late红 / todo灰
+  let html = '<div style="display:flex;gap:4px;align-items:center">';
+  p.phases.forEach(ph => {
+    const color = ph.status === 'done' ? 'var(--green)' : ph.status === 'doing' ? '#2563eb' : ph.status === 'late' ? 'var(--red)' : '#c4c4c6';
+    const pulse = ph.status === 'doing' ? ' style="animation:blink 1.2s infinite"' : '';
+    html += `<span title="阶段${ph.phase} ${ph.name}: ${ph.remark || ph.status}" style="width:14px;height:14px;border-radius:4px;background:${color}"${pulse}></span>`;
+  });
+  html += `<span style="color:var(--muted);font-size:11px;margin-left:6px">${p.phase}/5</span></div>`;
+  return html;
+}
+
+function toggleApqpDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  const wrap = row.closest('.tab-content') || document;
+  wrap.querySelectorAll('.detail-row').forEach(r => r.style.display = 'none');
+  wrap.querySelectorAll('.fin-row').forEach(r => r.classList.remove('active'));
+  if (isHidden) {
+    detailRow.style.display = '';
+    row.classList.add('active');
+  }
+}
+
+function renderApqpStats() {
+  const ps = PROJECT_DATA.projects;
+  const active = ps.filter(p => p.status === 'active').length;
+  const live = ps.filter(p => p.status === 'live').length;
+  const risk = ps.filter(p => p.status === 'risk').length;
+  document.getElementById('apqpActive').textContent = active;
+  document.getElementById('apqpLive').textContent = live;
+  document.getElementById('apqpRisk').textContent = risk;
+}
+
+function renderApqp() {
+  const wrap = document.getElementById('apqpTableWrap');
+  let projects = PROJECT_DATA.projects;
+  if (currentApqpFilter !== 'all') {
+    projects = projects.filter(p => p.status === currentApqpFilter);
+  }
+
+  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>产品(零件)</th><th>内部询价</th><th>APQP进度</th><th>当前阶段</th><th>状态</th><th>下一步</th><th></th></tr>';
+  projects.forEach(p => {
+    const cur = p.phases.find(ph => ph.phase === p.phase) || p.phases[p.phases.length - 1];
+    const phaseRows = p.phases.map(ph => `<tr>
+      <td>${ph.phase}. ${ph.name}</td>
+      <td>${apqpPhaseBadge(ph.status)}</td>
+      <td style="color:var(--muted)">${ph.planDate || '—'}</td>
+      <td style="color:var(--muted)">${ph.actualDate || '—'}</td>
+      <td style="font-size:12px">${ph.remark || ''}</td>
+    </tr>`).join('');
+    const tlRows = (p.timeline || []).map(t => `<tr>
+      <td style="white-space:nowrap">${t.date}</td>
+      <td>${t.event}</td>
+      <td>${t.status === 'done' ? '<span class="status st-live">✅ 完成</span>' : '<span class="status st-blue">🔄 进行中</span>'}</td>
+    </tr>`).join('');
+    const partsRows = (p.parts || []).map(pt => `<tr>
+      <td>${pt.name}</td>
+      <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
+      <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
+    </tr>`).join('');
+    const nPulled = (p.parts || []).filter(pt => pt.pulled).length;
+    const partsTxt = (p.parts || []).length > 0 ? `<span style="font-size:12px">${(p.parts||[]).length}个零件 · <span style="color:var(--green)">${nPulled}已拉动</span>/<span style="color:var(--yellow)">${(p.parts||[]).length-nPulled}未拉</span></span>` : (p.product || '—');
+    html += `<tr class="fin-row" onclick="toggleApqpDetail(this)">
+      <td class="part">${p.name}</td>
+      <td>${p.customer}</td>
+      <td>${p.oem ? `<span class="status st-blue" style="font-weight:700">${p.oem}</span>` : '—'}</td>
+      <td>${partsTxt}</td>
+      <td style="color:var(--muted)">${p.rfqDate || '—'}</td>
+      <td>${apqpPhaseDots(p)}</td>
+      <td>${cur ? `${cur.phase}. ${cur.name}` : '—'}</td>
+      <td>${apqpStatusBadge(p.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${p.nextStep || ''}</td>
+      <td class="fin-toggle">▸ 展开</td>
+    </tr>`;
+    html += `<tr class="detail-row" style="display:none"><td colspan="10"><div class="detail-inner">
+      <h4>🚀 ${p.name} · APQP 阶段明细</h4>
+      <table class="sub-table">
+        <tr><th>项目</th><th>客户</th><th>主机厂</th></tr>
+        <tr><td>${p.name}</td><td>${p.customer}</td><td>${p.oem || '—'}</td></tr>
+      </table>
+      ${partsRows ? `<h4 style="margin-top:14px">🧩 零件清单（${(p.parts||[]).length}个）</h4>
+      <table class="sub-table">
+        <tr><th>零件名称</th><th>物料编码</th><th>状态</th></tr>
+        ${partsRows}
+      </table>` : ''}
+      <table class="sub-table" style="margin-top:14px">
+        <tr><th>阶段</th><th>状态</th><th>计划日期</th><th>实际日期</th><th>备注</th></tr>
+        ${phaseRows}
+      </table>
+      ${tlRows ? `<h4 style="margin-top:14px">📅 时间线</h4>
+      <table class="sub-table">
+        <tr><th>日期</th><th>事件</th><th>状态</th></tr>
+        ${tlRows}
+      </table>` : ''}
+    </div></td></tr>`;
+  });
+  if (!projects.length) html += '<tr><td colspan="9" style="color:var(--muted);padding:24px">该筛选条件下暂无项目</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderApqpStats();
+  document.getElementById('updatedLabelApqp').textContent = `最后更新：${PROJECT_DATA.updatedAt}`;
+}
+
+let currentApqpFilter = 'all';
+function setApqpFilter(f) {
+  currentApqpFilter = f;
+  document.querySelectorAll('#apqpFilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderApqp();
+  renderGantt();
+}
+
+// ===== 甘特图渲染 =====
+function setApqpView(v) {
+  document.querySelectorAll('.view-bar button').forEach(b => b.classList.toggle('active', b.dataset.v === v));
+  document.getElementById('apqpTableWrap').style.display = v === 'table' ? '' : 'none';
+  document.getElementById('apqpGanttWrap').style.display = v === 'gantt' ? '' : 'none';
+  if (v === 'gantt') renderGantt();
+}
+
+function parseDate(s) {
+  if (!s) return null;
+  const p = s.split('-');
+  return new Date(+p[0], +p[1] - 1, +p[2]);
+}
+
+function renderGantt() {
+  const wrap = document.getElementById('apqpGanttWrap');
+  const projects = currentApqpFilter === 'all'
+    ? PROJECT_DATA.projects
+    : PROJECT_DATA.projects.filter(p => p.status === currentApqpFilter);
+
+  // —— 收集所有日期范围 ——
+  let minD = null, maxD = null;
+  const touch = d => { if (!d) return; if (!minD || d < minD) minD = d; if (!maxD || d > maxD) maxD = d; };
+  projects.forEach(p => p.phases.forEach(ph => { touch(parseDate(ph.planDate)); touch(parseDate(ph.actualDate)); }));
+
+  const today = new Date();
+  touch(today);
+  if (!minD || !maxD) { wrap.innerHTML = '<div class="empty-note">暂无排期数据</div>'; return; }
+  // 前后留白：起点往前推10天，终点往后推30天
+  const start = new Date(minD); start.setDate(start.getDate() - 10);
+  const end = new Date(maxD); end.setDate(end.getDate() + 30);
+  const totalDays = Math.max((end - start) / 86400000, 60);
+
+  const pct = d => ((d - start) / 86400000) / totalDays * 100;
+
+  // —— 月份刻度 ——
+  let ticks = '';
+  const axisTicks = [];
+  for (let t = new Date(start.getFullYear(), start.getMonth(), 1); t <= end; t.setMonth(t.getMonth() + 1)) {
+    axisTicks.push(new Date(t));
+  }
+  axisTicks.push(new Date(end.getFullYear(), end.getMonth() + 1, 1));
+
+  // —— 表头 ——
+  let head = '<div class="gantt-head"><div class="gantt-label" style="border-right:1px solid var(--border);padding:8px 10px;font-weight:700">项目 / 阶段</div><div class="gantt-axis">';
+  axisTicks.forEach(t => {
+    const x = pct(t);
+    head += `<div class="gantt-tick" style="left:${x}%"></div>`;
+    head += `<div style="position:absolute;left:${x}%;top:2px;transform:translateX(6px);font-size:10.5px;color:var(--muted)">${t.getMonth() + 1}月</div>`;
+  });
+  head += `<div class="gantt-tick now" style="left:${pct(today)}%"></div></div></div>`;
+
+  // —— 行 ——
+  let rows = '';
+  projects.forEach((p, pi) => {
+    const st = p.phases.find(ph => ph.status === 'doing') || p.phases.find(ph => ph.status === 'late') || p.phases[p.phases.length - 1];
+    rows += `<div class="gantt-row proj" onclick="toggleGanttProj(this,'gp${pi}')" style="cursor:pointer"><div class="gantt-label">${p.name} <span style="font-weight:400;color:var(--muted);font-size:11px">(${p.phase}/5)</span> <span class="gantt-arrow" style="font-size:11px;color:var(--accent)">▸</span></div><div class="gantt-cell"></div></div>`;
+    p.phases.forEach(ph => {
+      const ps = parseDate(ph.planDate);
+      const pas = parseDate(ph.actualDate);
+      let barHtml = '';
+      if (ph.status === 'done' && pas) {
+        // 已完成：plan→actual
+        const s = ps || pas, e = pas;
+        barHtml = `<div class="gantt-bar done" style="left:${pct(s)}%;width:${Math.max(pct(e) - pct(s), 2)}%" title="✓ ${ph.name} (${ph.planDate || '—'} → ${ph.actualDate})"><span>✓ ${ph.name}</span></div>`;
+      } else if (ph.status === 'doing' && ps) {
+        // 进行中：plan→今天
+        const s = ps, e = today;
+        barHtml = `<div class="gantt-bar doing" style="left:${pct(s)}%;width:${Math.max(pct(e) - pct(s), 2)}%" title="🔄 ${ph.name} (${ph.planDate} → 进行中)"><span>🔄 ${ph.name}</span></div>`;
+      } else if (ph.status === 'late' && ps) {
+        // 延期：plan→今天，红色
+        const s = ps, e = today;
+        barHtml = `<div class="gantt-bar late" style="left:${pct(s)}%;width:${Math.max(pct(e) - pct(s), 2)}%" title="⚠ ${ph.name} 已延期 (计划 ${ph.planDate})"><span>⚠ ${ph.name}</span></div>`;
+      } else if (ph.status === 'todo' && ps) {
+        // 未开始：计划日期一个点
+        barHtml = `<div class="gantt-bar todo" style="left:${pct(ps)}%;width:6px;transform:translateX(-3px);padding:0" title="○ ${ph.name} (计划 ${ph.planDate})"></div>`;
+      }
+      rows += `<div class="gantt-row gphase gp${pi}" style="display:none"><div class="gantt-label">${ph.phase}. ${ph.name}</div><div class="gantt-cell">${barHtml}<div class="gantt-tick now" style="left:${pct(today)}%"></div></div></div>`;
+    });
+  });
+
+  wrap.innerHTML = `<div class="gantt-scroll"><div class="gantt">${head}${rows}</div></div>`;
+}
+
+// 甘特图项目行折叠/展开（手风琴：一次只展开一个项目）
+function toggleGanttProj(row, cls) {
+  const isHidden = !document.querySelector(`.gantt-row.${cls}`) ||
+    document.querySelector(`.gantt-row.${cls}`).style.display === 'none';
+  // 先全部收起
+  document.querySelectorAll('.gantt-row.gphase').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('.gantt-row.proj .gantt-arrow').forEach(a => a.textContent = '▸');
+  if (isHidden) {
+    document.querySelectorAll(`.gantt-row.${cls}`).forEach(r => r.style.display = '');
+    const arrow = row.querySelector('.gantt-arrow');
+    if (arrow) arrow.textContent = '▾';
+  }
+}
+
+// ===== 任务待办渲染 =====
+let currentTaskFilter = 'all';
+function taskPriorityBadge(pr) {
+  const map = {
+    P0: '<span class="status st-overdue">🔴 P0</span>',
+    P1: '<span class="status st-pending">🟠 P1</span>',
+    P2: '<span class="status st-blue">🔵 P2</span>',
+    P3: '<span class="status" style="background:#e9e9ea;color:#5c5e62">⚪ P3</span>'
+  };
+  return map[pr] || map.P3;
+}
+
+function taskStatusBadge(s) {
+  const map = {
+    todo: '<span class="status st-pending">🟡 待办</span>',
+    doing: '<span class="status st-blue">🔵 进行中</span>',
+    done: '<span class="status st-paid">✅ 已完成</span>'
+  };
+  return map[s] || map.todo;
+}
+
+function toggleTaskDetail(row) {
+  const detailRow = row.nextElementSibling;
+  if (!detailRow || !detailRow.classList.contains('detail-row')) return;
+  const isHidden = detailRow.style.display === 'none';
+  document.querySelectorAll('#taskTableWrap .detail-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('#taskTableWrap .fin-row').forEach(r => r.classList.remove('active'));
+  if (isHidden) {
+    detailRow.style.display = '';
+    row.classList.add('active');
+  }
+}
+
+function renderTaskStats() {
+  const tasks = TASK_DATA.tasks;
+  const today = new Date();
+  const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+  const doing = tasks.filter(t => t.status === 'doing').length;
+  const done = tasks.filter(t => t.status === 'done').length;
+  const due = tasks.filter(t => t.status !== 'done' && parseDate(t.due) && parseDate(t.due) <= in7).length;
+  document.getElementById('taskTotal').textContent = tasks.length;
+  document.getElementById('taskDoing').textContent = doing;
+  document.getElementById('taskDue').textContent = due;
+  document.getElementById('taskDone').textContent = done;
+}
+
+function renderTask() {
+  const wrap = document.getElementById('taskTableWrap');
+  let tasks = TASK_DATA.tasks;
+  if (currentTaskFilter === 'todo' || currentTaskFilter === 'doing' || currentTaskFilter === 'done') {
+    tasks = tasks.filter(t => t.status === currentTaskFilter);
+  } else if (currentTaskFilter !== 'all') {
+    tasks = tasks.filter(t => t.priority === currentTaskFilter);
+  }
+
+  const today = new Date();
+  let html = '<table><tr><th>ID</th><th>任务</th><th>所属项目</th><th>负责人</th><th>优先级</th><th>截止日</th><th>状态</th><th>备注</th><th></th></tr>';
+  tasks.forEach(t => {
+    const d = parseDate(t.due);
+    const overdue = t.status !== 'done' && d && d < today;
+    const dueTxt = d ? (overdue ? `<span style="color:var(--red);font-weight:700">${t.due} ⚠逾期</span>` : t.due) : '—';
+    html += `<tr class="fin-row" onclick="toggleTaskDetail(this)">
+      <td style="color:var(--muted);font-size:12px">${t.id}</td>
+      <td class="part">${t.title}</td>
+      <td style="font-size:12px">${t.project}</td>
+      <td>${t.owner}</td>
+      <td>${taskPriorityBadge(t.priority)}</td>
+      <td>${dueTxt}</td>
+      <td>${taskStatusBadge(t.status)}</td>
+      <td style="color:var(--muted);font-size:12px">${t.remark || ''}</td>
+      <td class="fin-toggle">▸</td>
+    </tr>`;
+    html += `<tr class="detail-row" style="display:none"><td colspan="9"><div class="detail-inner">
+      <h4>📌 ${t.title} <span style="font-weight:400;color:var(--muted)">(${t.id})</span></h4>
+      <table class="sub-table">
+        <tr><th>所属项目</th><th>负责人</th><th>优先级</th><th>截止日</th><th>状态</th></tr>
+        <tr>
+          <td>${t.project}</td><td>${t.owner}</td><td>${t.priority}</td>
+          <td>${t.due || '—'}${overdue ? ' <span style="color:var(--red)">⚠ 已逾期</span>' : ''}</td>
+          <td>${t.status === 'done' ? '已完成' : t.status === 'doing' ? '进行中' : '待办'}</td>
+        </tr>
+      </table>
+      <div style="margin-top:8px;font-size:12.5px;color:var(--muted)">📝 ${t.remark || '暂无备注'}</div>
+    </div></td></tr>`;
+  });
+  if (!tasks.length) html += '<tr><td colspan="9" style="color:var(--muted);padding:24px">该筛选条件下暂无任务</td></tr>';
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  renderTaskStats();
+  document.getElementById('updatedLabelTask').textContent = `最后更新：${TASK_DATA.updatedAt}`;
+}
+
+function setTaskFilter(f) {
+  currentTaskFilter = f;
+  document.querySelectorAll('#taskFilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderTask();
+}
+
+// ===== 非26年量产项目渲染（海泰集团） =====
+let currentNon2026Filter = 'all';
+let currentNon2026Period = NON2026_DATA.periods && NON2026_DATA.periods.length ? NON2026_DATA.periods[0].id : null;
+function setNon2026Period(pid) {
+  currentNon2026Period = pid;
+  document.querySelectorAll('#non2026PeriodBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.p === pid);
+  });
+  renderNon2026();
+}
+function setNon2026Filter(f) {
+  currentNon2026Filter = f;
+  document.querySelectorAll('#non2026FilterBar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === f);
+  });
+  renderNon2026();
+}
+function renderNon2026() {
+  const d = NON2026_DATA;
+  const periods = d.periods || [];
+  const per = periods.find(p => p.id === currentNon2026Period) || periods[0] || {};
+  const t = per.totals || {};
+  const rowsAll = per.rows || [];
+
+  // 动态卡标题: 从 period label 提取月份 (如 "5月发货 vs 6月开票")
+  const isMerged = per.id === 'merged';
+  const m = (per.label || '').match(/(\d+)月发货.*?(\d+)月开票/);
+  const m1 = isMerged ? '累计' : (m ? m[1] + '月' : '');
+  const m2 = isMerged ? '累计' : (m ? m[2] + '月' : '');
+  document.getElementById('non2026LabelQty6').textContent = `${m1}发货数量`;
+  document.getElementById('non2026LabelRev6').textContent = `${m1}发货收入`;
+  document.getElementById('non2026LabelQty7').textContent = `${m2}开票数量`;
+  document.getElementById('non2026LabelAmt7').textContent = `${m2}开票金额`;
+
+  document.getElementById('non2026Qty6').textContent = (t.qty6 || 0).toLocaleString();
+  document.getElementById('non2026Rev6').textContent = '¥' + (t.rev6 || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  document.getElementById('non2026Qty7').textContent = (t.qty7 || 0).toLocaleString();
+  document.getElementById('non2026Amt7').textContent = '¥' + (t.amt7 || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  document.getElementById('updatedLabelNon2026').textContent = `最后更新：${d.updatedAt} · ${d.customer} · ${d.module} · ${per.label || ''}`;
+
+  // 客户筛选按钮动态生成
+  const custs = [...new Set(rowsAll.map(r => r.cust))];
+  let fbtns = `<button class="${currentNon2026Filter === 'all' ? 'active' : ''}" data-f="all" onclick="setNon2026Filter('all')">全部</button>`;
+  custs.forEach(c => {
+    fbtns += `<button class="${currentNon2026Filter === c ? 'active' : ''}" data-f="${c}" onclick="setNon2026Filter('${c}')">${c}</button>`;
+  });
+  document.getElementById('non2026FilterBar').innerHTML = fbtns;
+
+  const wrap = document.getElementById('non2026TableWrap');
+  let rows = rowsAll;
+  if (currentNon2026Filter !== 'all') rows = rows.filter(r => r.cust === currentNon2026Filter);
+
+  let html = `<div style="margin-bottom:8px;font-size:12px;color:var(--muted)">${per.note || ''}</div>`;
+  html += `<table><tr><th>客户</th><th>品号</th><th>品名</th><th>规格</th><th>售价(未税)</th><th>${m1}发货数量</th><th>${m1}发货收入</th><th>${m2}开票数量</th><th>${m2}开票金额</th><th>数量差异</th><th>金额差异</th></tr>`;
+  rows.forEach(r => {
+    const bad = r.diffQty < 0;
+    const diffQtyCls = bad ? ' style="color:var(--red);font-weight:600"' : '';
+    const diffAmtCls = r.diffAmt < 0 ? ' style="color:var(--red);font-weight:600"' : '';
+    html += `<tr>
+      <td>${r.cust}</td><td>${r.code}</td><td style="text-align:left">${r.part}</td><td>${r.spec}</td>
+      <td>${r.price.toFixed(4)}</td><td>${r.qty6.toLocaleString()}</td>
+      <td>¥${r.rev6.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+      <td>${r.qty7.toLocaleString()}</td>
+      <td>¥${r.amt7.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+      <td${diffQtyCls}>${r.diffQty.toLocaleString()}</td>
+      <td${diffAmtCls}>¥${r.diffAmt.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+    </tr>`;
+  });
+  // 合计行
+  const tq6 = t.qty6 || 0, tr6 = t.rev6 || 0, tq7 = t.qty7 || 0, ta7 = t.amt7 || 0, tdq = t.diffQty || 0, tda = t.diffAmt || 0;
+  html += `<tr style="font-weight:700;background:rgba(23,26,32,.05)">
+    <td>合计</td><td colspan="3">${rows.length} 个零件</td><td></td>
+    <td>${tq6.toLocaleString()}</td><td>¥${tr6.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+    <td>${tq7.toLocaleString()}</td><td>¥${ta7.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+    <td style="color:${tdq < 0 ? 'var(--red)' : ''}">${tdq.toLocaleString()}</td>
+    <td style="color:${tda < 0 ? 'var(--red)' : ''}">¥${tda.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+  </tr>`;
+  html += `</table>`;
+  wrap.innerHTML = html;
+}
+
+// ===== 密码锁逻辑 =====
+const PAGE_PASSWORD = "tairui999"; // ← 修改这里即可换密码
+const lockScreen = document.getElementById('lockScreen');
+const lockPass = document.getElementById('lockPass');
+const lockErr = document.getElementById('lockErr');
+const mainContent = document.getElementById('mainContent');
+
+function tryUnlock() {
+  if (lockPass.value === PAGE_PASSWORD) {
+    lockScreen.style.display = 'none';
+    mainContent.style.display = '';
+    sessionStorage.setItem('dashboard_unlocked', '1');
+    lockErr.textContent = '';
+  } else {
+    lockErr.textContent = '密码错误，请重试';
+    lockPass.value = '';
+    lockPass.focus();
+  }
+}
+
+if (sessionStorage.getItem('dashboard_unlocked') === '1') {
+  lockScreen.style.display = 'none';
+  mainContent.style.display = '';
+} else {
+  lockPass.focus();
+}
+
+renderBoard();
+renderMonthPicker();
+renderPull();
+renderPo();
+renderFinance();
+renderApqp();
+renderTask();
+renderNon2026();
+</script>
+</body>
+</html>
