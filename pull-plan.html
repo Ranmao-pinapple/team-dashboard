@@ -375,8 +375,8 @@
   <p class="subtitle">项目 / 拉动计划 / 对账开票 · 一站式 · 白猫自动更新</p>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('project')">🏠 项目看板</button>
-    <button class="tab-btn" onclick="switchTab('pull')">📅 月拉动计划</button>
+    <button class="tab-btn" onclick="switchTab('project')">🏠 项目看板</button>
+    <button class="tab-btn active" onclick="switchTab('pull')">📅 月拉动计划</button>
     <button class="tab-btn" onclick="switchTab('po')">📋 订单台账</button>
     <button class="tab-btn" onclick="switchTab('finance')">💰 对账开票</button>
     <button class="tab-btn" onclick="switchTab('apqp')">🚀 项目管理</button>
@@ -385,7 +385,7 @@
   </div>
 
   <!-- ========== Tab 1: 项目看板 ========== -->
-  <div class="tab-content active" id="tab-project">
+  <div class="tab-content" id="tab-project">
     <div class="grid">
       <div class="card stat" onclick="showToast('凯华平台项目总数')">
         <h3>平台项目</h3>
@@ -416,7 +416,7 @@
   </div>
 
   <!-- ========== Tab 2: 月拉动计划 ========== -->
-  <div class="tab-content" id="tab-pull">
+  <div class="tab-content active" id="tab-pull">
     <div class="toolbar">
       <div class="legend">
         <span><span class="dot" style="background:#171a20"></span>计划</span>
