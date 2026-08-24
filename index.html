@@ -292,6 +292,7 @@
   #tableWrap .tag, #poTableWrap .tag { display:inline-block; font-size:10px; font-weight:600; padding:1px 6px; border-radius:3px; margin-left:5px; vertical-align:1px; white-space:nowrap; }
   #tableWrap .tag-make, #poTableWrap .tag-make { background:#e6f6ec; color:#137a3b; border:1px solid #b7e3c8; }
   #tableWrap .tag-out, #poTableWrap .tag-out { background:#fef3e2; color:#b45309; border:1px solid #f5d9a8; }
+  #tableWrap .tag-supplier, #poTableWrap .tag-supplier { background:#f0f2f5; color:#555; border:1px solid #e0e2e6; }
   #tableWrap .type-filter-bar { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:10px 2px 2px; }
   #tableWrap .type-legend { display:inline-flex; gap:10px; align-items:center; font-size:11px; color:#666; }
   #tableWrap .type-filter { display:inline-flex; gap:6px; }
@@ -1849,7 +1850,7 @@ function renderPull() {
       let planSum = 0, actSum = 0;
       for (let d = 0; d < dim; d++) { planSum += arr[d] || 0; actSum += act[d] || 0; }
       const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
-      const pTag = r.makeType ? `<span class="tag ${r.makeType === '自制' ? 'tag-make' : 'tag-out'}">${r.makeType}${r.supplier ? ' ' + r.supplier : ''}</span>` : '';
+      const pTag = r.makeType ? `<span class="tag ${r.makeType === '自制' ? 'tag-make' : 'tag-out'}">${r.makeType}</span>${r.supplier ? `<span class="tag tag-supplier">${r.supplier}</span>` : ''}` : '';
       html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part">${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
       html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '—'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
       for (let d = 0; d < dim; d++) {
