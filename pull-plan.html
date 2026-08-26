@@ -1276,7 +1276,7 @@ const PO_DATA = {
 // 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
 // APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
 const PROJECT_DATA = {
-  updatedAt: "2026-08-05",
+  updatedAt: "2026-08-26",
   projects: [
     {
       name: "VFe32", customer: "凯华", oem: "VINFAST", product: "19个零件",
@@ -1349,6 +1349,30 @@ const PROJECT_DATA = {
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "", "remark": "项目启动"}, {"phase": 2, "name": "产品设计和开发", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "材料报价已报，寄材料样中"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
       timeline: [{"date": "2026-08-05", "event": "材料报价已报", "status": "done"}, {"date": "2026-08-05", "event": "寄材料样阶段", "status": "in_progress"}],
       parts: []
+    },
+    {
+      name: "CX835", customer: "凯华", oem: "长安福特烈马", product: "4个零件(吸音棉)",
+      status: "active", rfqDate: "2026-08-26", phase: 1,
+      nextStep: "等技术要求",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "doing", "planDate": "2026-08-26", "remark": "客户找我们报价, 内部启动(8/26); SOP目标2026.11"}],
+      timeline: [{"date": "2026-08-26", "event": "客户找我们报价, 内部启动", "status": "doing"}],
+      parts: ["CX835-右A吸音棉-RAA3-02534-AAW-04", "CX835-右风管吸音棉-RAA3-02534-AAW_06", "CX835-左A吸音棉-RAA3-02535-AAW-04", "CX835-左风管吸音棉-RAA3-02535-AAW_06"]
+    },
+    {
+      name: "EHEA", customer: "凯华", oem: "海豹06GT", product: "21个零件(吸音棉/海绵/毛毡)",
+      status: "active", rfqDate: "2026-08-26", phase: 2,
+      nextStep: "收到样件, 内部分析样件中; 切换件(切换后剩余量纲约20万台车)",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-08-26", "remark": "客户找我们报价, 内部启动(8/26)"}, {"phase": 2, "name": "产品设计和开发", "status": "doing", "remark": "收到样件, 内部分析样件中(部分零件等待接受样件)"}],
+      timeline: [{"date": "2026-08-26", "event": "客户找我们报价, 内部启动(切换件)", "status": "done"}, {"date": "2026-08-26", "event": "收到样件, 内部分析样件中", "status": "doing"}],
+      parts: ["EHEA 仪表板左下隔音板吸音棉", "EHEA 仪表板右下隔音板吸音棉", "EHEA 副仪表板左下护板吸音棉", "EHEA 副仪表板右下护板吸音棉", "EHEA 副仪表板左前护板吸音棉", "EHEA 副仪表板右前护板吸音棉", "EHEA 杂物箱吸音棉", "EHEA 仪表板上本体吸音棉", "EHEA 风道海绵条", "EHEA 前除霜风道上板防水海绵", "EHEA 前除霜风道下板防水海绵", "EHEA 仪表板左端护板无纺布", "EHEA 空调滤芯遮挡板缓冲毡垫", "EHEA 杂物箱锁扣手缓冲毛毡", "EHEA 副仪表板左前护板-毛毡", "EHEA 下护罩吸能块", "EHEA 骨架组合仪表挂钩毛毡", "EHEA PAD安装座护罩毛毡Ⅰ", "EHEA PAD检修盖板毛毡Ⅰ", "EHEA 杂物箱扣手缓冲垫", "EHEA 前除霜盖板海绵条 (带背胶）"]
+    },
+    {
+      name: "ROX01", customer: "凯华", oem: "极石01", product: "4个零件(毛毡/密封棉)",
+      status: "active", rfqDate: "2026-08-26", phase: 3,
+      nextStep: "样品已送并确认OK; 切换件(原供应商才供2个月); 已紧急拉动6500件(4000/1000/1500)",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-08-26", "remark": "客户找我们报价, 内部启动(8/26)"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "remark": "样品已送并确认OK"}, {"phase": 3, "name": "过程设计和开发", "status": "doing", "remark": "已紧急拉动6500件, 待量产切换"}],
+      timeline: [{"date": "2026-08-26", "event": "客户找我们报价, 内部启动(切换件)", "status": "done"}, {"date": "2026-08-26", "event": "样品已送并确认OK; 已紧急拉动6500件", "status": "doing"}],
+      parts: ["ROX01前围毛毡", "ROX01侧除霜风道密封棉", "ROX01前除霜盖板海绵条", "ROX01前除霜盖板密封棉"]
     }
   ]
 };
