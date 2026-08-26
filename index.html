@@ -1524,9 +1524,9 @@ function renderBoard() {
     const nPul = (p.parts || []).filter(pt => pt.pulled).length;
     const cur = p.phases.find(ph => ph.status === 'doing') || p.phases.find(ph => ph.status === 'late') || p.phases[p.phases.length - 1];
     const partsRows = (p.parts || []).map(pt => `<tr>
-      <td>${pt.name}</td>
+      <td>${pt.name}${pt.makeType ? (pt.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : '<span class="tag tag-out">外协</span>') : ''}${pt.supplier ? `<span class="tag tag-supplier" style="color:${pt.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${pt.supplier}</span>` : ''}</td>
       <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
-      <td style="color:var(--muted);font-size:11px">含税 ¥${(pt.priceTax ?? 0).toFixed(2)}</td>
+      <td style="color:var(--muted);font-size:11px">${pt.priceTax != null ? '含税 ¥' + pt.priceTax.toFixed(2) : '待报价'}</td>
       <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
     </tr>`).join('');
     const tlRows = (p.timeline || []).map(t => `<tr>
@@ -2060,7 +2060,7 @@ function renderApqp() {
       <td>${t.status === 'done' ? '<span class="status st-live">✅ 完成</span>' : '<span class="status st-blue">🔄 进行中</span>'}</td>
     </tr>`).join('');
     const partsRows = (p.parts || []).map(pt => `<tr>
-      <td>${pt.name}</td>
+      <td>${pt.name}${pt.makeType ? (pt.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : '<span class="tag tag-out">外协</span>') : ''}${pt.supplier ? `<span class="tag tag-supplier" style="color:${pt.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${pt.supplier}</span>` : ''}</td>
       <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
       <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
     </tr>`).join('');
