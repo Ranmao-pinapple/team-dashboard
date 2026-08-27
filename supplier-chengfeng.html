@@ -118,22 +118,13 @@ function openConfirm() {
   const ts = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
   const subject = encodeURIComponent('【外协确认】' + SUPPLIER + ' 已收到' + MONTH_NAMES[curMonth] + '月拉动计划');
   const body = encodeURIComponent(
-    SUPPLIER + ' 确认收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划，可执行订单拉动。
-
-' +
-    '■ 供应商：' + SUPPLIER + '
-' +
-    '■ 计划月份：' + MONTH_NAMES[curMonth] + '月
-' +
-    '■ 零件数：' + DATA.length + ' 件
-' +
-    '■ 拉动总量：' + total.toLocaleString() + ' 件
-' +
-    '■ 确认时间：' + ts + '
-' +
-    '■ 页面：' + location.href + '
-
-' +
+    SUPPLIER + ' 确认收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划，可执行订单拉动。\n\n' +
+    '■ 供应商：' + SUPPLIER + '\n' +
+    '■ 计划月份：' + MONTH_NAMES[curMonth] + '月\n' +
+    '■ 零件数：' + DATA.length + ' 件\n' +
+    '■ 拉动总量：' + total.toLocaleString() + ' 件\n' +
+    '■ 确认时间：' + ts + '\n' +
+    '■ 页面：' + location.href + '\n\n' +
     '如有疑问请联系臻畅销售四部。'
   );
   const mailto = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + body;
