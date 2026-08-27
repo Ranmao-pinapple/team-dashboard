@@ -35,6 +35,10 @@
     <div class="meta">臻畅/泰瑞 · 销售四部 &nbsp;|&nbsp; 数据更新：2026-08-27</div>
   </div>
   <div class="month-bar" id="monthBar"></div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+    <button id="confirmBtn" onclick="openConfirm()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(232,33,39,.3)">✅ 确认收到 · 可执行拉动</button>
+    <span id="confirmState" style="font-size:12px;color:#8a8f98"></span>
+  </div>
   <div class="sum-line" id="sumLine"></div>
   <div style="overflow-x:auto"><table id="pt"><thead id="ptHead"></thead><tbody id="ptBody"></tbody></table></div>
   <div class="foot">※ 数量单位：件（pcs）· 按客户拉动计划排产，如有变动以最新通知为准</div>
@@ -88,6 +92,58 @@ function render() {
   document.getElementById('sumLine').innerHTML = `${MONTH_NAMES[curMonth]} 拉动总量：<b>${fmt(grand)}</b> 件 · 共 ${DATA.length} 个零件`;
 }
 render();
+
+// ===== 确认收到 · 一键回执 =====
+const RECEIVER_EMAIL = 'xufeng_cao@zhenchang.group';
+const CONFIRM_KEY = 'sup_confirm_' + SUPPLIER;
+function grandTotal(m) {
+  return DATA.reduce((s,r)=>s+((r.daily[m]||[]).reduce((a,b)=>a+(b||0),0)),0);
+}
+function renderConfirmState() {
+  const done = localStorage.getItem(CONFIRM_KEY);
+  const btn = document.getElementById('confirmBtn');
+  const st = document.getElementById('confirmState');
+  if (done) {
+    btn.innerHTML = '✅ 已确认收到（' + done + '）';
+    btn.style.background = '#16a34a';
+    btn.style.boxShadow = 'none';
+    st.textContent = '已向臻畅发送确认回执，如计划有变请重新确认';
+  } else {
+    st.textContent = '点击按钮，一键发送确认回执邮件';
+  }
+}
+function openConfirm() {
+  const total = grandTotal(curMonth);
+  const now = new Date();
+  const ts = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const subject = encodeURIComponent('【外协确认】' + SUPPLIER + ' 已收到' + MONTH_NAMES[curMonth] + '月拉动计划');
+  const body = encodeURIComponent(
+    SUPPLIER + ' 确认收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划，可执行订单拉动。
+
+' +
+    '■ 供应商：' + SUPPLIER + '
+' +
+    '■ 计划月份：' + MONTH_NAMES[curMonth] + '月
+' +
+    '■ 零件数：' + DATA.length + ' 件
+' +
+    '■ 拉动总量：' + total.toLocaleString() + ' 件
+' +
+    '■ 确认时间：' + ts + '
+' +
+    '■ 页面：' + location.href + '
+
+' +
+    '如有疑问请联系臻畅销售四部。'
+  );
+  const mailto = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + body;
+  if (confirm('确认【' + SUPPLIER + '】已收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划（共 ' + DATA.length + ' 个零件 / ' + total.toLocaleString() + ' 件），并通知臻畅可执行订单拉动？')) {
+    location.href = mailto;
+    localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 ' + ts);
+    renderConfirmState();
+  }
+}
+renderConfirmState();
 </script>
 </body>
 </html>
