@@ -1283,7 +1283,7 @@ const PO_DATA = {
 // 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
 // APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
 const PROJECT_DATA = {
-  updatedAt: "2026-08-26",
+  updatedAt: "2026-08-27",
   projects: [
     {
       name: "VFe32", customer: "凯华", oem: "VINFAST", product: "19个零件",
@@ -1380,6 +1380,14 @@ const PROJECT_DATA = {
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-08-20", "remark": "客户找我们报价, 内部启动(8/26)"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "remark": "样品已送并确认OK"}, {"phase": 3, "name": "过程设计和开发", "status": "doing", "remark": "已紧急拉动6500件, 待量产切换"}],
       timeline: [{"date": "2026-08-20", "event": "客户找我们询价（内部启动）", "status": "done"}, {"date": "2026-08-26", "event": "样品已送并确认OK；已紧急拉动6500件", "status": "doing"}],
       parts: [{"name": "ROX01前围毛毡", "code": "510000000000011238", "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"name": "ROX01侧除霜风道密封棉", "code": "510000000000011239", "pulled": true, "makeType": "外协", "supplier": "宁波互盛"}, {"name": "ROX01前除霜盖板海绵条", "code": "510000000000011241", "pulled": true, "makeType": "外协", "supplier": "宁波互盛"}, {"name": "ROX01前除霜盖板密封棉", "code": "510000000000011242", "pulled": true, "makeType": "外协", "supplier": "宁波互盛"}]
+    },
+    {
+      name: "T12T", customer: "凯华", oem: "奇瑞QQ5", product: "10个零件(吸音棉7/毛毡3)",
+      status: "active", rfqDate: "2026-08-27", phase: 1,
+      nextStep: "SOP 2027.3; 待确认自制/外协分工",
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "doing", "planDate": "2026-08-27", "remark": "客户提供零件清单, 内部启动(8/27); SOP目标2027.3"}],
+      timeline: [{"date": "2026-08-27", "event": "客户提供T12T零件清单(吸音棉毛毡), 内部启动", "status": "doing"}],
+      parts: [{"name": "吸音棉 403032281AA-2", "code": "403032281AA-2", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "吸音棉 403032282AA-2", "code": "403032282AA-2", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "吸音棉 403034543AA-3", "code": "403034543AA-3", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "吸音棉 403037026AA-3", "code": "403037026AA-3", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "吸音棉 403037030AA-3", "code": "403037030AA-3", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "吸音棉 403032278AA-2", "code": "403032278AA-2", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "毛毡 403032278AA-3", "code": "403032278AA-3", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "吸音棉 403032287AA-2", "code": "403032287AA-2", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "毛毡 403032287AA-3", "code": "403032287AA-3", "pulled": false, "makeType": "待定", "supplier": "待定"}, {"name": "毛毡 403032289AA-4 (单车3件)", "code": "403032289AA-4", "pulled": false, "makeType": "待定", "supplier": "待定"}]
     }
   ]
 };
