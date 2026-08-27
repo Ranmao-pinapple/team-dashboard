@@ -428,6 +428,13 @@
       <div class="updated" id="updatedLabelPull">最后更新：--</div>
     </div>
 
+    <div class="card" style="padding:10px 14px;margin:12px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-weight:600;font-size:13px">📤 转发给外协供应商</span>
+      <button onclick="shareSupplier('husheng')" style="background:#f3e8ff;color:#8b5cf6;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer">宁波互盛 · 16件</button>
+      <button onclick="shareSupplier('chengfeng')" style="background:#fef3e2;color:#b45309;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer">江苏诚丰 · 4件</button>
+      <span id="supTip" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+
     <div class="month-picker" id="monthPicker"></div>
 
     <div id="pullStats"></div>
@@ -1496,6 +1503,34 @@ const NON2026_DATA = {
 };
 
 // ===== Tab 切换 =====
+const SUP_URLS = {
+  husheng: 'https://ranmao-pinapple.github.io/team-dashboard/supplier-husheng.html',
+  chengfeng: 'https://ranmao-pinapple.github.io/team-dashboard/supplier-chengfeng.html'
+};
+function shareSupplier(key){
+  const url = SUP_URLS[key];
+  const tip = document.getElementById('supTip');
+  const names = {husheng:'宁波互盛', chengfeng:'江苏诚丰'};
+  if (navigator.share) {
+    navigator.share({title: names[key]+' 月拉动计划', text: names[key]+' 9月月拉动计划已更新，请按计划排产', url: url})
+      .catch(()=>{ copySupLink(url, tip); });
+  } else {
+    copySupLink(url, tip);
+  }
+}
+function copySupLink(url, tip){
+  const done = ()=>{ if(tip){ tip.textContent='✅ 链接已复制，去微信粘贴即可发送'; setTimeout(()=>tip.textContent='',4000);} };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done).catch(()=>{ legacyCopy(url); done(); });
+  } else { legacyCopy(url); done(); }
+}
+function legacyCopy(url){
+  const ta = document.createElement('textarea');
+  ta.value = url; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta);
+}
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
