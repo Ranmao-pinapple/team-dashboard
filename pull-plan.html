@@ -92,6 +92,8 @@
   th.today { color: var(--yellow); }
   th.weekend { color: #c4c4c6; }
   td { padding: 5px 3px; font-size: 12px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  td.col-next { max-width: 240px; min-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+  td.col-next:hover { white-space: normal; overflow: visible; word-break: break-all; }
   td.today { background: rgba(180,83,9,.10); box-shadow: inset 0 0 0 1px var(--yellow); border-radius: 4px; }
   td.weekend { color: #c4c4c6; }
   tr:hover td { background: rgba(232,33,39,.04); }
@@ -1575,7 +1577,7 @@ function renderBoard() {
   document.getElementById('boardPulled').textContent = nPulled;
   document.getElementById('boardNotPulled').textContent = allParts.length - nPulled;
 
-  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>零件</th><th>状态</th><th>下一步</th></tr>';
+  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>零件</th><th>状态</th><th style="width:240px">下一步</th><th>操作</th></tr>';
   projects.forEach(p => {
     const nP = (p.parts || []).length;
     const nPul = (p.parts || []).filter(pt => pt.pulled).length;
@@ -1597,7 +1599,7 @@ function renderBoard() {
       <td>${p.oem ? `<span class="status st-blue" style="font-weight:700">${p.oem}</span>` : '—'}</td>
       <td><span style="font-size:12px">${nP}个零件 · <span style="color:var(--green)">${nPul}已拉动</span>/<span style="color:var(--yellow)">${nP - nPul}未拉</span></span></td>
       <td>${apqpStatusBadge(p.status)}</td>
-      <td style="color:var(--muted);font-size:12px">${p.nextStep || ''}</td>
+      <td class="col-next" title="${String(p.nextStep || '').replace(/"/g, '&quot;')}">${p.nextStep || ''}</td>
       <td class="fin-toggle">▸ 展开</td>
     </tr>`;
     html += `<tr class="detail-row" style="display:none"><td colspan="7"><div class="detail-inner">
@@ -2102,7 +2104,7 @@ function renderApqp() {
     projects = projects.filter(p => p.status === currentApqpFilter);
   }
 
-  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>产品(零件)</th><th>内部询价</th><th>APQP进度</th><th>当前阶段</th><th>状态</th><th>下一步</th><th></th></tr>';
+  let html = '<table><tr><th>项目</th><th>客户</th><th>主机厂</th><th>产品(零件)</th><th>内部询价</th><th>APQP进度</th><th>当前阶段</th><th>状态</th><th style="width:240px">下一步</th><th>操作</th></tr>';
   projects.forEach(p => {
     const cur = p.phases.find(ph => ph.phase === p.phase) || p.phases[p.phases.length - 1];
     const phaseRows = p.phases.map(ph => `<tr>
@@ -2133,7 +2135,7 @@ function renderApqp() {
       <td>${apqpPhaseDots(p)}</td>
       <td>${cur ? `${cur.phase}. ${cur.name}` : '—'}</td>
       <td>${apqpStatusBadge(p.status)}</td>
-      <td style="color:var(--muted);font-size:12px">${p.nextStep || ''}</td>
+      <td class="col-next" title="${String(p.nextStep || '').replace(/"/g, '&quot;')}">${p.nextStep || ''}</td>
       <td class="fin-toggle">▸ 展开</td>
     </tr>`;
     html += `<tr class="detail-row" style="display:none"><td colspan="10"><div class="detail-inner">
