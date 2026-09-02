@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""生成外协工厂月拉动计划网页 (宁波互盛/江苏诚丰) — CI 仓库内版本, 读 data/orders.json 本地生成"""
+import json, os, datetime
+
+BASE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+
+# ---------- 读取数据 ----------
+orders = json.load(open(f"{BASE}/orders.json"))
+YEAR = orders.get("year", 2026)
+MONTHS = ["6", "7", "8", "9"]
+MONTH_NAMES = {"6": "6月", "7": "7月", "8": "8月", "9": "9月"}
+
+def supplier_rows(supplier):
+    return [r for r in orders["rows"] if r.get("supplier") == supplier and r.get("makeType") == "外协"]
+
+HUSHENG = supplier_rows("宁波互盛")
+CHENGFENG = supplier_rows("江苏诚丰")
+
+# ---------- HTML 模板 ----------
+TMPL = """<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月拉动计划 · {supplier}</title>
+<style>
+  * {{ margin:0; padding:0; box-sizing:border-box; }}
+  body {{ font-family:"Microsoft YaHei","PingFang SC",sans-serif; background:#f5f6f8; color:#171a20; padding:20px; }}
+  .wrap {{ max-width:1280px; margin:0 auto; background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.06); padding:24px; }}
+  .head {{ display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #e82127; padding-bottom:14px; margin-bottom:16px; }}
+  h1 {{ font-size:20px; color:#171a20; }}
+  h1 span {{ color:#e82127; }}
+  .meta {{ font-size:12px; color:#8a8f98; }}
+  .month-bar {{ display:flex; gap:8px; margin-bottom:14px; }}
+  .month-bar button {{ padding:6px 18px; border:1px solid #d8dbe0; background:#fff; border-radius:8px; cursor:pointer; font-size:13px; }}
+  .month-bar button.active {{ background:#e82127; color:#fff; border-color:#e82127; font-weight:700; }}
+  .sum-line {{ font-size:13px; color:#555; margin-bottom:10px; }}
+  .sum-line b {{ color:#e82127; font-size:16px; }}
+  table {{ width:100%; border-collapse:collapse; font-size:11.5px; }}
+  th, td {{ border:1px solid #e4e6ea; padding:4px 2px; text-align:center; white-space:nowrap; }}
+  th {{ background:#f0f2f5; font-weight:600; position:sticky; top:0; }}
+  td.part {{ text-align:left; min-width:220px; padding-left:8px; font-weight:600; background:#fff; position:sticky; left:0; }}
+  tr.total-row td {{ background:#fff3cd; font-weight:700; }}
+  td.weekend {{ background:#faf3f0; }}
+  td.zero {{ color:#c8cbd0; }}
+  .foot {{ margin-top:14px; font-size:11px; color:#8a8f98; text-align:right; }}
+  @media print {{ body {{ padding:0; background:#fff; }} .wrap {{ box-shadow:none; border-radius:0; }} .month-bar {{ display:none; }} }}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>📋 月拉动计划 · <span>{supplier}</span></h1>
+    <div class="meta">臻畅/泰瑞 · 销售四部 &nbsp;|&nbsp; 数据更新：{updated}</div>
+  </div>
+  <div class="month-bar" id="monthBar"></div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+    <button id="confirmBtn" onclick="openConfirm()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(232,33,39,.3)">✅ 确认收到 · 可执行拉动</button>
+    <span id="confirmState" style="font-size:12px;color:#8a8f98"></span>
+  </div>
+  <div class="sum-line" id="sumLine"></div>
+  <div style="overflow-x:auto"><table id="pt"><thead id="ptHead"></thead><tbody id="ptBody"></tbody></table></div>
+  <div class="foot">※ 数量单位：件（pcs）· 按客户拉动计划排产，如有变动以最新通知为准</div>
+</div>
+<script>
+const SUPPLIER = {supplier_json};
+const DATA = {rows_json};
+const YEAR = {year};
+const MONTHS = {months_json};
+const MONTH_NAMES = {month_names_json};
+let curMonth = '9';
+const dim = m => new Date(YEAR, parseInt(m), 0).getDate();
+const fmt = n => (n||0).toLocaleString();
+document.getElementById('monthBar').innerHTML = MONTHS.map(m =>
+  `<button class="${{m===curMonth?'active':''}}" onclick="switchM('${{m}}')">${{MONTH_NAMES[m]}}</button>`).join('');
+function switchM(m) {{ curMonth = m; render(); }}
+function render() {{
+  const dim = new Date(YEAR, parseInt(curMonth), 0).getDate();
+  let head = '<tr><th>零件名称</th>';
+  for (let d=1; d<=dim; d++) {{
+    const dt = new Date(YEAR, parseInt(curMonth)-1, d);
+    const wk = ['日','一','二','三','四','五','六'][dt.getDay()];
+    const we = dt.getDay()===0 || dt.getDay()===6;
+    head += `<th class="${{we?'weekend':''}}">${{d}}<br><span style="font-weight:400;font-size:10px;color:#8a8f98">${{wk}}</span></th>`;
+  }}
+  head += '<th>月合计</th></tr>';
+  document.getElementById('ptHead').innerHTML = head;
+  let body = '', grand = 0;
+  DATA.forEach(r => {{
+    const arr = r.daily[curMonth] || [];
+    let sum = 0;
+    let cells = '';
+    for (let d=0; d<dim; d++) {{
+      const v = arr[d] || 0;
+      sum += v;
+      const dt = new Date(YEAR, parseInt(curMonth)-1, d+1);
+      const we = dt.getDay()===0 || dt.getDay()===6;
+      cells += `<td class="${{v===0?'zero':''}} ${{we?'weekend':''}}">${{v?fmt(v):''}}</td>`;
+    }}
+    grand += sum;
+    body += `<tr><td class="part">${{r.part}}</td>${{cells}}<td style="font-weight:700">${{fmt(sum)}}</td></tr>`;
+  }});
+  body += `<tr class="total-row"><td>合计（{supplier}）</td>`;
+  const arrs = DATA.map(r => r.daily[curMonth] || []);
+  for (let d=0; d<dim; d++) {{
+    let s = 0; arrs.forEach(a => s += a[d]||0);
+    body += `<td>${{s?fmt(s):''}}</td>`;
+  }}
+  body += `<td>${{fmt(grand)}}</td></tr>`;
+  document.getElementById('ptBody').innerHTML = body;
+  document.getElementById('sumLine').innerHTML = `${{MONTH_NAMES[curMonth]}} 拉动总量：<b>${{fmt(grand)}}</b> 件 · 共 ${{DATA.length}} 个零件`;
+}}
+render();
+
+// ===== 确认收到 · 一键回执 =====
+const RECEIVER_EMAIL = 'xufeng_cao@zhenchang.group';
+const CONFIRM_KEY = 'sup_confirm_' + SUPPLIER;
+function grandTotal(m) {{
+  return DATA.reduce((s,r)=>s+((r.daily[m]||[]).reduce((a,b)=>a+(b||0),0)),0);
+}}
+function renderConfirmState() {{
+  const done = localStorage.getItem(CONFIRM_KEY);
+  const btn = document.getElementById('confirmBtn');
+  const st = document.getElementById('confirmState');
+  if (done) {{
+    btn.innerHTML = '✅ 已确认收到（' + done + '）';
+    btn.style.background = '#16a34a';
+    btn.style.boxShadow = 'none';
+    st.textContent = '已向臻畅发送确认回执，如计划有变请重新确认';
+  }} else {{
+    st.textContent = '点击按钮，一键发送确认回执邮件';
+  }}
+}}
+function openConfirm() {{
+  const total = grandTotal(curMonth);
+  const now = new Date();
+  const ts = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const subject = encodeURIComponent('【外协确认】' + SUPPLIER + ' 已收到' + MONTH_NAMES[curMonth] + '月拉动计划');
+  const body = encodeURIComponent(
+    SUPPLIER + ' 确认收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划，可执行订单拉动。\\n\\n' +
+    '■ 供应商：' + SUPPLIER + '\\n' +
+    '■ 计划月份：' + MONTH_NAMES[curMonth] + '月\\n' +
+    '■ 零件数：' + DATA.length + ' 件\\n' +
+    '■ 拉动总量：' + total.toLocaleString() + ' 件\\n' +
+    '■ 确认时间：' + ts + '\\n' +
+    '■ 页面：' + location.href + '\\n\\n' +
+    '如有疑问请联系臻畅销售四部。'
+  );
+  const mailto = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + body;
+  if (confirm('确认【' + SUPPLIER + '】已收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划（共 ' + DATA.length + ' 个零件 / ' + total.toLocaleString() + ' 件），并通知臻畅可执行订单拉动？')) {{
+    location.href = mailto;
+    localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 ' + ts);
+    renderConfirmState();
+  }}
+}}
+renderConfirmState();
+</script>
+</body>
+</html>"""
+
+def make_page(supplier, rows):
+    rows_data = [{
+        "part": r["part"],
+        "daily": {m: r.get("daily", {}).get(m, [0]*31) for m in MONTHS},
+    } for r in rows]
+    html = TMPL.format(
+        supplier=supplier,
+        supplier_json=json.dumps(supplier, ensure_ascii=False),
+        rows_json=json.dumps(rows_data, ensure_ascii=False),
+        year=YEAR,
+        months_json=json.dumps(MONTHS),
+        month_names_json=json.dumps(MONTH_NAMES, ensure_ascii=False),
+        updated=datetime.date.today().isoformat(),
+    )
+    return html
+
+pages = [
+    ("supplier-husheng.html", "宁波互盛", HUSHENG),
+    ("supplier-chengfeng.html", "江苏诚丰", CHENGFENG),
+]
+
+OUT = os.path.dirname(BASE)  # 仓库根目录
+for fname, sup, rows in pages:
+    if not rows:
+        print(f"{fname}: 无数据, 跳过")
+        continue
+    html = make_page(sup, rows)
+    path = os.path.join(OUT, fname)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"{fname}: {sup} {len(rows)}件 -> 已生成")

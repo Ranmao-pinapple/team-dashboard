@@ -22,6 +22,9 @@ jobs:
       - name: 生成数据块并更新页面
         run: python scripts/build_dashboard.py
 
+      - name: 重新生成外协供应商月拉动页面
+        run: python scripts/make_supplier_pages.py
+
       - name: 有变化则提交
         run: |
           git config user.name "白猫控制台[bot]"
