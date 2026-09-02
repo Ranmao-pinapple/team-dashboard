@@ -24,18 +24,6 @@
       "planDate": "",
       "sendDate": "",
       "remark": "外协待定, 供应商可更换"
-    },
-    {
-      "project": "CI测试",
-      "customer": "内部",
-      "part": "端到端验证",
-      "qty": 1,
-      "makeType": "make",
-      "supplier": "自测",
-      "stage": "planning",
-      "planDate": "",
-      "sendDate": "",
-      "remark": "验证完成后删除"
     }
   ]
 }
