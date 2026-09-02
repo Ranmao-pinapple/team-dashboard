@@ -1,0 +1,115 @@
+{
+  "updatedAt": "2026-09-02",
+  "tasks": [
+    {
+      "id": "T001",
+      "title": "VWCO物流成本表填写",
+      "project": "VWCO 巴西卡车",
+      "owner": "Zane",
+      "priority": "P0",
+      "due": "2026-08-10",
+      "status": "doing",
+      "remark": "确认运输方式后填写，中英对照版已交付"
+    },
+    {
+      "id": "T002",
+      "title": "VWCO包装方案表填写",
+      "project": "VWCO 巴西卡车",
+      "owner": "Zane",
+      "priority": "P1",
+      "due": "2026-08-15",
+      "status": "todo",
+      "remark": "待物流数据确认后联动填写"
+    },
+    {
+      "id": "T003",
+      "title": "VWCO报价邮件发送",
+      "project": "VWCO 巴西卡车",
+      "owner": "Zane",
+      "priority": "P0",
+      "due": "2026-08-12",
+      "status": "todo",
+      "remark": "两表填完后统一邮件发送"
+    },
+    {
+      "id": "T004",
+      "title": "Limo Green 海绵外协打样跟进",
+      "project": "Limo Green 海绵（外协）",
+      "owner": "Zane",
+      "priority": "P0",
+      "due": "2026-08-05",
+      "status": "doing",
+      "remark": "已超计划3天，催外协反馈打样结果"
+    },
+    {
+      "id": "T005",
+      "title": "Limo Green 吸音棉打样安排",
+      "project": "Limo Green 吸音棉",
+      "owner": "Zane",
+      "priority": "P1",
+      "due": "2026-08-14",
+      "status": "todo",
+      "remark": "备料已完成，待安排打样"
+    },
+    {
+      "id": "T006",
+      "title": "凯华7月对账单确认",
+      "project": "VFe32 小海绵（凯华）",
+      "owner": "财务",
+      "priority": "P1",
+      "due": "2026-08-06",
+      "status": "doing",
+      "remark": "7月对账单待客户确认，确认后开票"
+    },
+    {
+      "id": "T007",
+      "title": "VFe32 8月拉动计划核对",
+      "project": "VFe32 小海绵（凯华）",
+      "owner": "Zane",
+      "priority": "P2",
+      "due": "2026-08-08",
+      "status": "todo",
+      "remark": "与订单台账交叉核对数量"
+    },
+    {
+      "id": "T008",
+      "title": "凯华逾期回款催收",
+      "project": "VFe32 小海绵（凯华）",
+      "owner": "Zane",
+      "priority": "P0",
+      "due": "2026-08-07",
+      "status": "todo",
+      "remark": "INV-202606-018 开票已超30天，催款"
+    },
+    {
+      "id": "T009",
+      "title": "7月对账单财务录入",
+      "project": "内部",
+      "owner": "白猫",
+      "priority": "P2",
+      "due": "2026-08-05",
+      "status": "doing",
+      "remark": "对账单确认后录入财务看板"
+    },
+    {
+      "id": "T010",
+      "title": "周报汇总",
+      "project": "内部",
+      "owner": "Zane",
+      "priority": "P3",
+      "due": "2026-08-08",
+      "status": "todo",
+      "remark": "每周五下班前输出"
+    },
+    {
+      "id": "T011",
+      "title": "BIN73031363AA 除霜风管海绵条(RH)尺寸确认",
+      "project": "VFe32 小海绵（凯华）",
+      "owner": "Zane",
+      "priority": "P1",
+      "due": "",
+      "status": "todo",
+      "remark": "PU棉 T8, 86.73×28.44×8mm, 1g; 图纸未标注形状按3D数据为准; 需与凯华确认样品/量产用途"
+    }
+  ]
+}
