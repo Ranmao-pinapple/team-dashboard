@@ -415,6 +415,33 @@
       <h3 style="color:var(--muted);font-size:14px;font-weight:500;margin-bottom:12px">项目状态一览（点击行展开详情 · 含零件拉动状态）</h3>
       <div id="boardTableWrap"></div>
     </div>
+
+    <div class="card">
+      <h3 style="color:var(--muted);font-size:14px;font-weight:500;margin-bottom:12px">🧪 样品计划（打样/送样跟踪）<span class="badge badge-live" id="sampleUpdated"></span></h3>
+      <div class="grid">
+        <div class="card stat" onclick="showToast('正在打样/待客户确认的样品')"'>
+          <h3>打样中</h3>
+          <div class="big-number blue" id="sampleMaking">0</div>
+          <div class="sub">含客户确认中</div>
+        </div>
+        <div class="card stat" onclick="showToast('已排期待送出的样品')"'>
+          <h3>待送样</h3>
+          <div class="big-number yellow" id="sampleToSend">0</div>
+          <div class="sub">待打样/已备好</div>
+        </div>
+        <div class="card stat" onclick="showToast('已寄出等待客户反馈')"'>
+          <h3>已送样</h3>
+          <div class="big-number purple" id="sampleSent">0</div>
+          <div class="sub">等客户确认</div>
+        </div>
+        <div class="card stat" onclick="showToast('客户已确认的样品')"'>
+          <h3>样品确认</h3>
+          <div class="big-number green" id="sampleConfirmed">0</div>
+          <div class="sub">可转量产</div>
+        </div>
+      </div>
+      <div id="sampleTableWrap"></div>
+    </div>
   </div>
 
   <!-- ========== Tab 2: 月拉动计划 ========== -->
@@ -1507,6 +1534,53 @@ const NON2026_DATA = {
   ]
 };
 
+// ===== 样品计划 =====
+const SAMPLE_DATA = {
+  updatedAt: "2026-09-02",
+  rows: [
+    { project: "ZH5EM", customer: "凯华", part: "泡棉件(8件)", qty: 8, makeType: "out", supplier: "宁波互盛", stage: "making", planDate: "", sendDate: "", remark: "10件全为外协待定(采购未确认), 送样暂用此供应商, 供应商可更换" },
+    { project: "ZH5EM", customer: "凯华", part: "蘑菇塔扣(2件)", qty: 2, makeType: "out", supplier: "惠州兰谷(兰谷电子)", stage: "making", planDate: "", sendDate: "", remark: "外协待定, 供应商可更换" }
+  ]
+};
+const SAMPLE_STAGE = {
+  planning:   { t: '待打样',    c: 'st-pending' },
+  making:     { t: '打样中',    c: 'st-blue' },
+  to_send:    { t: '待送样',    c: 'st-pending' },
+  sent:       { t: '已送样',    c: 'st-invoiced' },
+  confirming: { t: '客户确认中', c: 'st-blue' },
+  confirmed:  { t: '样品确认',  c: 'st-paid' },
+  rejected:   { t: '退回重打',  c: 'st-overdue' }
+};
+function renderSample() {
+  const rows = SAMPLE_DATA.rows || [];
+  const cnt = s => rows.filter(r => r.stage === s).length;
+  document.getElementById('sampleMaking').textContent = cnt('making') + cnt('confirming');
+  document.getElementById('sampleToSend').textContent = cnt('planning') + cnt('to_send');
+  document.getElementById('sampleSent').textContent = cnt('sent');
+  document.getElementById('sampleConfirmed').textContent = cnt('confirmed');
+  const up = document.getElementById('sampleUpdated');
+  if (up) up.textContent = '更新 ' + (SAMPLE_DATA.updatedAt || '--');
+  const wrap = document.getElementById('sampleTableWrap');
+  if (!rows.length) { wrap.innerHTML = '<div style="padding:20px;color:var(--muted)">暂无样品计划 — 把样品清单发我，我来维护</div>'; return; }
+  const tagOf = r => r.makeType === 'make' ? '<span class="tag tag-make">自制</span>' : r.makeType === 'out' ? '<span class="tag tag-out">外协</span>' : '';
+  let h = '<table><tr><th>项目</th><th>客户</th><th>零件</th><th>件数</th><th>供应商</th><th>样品状态</th><th>计划送样</th><th>实际送样</th><th>备注</th></tr>';
+  rows.forEach(r => {
+    const st = SAMPLE_STAGE[r.stage] || { t: r.stage, c: '' };
+    h += `<tr>
+      <td><b>${r.project}</b></td>
+      <td>${r.customer}</td>
+      <td>${r.part}</td>
+      <td>${r.qty}</td>
+      <td>${tagOf(r)} ${r.supplier}</td>
+      <td><span class="status ${st.c}">${st.t}</span></td>
+      <td>${r.planDate || '—'}</td>
+      <td>${r.sendDate || '—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${r.remark || ''}</td></tr>`;
+  });
+  h += '</table>';
+  wrap.innerHTML = h;
+}
+
 // ===== Tab 切换 =====
 const SUP_URLS = {
   husheng: 'https://ranmao-pinapple.github.io/team-dashboard/supplier-husheng.html',
@@ -2388,6 +2462,7 @@ function setNon2026Period(pid) {
     b.classList.toggle('active', b.dataset.p === pid);
   });
   renderNon2026();
+renderSample();
 }
 function setNon2026Filter(f) {
   currentNon2026Filter = f;
