@@ -134,6 +134,7 @@
   .st-live { background: rgba(18,161,80,.12); color: var(--green); }
   .st-plan { background: rgba(232,33,39,.10); color: var(--accent); }
   .st-wait { background: rgba(180,83,9,.12); color: var(--yellow); }
+.st-stop { background: #dc2626; color: #fff; font-weight: 800; }
   .st-pending { background: rgba(180,83,9,.12); color: var(--yellow); }
   .st-confirmed { background: rgba(232,33,39,.10); color: var(--accent); }
   .st-invoiced { background: rgba(124,58,237,.12); color: var(--purple); }
@@ -731,7 +732,7 @@
 <script>
 // ===== 月拉动计划数据块（白猫脚本自动更新区域） =====
 const PULL_DATA = {
-  updatedAt: "2026-08-31",
+  updatedAt: "2026-09-04",
   year: 2026,
   rows: [
     {
@@ -1084,14 +1085,14 @@ const PULL_DATA = {
       part: "VFe32后扰流板内部海绵条",
       project: "VFe32",
       proj: "凯华",
-      status: "live",
+      status: "stop",
       makeType: "外协",
       supplier: "宁波互盛",
       daily: {
         6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 0, 0],
-        9: [0, 0, 0, 10000, 0, 0, 5000, 0, 0, 0, 0, 0, 0, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       },
       actual: {
         6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1334,7 +1335,7 @@ const PROJECT_DATA = {
       nextStep: "陆续增加新的零件，进行切换中",
       bomFiles: [],
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-06-04", "actualDate": "2026-06-02", "remark": "内部询价→报价→定点(切换件)"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "2026-07-20", "actualDate": "2026-07-15", "remark": "图纸确认/样件认可"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "2026-07-25", "actualDate": "2026-07-22", "remark": "模压工装/裁切工艺"}, {"phase": 4, "name": "产品和过程确认", "status": "done", "planDate": "2026-07-30", "actualDate": "2026-07-28", "remark": "PPAP/试产确认"}, {"phase": 5, "name": "反馈评定纠正", "status": "done", "planDate": "2026-08-05", "actualDate": "2026-07-31", "remark": "SOP量产(切换件)"}],
-      timeline: [{"date": "2026-05-25", "event": "内部询价", "status": "done"}, {"date": "2026-06-09", "event": "报价提交", "status": "done"}, {"date": "2026-07-15", "event": "客户定点", "status": "done"}, {"date": "2026-07-31", "event": "SOP量产(切换件)", "status": "done"}],
+      timeline: [{"date": "2026-05-25", "event": "内部询价", "status": "done"}, {"date": "2026-06-09", "event": "报价提交", "status": "done"}, {"date": "2026-07-15", "event": "客户定点", "status": "done"}, {"date": "2026-07-31", "event": "SOP量产(切换件)", "status": "done"}, {"date": "2026-09-04", "event": "🔴 后扰流板内部海绵条(BEX73090010AA·宁波互盛外协): 9/4及以后拉动全部叫停(原定9/4=10000/9/7=5000/9/14=5000)", "status": "done"}],
       parts: [{"code": "510000000000011053", "name": "VFe32风管外部隔音棉BIN73031332AA", "priceTax": 0.79, "pulled": true, "makeType": "自制", "supplier": "上海泰瑞"}, {"code": "510000000000011055", "name": "VFe32风管外部隔音棉BIN73031362AA", "priceTax": 0.6, "pulled": true, "makeType": "自制", "supplier": "上海泰瑞"}, {"code": "510000000000011049", "name": "VFe32风管外部隔音棉BIN73031211AA", "priceTax": 2.6, "pulled": true, "makeType": "自制", "supplier": "上海泰瑞"}, {"code": "510000000000011011", "name": "VFe32防水海绵-侧裙", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000010920", "name": "VFe32后扰流板内部海绵条", "priceTax": 1.37, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011034", "name": "VFe32前通风盖板本体海绵条6x10x1301.3", "priceTax": 1, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000010921", "name": "VFe32后保险杠安装支架密封圈", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011148", "name": "VFe32后三角板泡棉10×10×203mm", "priceTax": 0.34, "pulled": true, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011052", "name": "VFe32前除霜风管海绵条3", "priceTax": 0.65, "pulled": true, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011030", "name": "VFe32前端海绵条", "priceTax": 0.9, "pulled": true, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000010919", "name": "VFe32防水垫圈", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011054", "name": "VFe32风管接口海绵条", "priceTax": 0.48, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011050", "name": "VFe32前除霜风管海绵条1", "priceTax": 0.46, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011006", "name": "VFe32防水海绵22x10.5x6mm", "priceTax": 0.1, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011056", "name": "VFe32风管接口海绵条", "priceTax": 0.52, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011035", "name": "VFe32后背门扣手盖板本体防水条3x4x1120mm", "priceTax": 0.4, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011051", "name": "VFe32前除霜风管海绵条2", "priceTax": 0.46, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "320000000000011426", "name": "VFe32售后件防水海绵", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000011036", "name": "VFe32海绵条", "priceTax": 1.84, "pulled": true, "makeType": "外协", "supplier": "宁波互盛"}]
     },
     {
@@ -1718,7 +1719,8 @@ function renderBoard() {
 const statusMap = {
   live: '<span class="status st-live">✅ 已确认</span>',
   plan: '<span class="status st-plan">🔵 预测</span>',
-  wait: '<span class="status st-wait">🔄 待定</span>'
+  wait: '<span class="status st-wait">🔄 待定</span>',
+  stop: '<span class="status st-stop">🛑 已叫停</span>'
 };
 
 let currentMonth = new Date().getMonth() + 1;
