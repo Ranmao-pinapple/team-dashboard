@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-09-04",
   "projects": [
     {
       "name": "VFe32",
@@ -974,7 +974,7 @@
       "status": "active",
       "rfqDate": "2026-08-26",
       "phase": 2,
-      "nextStep": "收到样件, 内部分析样件中; 切换件(切换后剩余量纲约20万台车)",
+      "nextStep": "外协件交新久玥排产(3小时内盖章回传PO); 剩余外协2件(1632毛毡/1688吸能块)供应商待确认",
       "phases": [
         {
           "phase": 1,
@@ -1000,6 +1000,11 @@
           "date": "2026-08-26",
           "event": "收到样件，内部分析样件中",
           "status": "doing"
+        },
+        {
+          "date": "2026-09-04",
+          "event": "收到凯华济南9月订单PO4500126513: 外协11项/13.17万件/含税¥19,800, 交期9-30; 外协供应商确认为新久玥",
+          "status": "done"
         }
       ],
       "parts": [
@@ -1008,42 +1013,42 @@
           "code": "510000000000011619",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 前除霜风道上板防水海绵",
           "code": "510000000000011620",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 前除霜风道下板防水海绵",
           "code": "510000000000011621",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 仪表板左端护板无纺布",
           "code": "510000000000011622",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 空调滤芯遮挡板缓冲毡垫",
           "code": "510000000000011623",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 杂物箱锁扣手缓冲毛毡",
           "code": "510000000000011624",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 仪表板左下隔音板吸音棉",
@@ -1113,35 +1118,35 @@
           "code": "510000000000011776",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA PAD安装座护罩毛毡Ⅰ",
           "code": "510000000000011777",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA PAD检修盖板毛毡Ⅰ",
           "code": "510000000000011778",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 杂物箱扣手缓冲垫",
           "code": "510000000000011779",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 前除霜盖板海绵条 (带背胶）",
           "code": "510000000000011827",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "新久玥"
         },
         {
           "name": "EHEA 副仪表板右下护板吸音棉",
