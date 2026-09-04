@@ -1243,7 +1243,7 @@
       "status": "active",
       "rfqDate": "2026-08-27",
       "phase": 1,
-      "nextStep": "SOP 2027.3; 待确认自制/外协分工",
+      "nextStep": "SOP 2027.3; 成本表已入, 待输出报价发凯华",
       "phases": [
         {
           "phase": 1,
@@ -1258,6 +1258,11 @@
           "date": "2026-08-27",
           "event": "客户提供T12T零件清单(吸音棉毛毡), 内部启动",
           "status": "doing"
+        },
+        {
+          "date": "2026-09-04",
+          "event": "臻畅基地出T12T成本表(9/1): 自制吸音棉7件单件成本¥0.398~0.890(含材料/加工/三项/运输/包装/实验/模具摊销), 毛毡3件外购南通华阁¥0.084/件",
+          "status": "done"
         }
       ],
       "parts": [
@@ -1266,70 +1271,80 @@
           "code": "403032281AA-2",
           "pulled": false,
           "makeType": "自制",
-          "supplier": "上海泰瑞"
+          "supplier": "上海泰瑞",
+          "cost": 0.39815216
         },
         {
           "name": "吸音棉 403032282AA-2",
           "code": "403032282AA-2",
           "pulled": false,
           "makeType": "自制",
-          "supplier": "上海泰瑞"
+          "supplier": "上海泰瑞",
+          "cost": 0.39815216
         },
         {
           "name": "吸音棉 403034543AA-3",
           "code": "403034543AA-3",
           "pulled": false,
           "makeType": "自制",
-          "supplier": "上海泰瑞"
+          "supplier": "上海泰瑞",
+          "cost": 0.45464862
         },
         {
           "name": "吸音棉 403037026AA-3",
           "code": "403037026AA-3",
           "pulled": false,
           "makeType": "自制",
-          "supplier": "上海泰瑞"
+          "supplier": "上海泰瑞",
+          "cost": 0.45464862
         },
         {
           "name": "吸音棉 403037030AA-3",
           "code": "403037030AA-3",
           "pulled": false,
           "makeType": "自制",
-          "supplier": "上海泰瑞"
+          "supplier": "上海泰瑞",
+          "cost": 0.45464862
         },
         {
           "name": "吸音棉 403032278AA-2",
           "code": "403032278AA-2",
           "pulled": false,
           "makeType": "自制",
-          "supplier": "上海泰瑞"
+          "supplier": "上海泰瑞",
+          "cost": 0.88972984
         },
         {
           "name": "毛毡 403032278AA-3",
           "code": "403032278AA-3",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "南通华阁",
+          "cost": 0.084
         },
         {
           "name": "吸音棉 403032287AA-2",
           "code": "403032287AA-2",
           "pulled": false,
           "makeType": "自制",
-          "supplier": "上海泰瑞"
+          "supplier": "上海泰瑞",
+          "cost": 0.88972984
         },
         {
           "name": "毛毡 403032287AA-3",
           "code": "403032287AA-3",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "南通华阁",
+          "cost": 0.084
         },
         {
           "name": "毛毡 403032289AA-4 (单车3件)",
           "code": "403032289AA-4",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "南通华阁",
+          "cost": 0.084
         }
       ],
       "bomFiles": [
@@ -1340,6 +1355,10 @@
         {
           "title": "T12T吸音棉毛毡零件清单",
           "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-T12T-吸音棉毛毡零件清单.xlsx"
+        },
+        {
+          "title": "T12T吸音棉毛毡成本表-臻畅基地-2026.9.1",
+          "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-T12T-吸音棉毛毡成本表-臻畅基地-20260901.xlsx"
         }
       ]
     }

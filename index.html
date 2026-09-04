@@ -1439,11 +1439,11 @@ const PROJECT_DATA = {
     {
       name: "T12T", customer: "凯华", oem: "奇瑞QQ5", product: "10个零件(吸音棉7/毛毡3)",
       status: "active", rfqDate: "2026-08-27", phase: 1,
-      nextStep: "SOP 2027.3; 待确认自制/外协分工",
-      bomFiles: [{"title": "T12T立柱BOM V0.4 (产品/模具/检具/工装)", "url": "https://ranmao-pinapple.github.io/team-dashboard/files/KH-奇瑞-T12T-立柱-BOM-V0.4-20260730.xlsx"}, {"title": "T12T吸音棉毛毡零件清单", "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-T12T-吸音棉毛毡零件清单.xlsx"}],
+      nextStep: "SOP 2027.3; 成本表已入, 待输出报价发凯华",
+      bomFiles: [{"title": "T12T立柱BOM V0.4 (产品/模具/检具/工装)", "url": "https://ranmao-pinapple.github.io/team-dashboard/files/KH-奇瑞-T12T-立柱-BOM-V0.4-20260730.xlsx"}, {"title": "T12T吸音棉毛毡零件清单", "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-T12T-吸音棉毛毡零件清单.xlsx"}, {"title": "T12T吸音棉毛毡成本表-臻畅基地-2026.9.1", "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-T12T-吸音棉毛毡成本表-臻畅基地-20260901.xlsx"}],
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "doing", "planDate": "2026-08-27", "remark": "客户提供零件清单, 内部启动(8/27); SOP目标2027.3"}],
-      timeline: [{"date": "2026-08-27", "event": "客户提供T12T零件清单(吸音棉毛毡), 内部启动", "status": "doing"}],
-      parts: [{"name": "吸音棉 403032281AA-2", "code": "403032281AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞"}, {"name": "吸音棉 403032282AA-2", "code": "403032282AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞"}, {"name": "吸音棉 403034543AA-3", "code": "403034543AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞"}, {"name": "吸音棉 403037026AA-3", "code": "403037026AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞"}, {"name": "吸音棉 403037030AA-3", "code": "403037030AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞"}, {"name": "吸音棉 403032278AA-2", "code": "403032278AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞"}, {"name": "毛毡 403032278AA-3", "code": "403032278AA-3", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "吸音棉 403032287AA-2", "code": "403032287AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞"}, {"name": "毛毡 403032287AA-3", "code": "403032287AA-3", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "毛毡 403032289AA-4 (单车3件)", "code": "403032289AA-4", "pulled": false, "makeType": "外协", "supplier": "待定"}]
+      timeline: [{"date": "2026-08-27", "event": "客户提供T12T零件清单(吸音棉毛毡), 内部启动", "status": "doing"}, {"date": "2026-09-04", "event": "臻畅基地出T12T成本表(9/1): 自制吸音棉7件单件成本¥0.398~0.890(含材料/加工/三项/运输/包装/实验/模具摊销), 毛毡3件外购南通华阁¥0.084/件", "status": "done"}],
+      parts: [{"name": "吸音棉 403032281AA-2", "code": "403032281AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.39815216}, {"name": "吸音棉 403032282AA-2", "code": "403032282AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.39815216}, {"name": "吸音棉 403034543AA-3", "code": "403034543AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.45464862}, {"name": "吸音棉 403037026AA-3", "code": "403037026AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.45464862}, {"name": "吸音棉 403037030AA-3", "code": "403037030AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.45464862}, {"name": "吸音棉 403032278AA-2", "code": "403032278AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.88972984}, {"name": "毛毡 403032278AA-3", "code": "403032278AA-3", "pulled": false, "makeType": "外协", "supplier": "南通华阁", "cost": 0.084}, {"name": "吸音棉 403032287AA-2", "code": "403032287AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.88972984}, {"name": "毛毡 403032287AA-3", "code": "403032287AA-3", "pulled": false, "makeType": "外协", "supplier": "南通华阁", "cost": 0.084}, {"name": "毛毡 403032289AA-4 (单车3件)", "code": "403032289AA-4", "pulled": false, "makeType": "外协", "supplier": "南通华阁", "cost": 0.084}]
     }
   ]
 };
@@ -1674,6 +1674,7 @@ function renderBoard() {
       <td>${pt.name}${pt.makeType ? (pt.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : '<span class="tag tag-out">外协</span>') : ''}${pt.supplier ? `<span class="tag tag-supplier" style="color:${pt.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${pt.supplier}</span>` : ''}</td>
       <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
       <td style="color:var(--muted);font-size:11px">${pt.priceTax != null ? '含税 ¥' + pt.priceTax.toFixed(2) : '待报价'}</td>
+      <td style="color:var(--muted);font-size:11px">${pt.cost != null ? '¥' + pt.cost.toFixed(4) : '—'}</td>
       <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
     </tr>`).join('');
     const tlRows = (p.timeline || []).map(t => `<tr>
@@ -1699,7 +1700,7 @@ function renderBoard() {
       ${(p.bomFiles||[]).map((b,i)=>`<div style="margin:14px 0 4px"><button onclick="openBom('${p.name}',${i})" style="background:#e8f0fe;color:#1e6fd9;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;margin-right:8px">📎 ${b.title}</button></div>`).join('')}
       ${partsRows ? `<h4 style="margin-top:14px">🧩 零件清单（${nP}个）</h4>
       <table class="sub-table">
-        <tr><th>零件名称</th><th>物料编码</th><th>含税价</th><th>状态</th></tr>
+        <tr><th>零件名称</th><th>物料编码</th><th>含税价</th><th>成本(未税)</th><th>状态</th></tr>
         ${partsRows}
       </table>` : ''}
       ${tlRows ? `<h4 style="margin-top:14px">📅 时间线</h4>
@@ -2210,6 +2211,7 @@ function renderApqp() {
     const partsRows = (p.parts || []).map(pt => `<tr>
       <td>${pt.name}${pt.makeType ? (pt.makeType === '自制' ? '<span class="tag tag-make">自制</span>' : '<span class="tag tag-out">外协</span>') : ''}${pt.supplier ? `<span class="tag tag-supplier" style="color:${pt.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${pt.supplier}</span>` : ''}</td>
       <td style="color:var(--muted);font-size:11px">${pt.code || ''}</td>
+      <td style="color:var(--muted);font-size:11px">${pt.cost != null ? '¥' + pt.cost.toFixed(4) : '—'}</td>
       <td>${pt.pulled ? '<span class="status st-green" style="font-weight:700">🟢 已拉动</span>' : '<span class="status st-yellow" style="font-weight:700">🟡 未拉动</span>'}</td>
     </tr>`).join('');
     const nPulled = (p.parts || []).filter(pt => pt.pulled).length;
@@ -2234,7 +2236,7 @@ function renderApqp() {
       </table>
       ${partsRows ? `<h4 style="margin-top:14px">🧩 零件清单（${(p.parts||[]).length}个）</h4>
       <table class="sub-table">
-        <tr><th>零件名称</th><th>物料编码</th><th>状态</th></tr>
+        <tr><th>零件名称</th><th>物料编码</th><th>成本(未税)</th><th>状态</th></tr>
         ${partsRows}
       </table>` : ''}
       <table class="sub-table" style="margin-top:14px">
