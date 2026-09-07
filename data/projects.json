@@ -1100,7 +1100,8 @@
           "code": "510000000000011632",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "待定",
+          "canceled": true
         },
         {
           "name": "EHEA 杂物箱吸音棉",
@@ -1115,7 +1116,8 @@
           "code": "510000000000011688",
           "pulled": false,
           "makeType": "外协",
-          "supplier": "待定"
+          "supplier": "待定",
+          "canceled": true
         },
         {
           "name": "EHEA 仪表板上本体吸音棉",
