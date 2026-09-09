@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-04",
+  "updatedAt": "2026-09-09",
   "orders": [
     {
       "po": "4500118027",
@@ -790,8 +790,8 @@
       "part": "ROX MY26-左端盖板吸音棉 -15200958AA",
       "part_code": "510000000000016422",
       "qty": 500,
-      "unit_price_tax": 0.0,
-      "total_tax": 0.0,
+      "unit_price_tax": 0.35,
+      "total_tax": 175.0,
       "tax_rate": 13,
       "delivery_sys": "2026-09-30",
       "delivery_note": "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准",
@@ -807,8 +807,8 @@
       "part": "ROX MY26-右端盖板吸音棉 -15200961AA",
       "part_code": "510000000000016423",
       "qty": 500,
-      "unit_price_tax": 0.0,
-      "total_tax": 0.0,
+      "unit_price_tax": 0.34,
+      "total_tax": 170.0,
       "tax_rate": 13,
       "delivery_sys": "2026-09-30",
       "delivery_note": "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准",
