@@ -1407,7 +1407,20 @@
    "rfqDate": "",
    "phase": 2,
    "nextStep": "内部定点完成(9/16)：奇瑞S56_X3/X3L吸音棉14件，平均年产量5万套，EOP 2029.12；14件成本/定点单价待内部核算；首单PO4500127228(5件/12,040件)交期2026-09-25",
-   "bomFiles": [],
+   "bomFiles": [
+    {
+     "title": "S56吸音棉定点信息提交表（14件·定点2026-09-16）",
+     "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-奇瑞S56-吸音棉定点信息提交表-20260916.xlsx"
+    },
+    {
+     "title": "S56-X3L吸音棉零件清单（14件·全码）",
+     "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-奇瑞S56-X3L吸音棉零件清单-14件.xlsx"
+    },
+    {
+     "title": "首单PO4500127228分析（5件/12,040件·单价待定价）",
+     "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-奇瑞S56-首单PO4500127228分析-20260915.xlsx"
+    }
+   ],
    "phases": [
     {
      "phase": 1,
