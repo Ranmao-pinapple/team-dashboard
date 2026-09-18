@@ -1,29 +1,84 @@
 {
-  "updatedAt": "2026-09-02",
-  "rows": [
-    {
-      "project": "ZH5EM",
-      "customer": "凯华",
-      "part": "泡棉件(8件)",
-      "qty": 8,
-      "makeType": "out",
-      "supplier": "宁波互盛",
-      "stage": "making",
-      "planDate": "",
-      "sendDate": "",
-      "remark": "10件全为外协待定(采购未确认), 送样暂用此供应商, 供应商可更换"
-    },
-    {
-      "project": "ZH5EM",
-      "customer": "凯华",
-      "part": "蘑菇塔扣(2件)",
-      "qty": 2,
-      "makeType": "out",
-      "supplier": "惠州兰谷(兰谷电子)",
-      "stage": "making",
-      "planDate": "",
-      "sendDate": "",
-      "remark": "外协待定, 供应商可更换"
-    }
-  ]
+ "updatedAt": "2026-09-18",
+ "rows": [
+  {
+   "project": "ZH5EM",
+   "customer": "凯华",
+   "part": "泡棉件(8件)",
+   "qty": 8,
+   "makeType": "out",
+   "supplier": "宁波互盛",
+   "stage": "making",
+   "planDate": "",
+   "sendDate": "",
+   "remark": "10件全为外协待定(采购未确认), 送样暂用此供应商, 供应商可更换"
+  },
+  {
+   "project": "ZH5EM",
+   "customer": "凯华",
+   "part": "蘑菇塔扣(2件)",
+   "qty": 2,
+   "makeType": "out",
+   "supplier": "惠州兰谷(兰谷电子)",
+   "stage": "making",
+   "planDate": "",
+   "sendDate": "",
+   "remark": "外协待定, 供应商可更换"
+  },
+  {
+   "project": "S56",
+   "customer": "凯华",
+   "part": "S56_X3_吸音棉2（510000000000012330）",
+   "qty": 5,
+   "supplier": "待定",
+   "stage": "to_send",
+   "planDate": "",
+   "sendDate": "",
+   "remark": "首单PO4500127228件号；样品编号 S56-12330-01~05；共5件号×5件=25件"
+  },
+  {
+   "project": "S56",
+   "customer": "凯华",
+   "part": "S56_X3L_左C下吸音棉4（510000000000013896）",
+   "qty": 5,
+   "supplier": "待定",
+   "stage": "to_send",
+   "planDate": "",
+   "sendDate": "",
+   "remark": "首单PO4500127228件号；样品编号 S56-13896-01~05；共5件号×5件=25件"
+  },
+  {
+   "project": "S56",
+   "customer": "凯华",
+   "part": "S56_X3L_左C下吸音棉5（510000000000013897）",
+   "qty": 5,
+   "supplier": "待定",
+   "stage": "to_send",
+   "planDate": "",
+   "sendDate": "",
+   "remark": "首单PO4500127228件号；样品编号 S56-13897-01~05；共5件号×5件=25件"
+  },
+  {
+   "project": "S56",
+   "customer": "凯华",
+   "part": "S56_X3L_右C下吸音棉4（510000000000013898）",
+   "qty": 5,
+   "supplier": "待定",
+   "stage": "to_send",
+   "planDate": "",
+   "sendDate": "",
+   "remark": "首单PO4500127228件号；样品编号 S56-13898-01~05；共5件号×5件=25件"
+  },
+  {
+   "project": "S56",
+   "customer": "凯华",
+   "part": "S56_X3L_右C下吸音棉5（510000000000013899）",
+   "qty": 5,
+   "supplier": "待定",
+   "stage": "to_send",
+   "planDate": "",
+   "sendDate": "",
+   "remark": "首单PO4500127228件号；样品编号 S56-13899-01~05；共5件号×5件=25件"
+  }
+ ]
 }
