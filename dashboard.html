@@ -1307,7 +1307,7 @@ const PO_DATA = {
 // 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
 // APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
 const PROJECT_DATA = {
-  updatedAt: "2026-09-15",
+  updatedAt: "2026-09-18",
   projects: [
     {
       name: "VFe32", customer: "凯华", oem: "VINFAST", product: "19个零件",
@@ -1425,6 +1425,15 @@ const PROJECT_DATA = {
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "doing", "planDate": "2026-08-27", "remark": "客户提供零件清单, 内部启动(8/27); SOP目标2027.3"}],
       timeline: [{"date": "2026-08-27", "event": "客户提供T12T零件清单(吸音棉毛毡), 内部启动", "status": "doing"}, {"date": "2026-09-04", "event": "臻畅基地出T12T成本表(9/1): 自制吸音棉7件单件成本¥0.398~0.890(含材料/加工/三项/运输/包装/实验/模具摊销), 毛毡3件外购南通华阁¥0.084/件", "status": "done"}],
       parts: [{"name": "吸音棉 403032281AA-2", "code": "403032281AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.39815216}, {"name": "吸音棉 403032282AA-2", "code": "403032282AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.39815216}, {"name": "吸音棉 403034543AA-3", "code": "403034543AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.45464862}, {"name": "吸音棉 403037026AA-3", "code": "403037026AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.45464862}, {"name": "吸音棉 403037030AA-3", "code": "403037030AA-3", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.45464862}, {"name": "吸音棉 403032278AA-2", "code": "403032278AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.88972984}, {"name": "毛毡 403032278AA-3", "code": "403032278AA-3", "pulled": false, "makeType": "外协", "supplier": "南通华阁", "cost": 0.084}, {"name": "吸音棉 403032287AA-2", "code": "403032287AA-2", "pulled": false, "makeType": "自制", "supplier": "上海泰瑞", "cost": 0.88972984}, {"name": "毛毡 403032287AA-3", "code": "403032287AA-3", "pulled": false, "makeType": "外协", "supplier": "南通华阁", "cost": 0.084}, {"name": "毛毡 403032289AA-4 (单车3件)", "code": "403032289AA-4", "pulled": false, "makeType": "外协", "supplier": "南通华阁", "cost": 0.084}]
+    },
+    {
+      name: "S56", customer: "浙江凯华", oem: "奇瑞", product: "14个零件(PP/PET吸音棉)",
+      status: "won", rfqDate: "", phase: 2,
+      nextStep: "内部定点完成(9/16)：奇瑞S56_X3/X3L吸音棉14件，平均年产量5万套，EOP 2029.12；14件成本/定点单价待内部核算；首单PO4500127228(5件/12,040件)交期2026-09-25",
+      bomFiles: [],
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "2026-09-16", "remark": "内部定点完成（奇瑞S56_X3/X3L 吸音棉14件）"}, {"phase": 2, "name": "产品设计和开发", "status": "doing", "planDate": "", "actualDate": "", "remark": "14件成本/定点单价待内部核算"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-09-14", "event": "收到凯华汽车科技(安徽)首单PO4500127228：S56_X3/X3L吸音棉5件/12,040件，含税单价与金额全部为0(未定价)，交期2026-09-25，收货地安徽芜湖南陵", "status": "done"}, {"date": "2026-09-16", "event": "内部定点完成：奇瑞S56_X3/X3L吸音棉14件，平均年产量50,000套(单车用量16件)，EOP 2029.12，交货地芜湖", "status": "done"}],
+      parts: [{"name": "S56_X3L_右C下吸音棉4", "code": "510000000000013898", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_C上吸音棉1", "code": "510000000000012724", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_C上吸音棉2", "code": "510000000000012725", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_左下吸音棉3", "code": "510000000000012721", "pulled": false, "supplier": "待定"}, {"name": "S56_X3L_左C下吸音棉5", "code": "510000000000013897", "pulled": true, "supplier": "待定"}, {"name": "S56_X3L_右C下吸音棉5", "code": "510000000000013899", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_B下吸音棉", "code": "510000000000012723", "pulled": false, "supplier": "待定"}, {"name": "S56_X3L_左C下吸音棉4", "code": "510000000000013896", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_吸音棉2", "code": "510000000000012330", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_C下吸音棉1", "code": "510000000000012719", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_右下吸音棉2", "code": "510000000000012727", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_03T吸音棉1", "code": "510000000000012328", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_C上吸音棉3", "code": "510000000000012726", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_左下吸音棉2", "code": "510000000000012720", "pulled": false, "supplier": "待定"}]
     }
   ]
 };
