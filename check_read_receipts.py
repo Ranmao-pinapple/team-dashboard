@@ -68,6 +68,7 @@ def main():
             else:
                 # 上周发货情况填报: 取正文里的 计划/实际/达成率
                 info = {}
+                atts = []
                 try:
                     typ3, d3 = M.fetch(num, '(BODY.PEEK[])')
                     full = email.message_from_bytes(d3[0][1])
@@ -78,6 +79,21 @@ def main():
                                 body += (part.get_payload(decode=True) or b'').decode('utf-8', 'replace')
                     else:
                         body = (full.get_payload(decode=True) or b'').decode('utf-8', 'replace')
+                    # 保存附件(签收单等)
+                    outdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'receipts')
+                    for part in full.walk():
+                        fn = dec(part.get_filename())
+                        if not fn:
+                            continue
+                        data = part.get_payload(decode=True) or b''
+                        if not data:
+                            continue
+                        os.makedirs(outdir, exist_ok=True)
+                        safe = re.sub(r'[^\w.\-]+', '_', fn)
+                        path = os.path.join(outdir, datetime.now().strftime('%Y%m%d') + '_' + safe)
+                        with open(path, 'wb') as fo:
+                            fo.write(data)
+                        atts.append((fn, len(data), path))
                     for key, pat in (('plan', r'计划总量：([\d,]+)'), ('actual', r'实际发货：([\d,]+)'),
                                      ('rate', r'达成率：([\d.]+)%'), ('unfilled', r'未填零件：(\d+)')):
                         mm = re.search(pat, body)
@@ -87,7 +103,8 @@ def main():
                     pass
                 m2 = re.search(r'【外协发货】(.+?)\s*(\d{4}-\d{2}-\d{2}~\d{4}-\d{2}-\d{2})', subj)
                 hits.append({'mid': mid, 'kind': 'ship', 'supplier': (m2.group(1).strip() if m2 else subj),
-                             'week': (m2.group(2) if m2 else '?'), 'info': info, 'date': msg.get('Date', '')})
+                             'week': (m2.group(2) if m2 else '?'), 'info': info, 'atts': atts,
+                             'date': msg.get('Date', '')})
     M.logout()
     # 更新状态(仅记录本次确认命中的)
     for h in hits:
@@ -105,6 +122,8 @@ def main():
                     print(f"📦 {h['supplier']} 上周发货填报（{h['week']}）：计划 {i.get('plan','?')} 件 / 实际 {i.get('actual','?')} 件 · 达成率 {i.get('rate','?')}% · 未填 {i.get('unfilled','?')} 个（{h['date']}）")
                 else:
                     print(f"📦 {h['supplier']} 上周发货填报（{h['week']}）— 请到邮箱看明细（{h['date']}）")
+                for fn, sz, path in (h.get('atts') or []):
+                    print(f"   📎 签收单附件已存: {fn}（{round(sz/1024)}KB）→ {path}")
                 continue
             if h['status'] == '无法按期完成':
                 print(f"⚠️ {h['supplier']} 反馈【无法按期完成】{h['month']}月拉动计划 —— 需重点跟进（{h['date']}）")

@@ -51,6 +51,18 @@
       <button onclick="copyShip()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer">📋 复制表格</button>
       <span id="shipState" style="font-size:12px;color:#8a8f98"></span>
     </div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #f0d9a8">
+      <div style="font-size:13px;font-weight:700;color:#b45309;margin-bottom:6px">📎 签收单上传</div>
+      <div style="font-size:12px;color:#8a8f98;margin-bottom:8px">选好上周签收单（照片可多张 / PDF）→ 手机端点「📤 发送到微信/邮箱」直接发我们；电脑端点「⬇️ 下载」后拖进微信。也可直接发到 <b>xufeng_cao@zhenchang.group</b>（邮件可带附件）。照片会自动压缩，不影响看清。</div>
+      <input id="podFiles" type="file" accept="image/*,application/pdf" multiple onchange="onPodPick(event)" style="font-size:12px">
+      <div id="podList" style="font-size:12px;color:#334155;margin-top:6px;line-height:1.7"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+        <button onclick="sharePod()" style="background:#16a34a;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer">📤 发送到微信/邮箱</button>
+        <button onclick="downloadPod()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer">⬇️ 下载签收单</button>
+        <button onclick="copyMail()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer">📧 复制我们的邮箱</button>
+        <span id="podState" style="font-size:12px;color:#8a8f98"></span>
+      </div>
+    </div>
   </div>
   <div class="foot">※ 数量单位：件（pcs）· 按客户拉动计划排产，如有变动以最新通知为准</div>
 </div>
@@ -249,6 +261,72 @@ function copyShip() {
   const st = document.getElementById('shipState');
   if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(() => { st.textContent = '已复制，可直接粘贴到微信发给臻畅'; }).catch(() => { window.prompt('复制以下内容：', txt); }); }
   else { window.prompt('复制以下内容：', txt); }
+}
+// ===== 签收单上传(静态页无服务器: 压缩后分享到微信/邮件 或 下载) =====
+let POD = [];
+function onPodPick(e) {
+  const fs = Array.from((e.target && e.target.files) || []);
+  POD = [];
+  const st = document.getElementById('podState');
+  if (!fs.length) { document.getElementById('podList').textContent = ''; st.textContent = ''; return; }
+  st.textContent = '处理中…';
+  let pending = fs.length;
+  function done() { pending--; if (pending <= 0) renderPod(); }
+  fs.forEach(f => {
+    if (f.type && f.type.indexOf('image') === 0) {
+      compressImg(f).then(c => { POD.push({name: f.name.replace(/\.[^.]+$/, '') + '.jpg', blob: c}); done(); });
+    } else { POD.push({name: f.name, blob: f}); done(); }
+  });
+}
+function compressImg(file) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 1600, sc = Math.min(1, maxW / img.width);
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(b => res(b || file), 'image/jpeg', 0.82);
+    };
+    img.onerror = () => res(file);
+    img.src = URL.createObjectURL(file);
+  });
+}
+function renderPod() {
+  let kb = 0;
+  POD.forEach(x => { kb += (x.blob.size || 0); });
+  document.getElementById('podList').innerHTML = POD.map((x, i) => (i + 1) + '. ' + x.name + '（' + Math.round((x.blob.size || 0) / 1024) + 'KB）').join('<br>');
+  document.getElementById('podState').textContent = '已选 ' + POD.length + ' 个文件，合计 ' + Math.round(kb / 1024) + 'KB';
+}
+function sharePod() {
+  const st = document.getElementById('podState');
+  if (!POD.length) { st.textContent = '请先选择签收单文件'; return; }
+  const files = POD.map(x => new File([x.blob], x.name, {type: x.blob.type || 'image/jpeg'}));
+  const txt = '【' + SUPPLIER + '】上周发货签收单 ' + POD.length + ' 个文件';
+  if (navigator.canShare && navigator.canShare({files: files})) {
+    navigator.share({files: files, title: txt, text: txt})
+      .then(() => { st.textContent = '已发送，谢谢！'; })
+      .catch(() => { st.textContent = '已取消。可改用「⬇️ 下载签收单」后在微信里发给我们'; });
+  } else {
+    st.textContent = '当前浏览器不支持直接分享，请点「⬇️ 下载签收单」，再在微信里发给臻畅（或发 xufeng_cao@zhenchang.group）';
+  }
+}
+function downloadPod() {
+  const st = document.getElementById('podState');
+  if (!POD.length) { st.textContent = '请先选择签收单文件'; return; }
+  POD.forEach((x, i) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(x.blob); a.download = x.name;
+    document.body.appendChild(a);
+    setTimeout(() => { a.click(); }, i * 500);
+  });
+  st.textContent = '开始下载 → 下载后请在微信里发给臻畅对接人（或发 xufeng_cao@zhenchang.group）';
+}
+function copyMail() {
+  const mail = 'xufeng_cao@zhenchang.group';
+  const st = document.getElementById('podState');
+  if (navigator.clipboard) { navigator.clipboard.writeText(mail).then(() => { st.textContent = '已复制邮箱：' + mail; }); }
+  else { window.prompt('我们的邮箱：', mail); }
 }
 renderShip();
 renderConfirmState();
