@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-18",
+ "updatedAt": "2026-09-20",
  "projects": [
   {
    "name": "VFe32",
@@ -1273,6 +1273,64 @@
      "pulled": true,
      "makeType": "外协",
      "supplier": "宁波互盛"
+    }
+   ]
+  },
+  {
+   "name": "ROX MY26",
+   "customer": "浙江凯华",
+   "oem": "极石",
+   "product": "2个零件(端盖吸音棉)",
+   "status": "won",
+   "rfqDate": "",
+   "phase": 2,
+   "nextStep": "已定点(2026-09-01)，切换件量产 — 自制·上海泰瑞；PP/OTS节点与内部询价日期待补",
+   "phases": [
+    {
+     "phase": 1,
+     "name": "计划和确定项目",
+     "status": "done",
+     "planDate": "2026-09-01",
+     "remark": "客户定点(内部定点信 2026-09-01)；左/右端盖吸音棉 2件"
+    },
+    {
+     "phase": 2,
+     "name": "产品设计和开发",
+     "status": "doing",
+     "remark": "切换件；样品/OTS 节点待确认"
+    }
+   ],
+   "timeline": [
+    {
+     "date": "2026-08-25",
+     "event": "客户PO 4500125725 下首批(左/右端盖吸音棉各500件，交期2026-09-30)",
+     "status": "done"
+    },
+    {
+     "date": "2026-09-01",
+     "event": "客户定点(内部定点信)：左0.3097/右0.3009 未税，利润率 12.83% / 23.56%",
+     "status": "done"
+    },
+    {
+     "date": "2026-09-20",
+     "event": "独立项目卡建立(与ROX01分列)：端盖吸音棉为独立项目，自制·上海泰瑞",
+     "status": "done"
+    }
+   ],
+   "parts": [
+    {
+     "name": "ROX左侧端盖板吸音棉 15200958AA",
+     "code": "510000000000016422",
+     "pulled": false,
+     "makeType": "自制",
+     "supplier": "上海泰瑞"
+    },
+    {
+     "name": "ROX右侧端盖板吸音棉 15200961AA",
+     "code": "510000000000016423",
+     "pulled": false,
+     "makeType": "自制",
+     "supplier": "上海泰瑞"
     }
    ]
   },
