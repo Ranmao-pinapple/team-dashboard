@@ -3,7 +3,7 @@
  "year": 2026,
  "rows": [
   {
-   "part": "VF-LIMO7 挡脚板隔音垫",
+   "part": "VF-LIMO7 RHD-左下挡脚板隔音垫 BIN32551820AA",
    "project": "LEV1",
    "proj": "凯华",
    "status": "live",
@@ -279,7 +279,7 @@
    "supplier": "上海泰瑞"
   },
   {
-   "part": "VFe32风管外部隔音棉 32AA",
+   "part": "VFe32风管外部隔音棉 BIN73031332AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -621,7 +621,7 @@
    "supplier": "上海泰瑞"
   },
   {
-   "part": "VFe32风管外部隔音棉 62AA",
+   "part": "VFe32风管外部隔音棉 BIN73031362AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -963,7 +963,7 @@
    "supplier": "上海泰瑞"
   },
   {
-   "part": "VFe32风管外部隔音棉 211AA",
+   "part": "VFe32风管外部隔音棉 BIN73031211AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -1305,7 +1305,7 @@
    "supplier": "上海泰瑞"
   },
   {
-   "part": "VF-LIMO7 中间中通右风管隔音棉 13AA",
+   "part": "VF-LIMO7 RHD-中间中通右风管隔音棉 BIN32472013AA",
    "project": "LEV1",
    "proj": "凯华",
    "status": "live",
@@ -1581,7 +1581,7 @@
    "supplier": "江苏诚丰"
   },
   {
-   "part": "VF-LIMO7 左侧中通右风管隔音棉 16AA",
+   "part": "VF-LIMO7 RHD-左侧中通右风管隔音棉 BIN32472016AA",
    "project": "LEV1",
    "proj": "凯华",
    "status": "live",
@@ -1857,7 +1857,7 @@
    "supplier": "江苏诚丰"
   },
   {
-   "part": "VF-LIMO7 中间中通左风管隔音棉 17AA",
+   "part": "VF-LIMO7 RHD-中间中通左风管隔音棉 BIN32472017AA",
    "project": "LEV1",
    "proj": "凯华",
    "status": "live",
@@ -2133,7 +2133,7 @@
    "supplier": "江苏诚丰"
   },
   {
-   "part": "VF-LIMO7 右侧中通风管隔音棉 18AA",
+   "part": "VF-LIMO7 RHD-右侧中通风管隔音棉 BIN32472018AA",
    "project": "LEV1",
    "proj": "凯华",
    "status": "live",
@@ -2409,7 +2409,7 @@
    "supplier": "江苏诚丰"
   },
   {
-   "part": "VFe32前通风盖板本体海绵条6x10x1301.3",
+   "part": "VFe32前通风盖板本体海绵条6x10x1301.3 BEX73050103AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -2685,7 +2685,7 @@
    "supplier": "宁波互盛"
   },
   {
-   "part": "VFe32后三角板泡棉10×10×203mm",
+   "part": "VFe32后三角板泡棉10×10×203mm BEX73020410AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -2961,7 +2961,7 @@
    "supplier": "宁波互盛"
   },
   {
-   "part": "VFe32海绵条10x10x1842.8mm",
+   "part": "VFe32海绵条10x10x1842.8mm BEX73090103AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -3237,7 +3237,7 @@
    "supplier": "宁波互盛"
   },
   {
-   "part": "VFe32防水海绵22×10.5×5mm BEX7302010AA",
+   "part": "VFe32防水海绵22×10.5×6mm BEX73020104AA",
    "proj": "凯华",
    "status": "live",
    "project": "VFe32",
@@ -3513,7 +3513,7 @@
    "supplier": "宁波互盛"
   },
   {
-   "part": "VFe32防水海绵-侧裙 BEX7302070AA",
+   "part": "VFe32防水海绵-侧裙 BEX73020703AA",
    "proj": "凯华",
    "status": "live",
    "project": "VFe32",
@@ -4341,7 +4341,7 @@
    "supplier": "宁波互盛"
   },
   {
-   "part": "VFe32前除霜风管海绵条3",
+   "part": "VFe32前除霜风管海绵条3 BIN73031304AA",
    "proj": "凯华",
    "status": "live",
    "project": "VFe32",
@@ -4893,7 +4893,7 @@
    "supplier": "上海泰瑞"
   },
   {
-   "part": "VFe32后扰流板内部海绵条",
+   "part": "VFe32后扰流板内部海绵条 BEX73090010AA",
    "proj": "凯华",
    "status": "stop",
    "project": "VFe32",
@@ -5175,7 +5175,7 @@
    }
   },
   {
-   "part": "VFe32防水垫圈",
+   "part": "VFe32防水垫圈 BEX73090007AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -5451,7 +5451,7 @@
    }
   },
   {
-   "part": "VFe32风管接口海绵条 1054",
+   "part": "VFe32风管接口海绵条 BIN73031333AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -5727,7 +5727,7 @@
    }
   },
   {
-   "part": "VFe32前除霜风管海绵条1",
+   "part": "VFe32前除霜风管海绵条1 BIN73031302AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -6003,7 +6003,7 @@
    }
   },
   {
-   "part": "VFe32风管接口海绵条 1056",
+   "part": "VFe32风管接口海绵条 BIN73031363AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -6279,7 +6279,7 @@
    }
   },
   {
-   "part": "VFe32后背门扣手盖板本体防水条3x4x1120mm",
+   "part": "VFe32后背门扣手盖板本体防水条3x4x1120mm BEX73050203AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -6555,7 +6555,7 @@
    }
   },
   {
-   "part": "VFe32前除霜风管海绵条2",
+   "part": "VFe32前除霜风管海绵条2 BIN73031303AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
@@ -6831,7 +6831,7 @@
    }
   },
   {
-   "part": "VFe32售后件防水海绵",
+   "part": "VFe32售后件防水海绵 BEX73070104AA",
    "project": "VFe32",
    "proj": "凯华",
    "status": "live",
