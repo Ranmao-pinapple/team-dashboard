@@ -36,7 +36,8 @@
   </div>
   <div class="month-bar" id="monthBar"></div>
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-    <button id="confirmBtn" onclick="openConfirm()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(232,33,39,.3)">✅ 确认收到 · 可执行拉动</button>
+    <button id="confirmBtn" onclick="openConfirm()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(232,33,39,.3)">✅ 能按期完成 · 可执行拉动</button>
+    <button id="delayBtn" onclick="openDelay()" style="background:#fff;color:#b45309;border:1px solid #f0c36d;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer">⚠️ 无法按期完成 · 反馈交期</button>
     <span id="confirmState" style="font-size:12px;color:#8a8f98"></span>
   </div>
   <div class="sum-line" id="sumLine"></div>
@@ -104,19 +105,19 @@ function renderConfirmState() {
   const btn = document.getElementById('confirmBtn');
   const st = document.getElementById('confirmState');
   if (done) {
-    btn.innerHTML = '✅ 已确认收到（' + done + '）';
+    btn.innerHTML = '✅ 已反馈（' + done + '）';
     btn.style.background = '#16a34a';
     btn.style.boxShadow = 'none';
-    st.textContent = '已向臻畅发送确认回执，如计划有变请重新确认';
+    st.textContent = '已向臻畅发送反馈，如计划有变请重新点击';
   } else {
-    st.textContent = '点击按钮，一键发送确认回执邮件';
+    st.textContent = '能按期完成点 ✅；做不到请点 ⚠️ 反馈交期（自动带上原因与预计完成日期）';
   }
 }
 function openConfirm() {
   const total = grandTotal(curMonth);
   const now = new Date();
   const ts = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-  const subject = encodeURIComponent('【外协确认】' + SUPPLIER + ' 已收到' + MONTH_NAMES[curMonth] + '月拉动计划');
+  const subject = encodeURIComponent('【外协确认】' + SUPPLIER + ' 能按期完成 ' + MONTH_NAMES[curMonth] + '月拉动计划');
   const body = encodeURIComponent(
     SUPPLIER + ' 确认收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划，可执行订单拉动。\n\n' +
     '■ 供应商：' + SUPPLIER + '\n' +
@@ -133,6 +134,36 @@ function openConfirm() {
     localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 ' + ts);
     renderConfirmState();
   }
+}
+// ===== 无法按期完成 → 反馈原因与交期 =====
+const NL = `
+`;
+function openDelay() {
+  const total = grandTotal(curMonth);
+  const now = new Date();
+  const ts = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const why = prompt('请说明无法按期完成的原因（产能/模具/材料/交期等）：', '');
+  if (why === null) return;
+  const eta = prompt('预计什么时候可以完成？请填日期，例如 2026-10-08：', '');
+  if (eta === null) return;
+  const qty = prompt('本月计划 ' + total.toLocaleString() + ' 件，实际能完成多少件？（可留空）', '');
+  if (qty === null) return;
+  const subject = encodeURIComponent('【外协确认】' + SUPPLIER + ' 无法按期完成 ' + MONTH_NAMES[curMonth] + '月拉动计划');
+  const body = encodeURIComponent(
+    SUPPLIER + ' 反馈：' + MONTH_NAMES[curMonth] + ' 月拉动计划无法按期完成。' + NL + NL +
+    '■ 供应商：' + SUPPLIER + NL +
+    '■ 计划月份：' + MONTH_NAMES[curMonth] + ' 月' + NL +
+    '■ 计划总量：' + total.toLocaleString() + ' 件 / ' + DATA.length + ' 个零件' + NL +
+    '■ 实际可完成：' + (qty ? qty + ' 件' : '（未填）') + NL +
+    '■ 原因：' + (why || '（未填）') + NL +
+    '■ 预计完成日期：' + (eta || '（未填）') + NL +
+    '■ 反馈时间：' + ts + NL +
+    '■ 页面：' + location.href + NL + NL +
+    '请臻畅确认调整后的拉动计划。'
+  );
+  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + body;
+  localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 需延期' + (eta ? ' 至 ' + eta : '') + ' (' + ts + ')');
+  renderConfirmState();
 }
 renderConfirmState();
 </script>
