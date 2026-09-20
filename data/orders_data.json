@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-15",
+ "updatedAt": "2026-09-20",
  "orders": [
   {
    "po": "4500118027",
@@ -1411,6 +1411,74 @@
    "status": "received",
    "makeType": "外协",
    "supplier": "新久玥"
+  },
+  {
+   "po": "4500126863",
+   "date": "2026-09-09",
+   "customer": "浙江凯华",
+   "part": "ROX01侧除霜风道密封棉",
+   "part_code": "510000000000011239",
+   "qty": 2500,
+   "unit_price_tax": 0.3,
+   "total_tax": 750.0,
+   "tax_rate": 13,
+   "delivery_sys": "2026-10-31",
+   "delivery_note": "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准",
+   "payment": "票到90天",
+   "status": "received",
+   "makeType": "外协",
+   "supplier": "宁波互盛"
+  },
+  {
+   "po": "4500126863",
+   "date": "2026-09-09",
+   "customer": "浙江凯华",
+   "part": "ROX01前除霜盖板海绵条",
+   "part_code": "510000000000011241",
+   "qty": 2000,
+   "unit_price_tax": 1.3,
+   "total_tax": 2600.0,
+   "tax_rate": 13,
+   "delivery_sys": "2026-10-31",
+   "delivery_note": "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准",
+   "payment": "票到90天",
+   "status": "received",
+   "makeType": "外协",
+   "supplier": "宁波互盛"
+  },
+  {
+   "po": "4500126863",
+   "date": "2026-09-09",
+   "customer": "浙江凯华",
+   "part": "ROX01前除霜盖板密封棉",
+   "part_code": "510000000000011242",
+   "qty": 4000,
+   "unit_price_tax": 0.7,
+   "total_tax": 2800.0,
+   "tax_rate": 13,
+   "delivery_sys": "2026-10-31",
+   "delivery_note": "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准",
+   "payment": "票到90天",
+   "status": "received",
+   "makeType": "外协",
+   "supplier": "宁波互盛"
+  },
+  {
+   "po": "4500126863",
+   "date": "2026-09-09",
+   "customer": "浙江凯华",
+   "part": "ROX01前围毛毡",
+   "part_code": "510000000000011238",
+   "qty": 21000,
+   "unit_price_tax": 0.08,
+   "total_tax": 1680.0,
+   "tax_rate": 13,
+   "delivery_sys": "2026-10-31",
+   "delivery_note": "交付日期为客户系统内自动生成日期，实际交付根据客户的拉动计划为准",
+   "payment": "票到90天",
+   "status": "received",
+   "makeType": "外协",
+   "supplier": "宁波互盛"
   }
  ]
 }
