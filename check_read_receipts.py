@@ -52,18 +52,42 @@ def main():
             except Exception:
                 continue
             subj = dec(msg.get('Subject', ''))
-            if '外协确认' not in subj:
+            if '外协确认' not in subj and '外协发货' not in subj:
                 continue
             mid = msg.get('Message-ID', num.decode())
             if mid in seen:
                 continue
-            m = re.search(r'【外协确认】(.+?)\s*(能按期完成|无法按期完成|已收到)\s*(\d+)月拉动计划', subj)
-            if m:
-                supplier, status_, month = m.group(1).strip(), m.group(2), m.group(3)
+            if '外协确认' in subj:
+                m = re.search(r'【外协确认】(.+?)\s*(能按期完成|无法按期完成|已收到)\s*(\d+)月拉动计划', subj)
+                if m:
+                    supplier, status_, month = m.group(1).strip(), m.group(2), m.group(3)
+                else:
+                    supplier, status_, month = subj, '已收到', '?'
+                hits.append({'mid': mid, 'kind': 'confirm', 'supplier': supplier, 'status': status_,
+                             'month': month, 'date': msg.get('Date', '')})
             else:
-                supplier, status_, month = subj, '已收到', '?'
-            hits.append({'mid': mid, 'supplier': supplier, 'status': status_, 'month': month,
-                         'date': msg.get('Date', '')})
+                # 上周发货情况填报: 取正文里的 计划/实际/达成率
+                info = {}
+                try:
+                    typ3, d3 = M.fetch(num, '(BODY.PEEK[])')
+                    full = email.message_from_bytes(d3[0][1])
+                    body = ''
+                    if full.is_multipart():
+                        for part in full.walk():
+                            if part.get_content_type() == 'text/plain':
+                                body += (part.get_payload(decode=True) or b'').decode('utf-8', 'replace')
+                    else:
+                        body = (full.get_payload(decode=True) or b'').decode('utf-8', 'replace')
+                    for key, pat in (('plan', r'计划总量：([\d,]+)'), ('actual', r'实际发货：([\d,]+)'),
+                                     ('rate', r'达成率：([\d.]+)%'), ('unfilled', r'未填零件：(\d+)')):
+                        mm = re.search(pat, body)
+                        if mm:
+                            info[key] = mm.group(1)
+                except Exception:
+                    pass
+                m2 = re.search(r'【外协发货】(.+?)\s*(\d{4}-\d{2}-\d{2}~\d{4}-\d{2}-\d{2})', subj)
+                hits.append({'mid': mid, 'kind': 'ship', 'supplier': (m2.group(1).strip() if m2 else subj),
+                             'week': (m2.group(2) if m2 else '?'), 'info': info, 'date': msg.get('Date', '')})
     M.logout()
     # 更新状态(仅记录本次确认命中的)
     for h in hits:
@@ -73,8 +97,15 @@ def main():
     except Exception:
         pass
     if hits:
-        print('📬 外协月拉动计划 · 新收到反馈:')
+        print('📬 外协反馈 · 新收到:')
         for h in hits:
+            if h.get('kind') == 'ship':
+                i = h.get('info') or {}
+                if i:
+                    print(f"📦 {h['supplier']} 上周发货填报（{h['week']}）：计划 {i.get('plan','?')} 件 / 实际 {i.get('actual','?')} 件 · 达成率 {i.get('rate','?')}% · 未填 {i.get('unfilled','?')} 个（{h['date']}）")
+                else:
+                    print(f"📦 {h['supplier']} 上周发货填报（{h['week']}）— 请到邮箱看明细（{h['date']}）")
+                continue
             if h['status'] == '无法按期完成':
                 print(f"⚠️ {h['supplier']} 反馈【无法按期完成】{h['month']}月拉动计划 —— 需重点跟进（{h['date']}）")
             elif h['status'] == '能按期完成':

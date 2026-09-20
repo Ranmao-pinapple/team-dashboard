@@ -42,6 +42,16 @@
   </div>
   <div class="sum-line" id="sumLine"></div>
   <div style="overflow-x:auto"><table id="pt"><thead id="ptHead"></thead><tbody id="ptBody"></tbody></table></div>
+  <div style="margin-top:18px;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;background:#fffdf7">
+    <h2 id="shipTitle" style="font-size:15px;margin:0 0 4px;color:#b45309">📦 上周发货情况填报</h2>
+    <div style="font-size:12px;color:#8a8f98;margin-bottom:8px">请填写上周<b>实际发货件数</b>；缺货/延期的在备注里写明原因与预计发货日。填完点「提交」，邮件会自动带好。</div>
+    <div id="shipBox" style="overflow-x:auto"></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
+      <button onclick="submitShip()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer">📤 提交上周发货情况</button>
+      <button onclick="copyShip()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer">📋 复制表格</button>
+      <span id="shipState" style="font-size:12px;color:#8a8f98"></span>
+    </div>
+  </div>
   <div class="foot">※ 数量单位：件（pcs）· 按客户拉动计划排产，如有变动以最新通知为准</div>
 </div>
 <script>
@@ -165,6 +175,82 @@ function openDelay() {
   localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 需延期' + (eta ? ' 至 ' + eta : '') + ' (' + ts + ')');
   renderConfirmState();
 }
+// ===== 上周发货情况填报 =====
+function p2(n) { return String(n).padStart(2,'0'); }
+function dstr(d) { return d.getFullYear() + '-' + p2(d.getMonth()+1) + '-' + p2(d.getDate()); }
+function lastWeekRange() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const end = new Date(today); end.setDate(today.getDate() - 1);
+  const start = new Date(end); start.setDate(end.getDate() - 6);
+  return [start, end];
+}
+function planFor(r, s0, e0) {
+  let s = 0; const d = new Date(s0);
+  while (d <= e0) {
+    const arr = (r.daily && r.daily[String(d.getMonth()+1)]) || [];
+    s += arr[d.getDate()-1] || 0;
+    d.setDate(d.getDate() + 1);
+  }
+  return s;
+}
+let SHIP_ROWS = [];
+function renderShip() {
+  const rg = lastWeekRange(), s0 = rg[0], e0 = rg[1];
+  document.getElementById('shipTitle').textContent = '📦 上周发货情况填报 · ' + dstr(s0) + ' ~ ' + dstr(e0);
+  SHIP_ROWS = [];
+  DATA.forEach((r, i) => { const p = planFor(r, s0, e0); if (p > 0) SHIP_ROWS.push({i: i, part: r.part, plan: p}); });
+  if (!SHIP_ROWS.length) { document.getElementById('shipBox').innerHTML = '<div style="color:#8a8f98;font-size:13px">上周（' + dstr(s0) + ' ~ ' + dstr(e0) + '）无计划量</div>'; return; }
+  let h = '<table><thead><tr><th>零件</th><th>上周计划(件)</th><th>实际发货(件)</th><th>发货日期</th><th>备注(缺料/延期原因)</th></tr></thead><tbody>';
+  SHIP_ROWS.forEach((x, k) => {
+    h += '<tr><td class="part">' + x.part + '</td><td>' + x.plan.toLocaleString() + '</td>' +
+      '<td><input class="shq" data-k="' + k + '" type="number" min="0" style="width:96px;padding:4px;border:1px solid #dfe2e7;border-radius:6px;text-align:right"></td>' +
+      '<td><input class="shd" data-k="' + k + '" type="text" placeholder="如 9/16" style="width:80px;padding:4px;border:1px solid #dfe2e7;border-radius:6px"></td>' +
+      '<td><input class="shr" data-k="' + k + '" type="text" placeholder="如 缺料延期至9/22" style="width:180px;padding:4px;border:1px solid #dfe2e7;border-radius:6px"></td></tr>';
+  });
+  h += '</tbody></table>';
+  document.getElementById('shipBox').innerHTML = h;
+}
+function shipLines() {
+  const rg = lastWeekRange();
+  let tp = 0, ta = 0, unfilled = 0, lines = [];
+  SHIP_ROWS.forEach((x, k) => {
+    const q = document.querySelector('.shq[data-k="' + k + '"]');
+    const dv = document.querySelector('.shd[data-k="' + k + '"]');
+    const rv = document.querySelector('.shr[data-k="' + k + '"]');
+    const act = (q && q.value !== '') ? parseInt(q.value, 10) : null;
+    if (act === null) unfilled++;
+    tp += x.plan; ta += (act || 0);
+    lines.push('• ' + x.part + '｜计划 ' + x.plan + '｜实际 ' + (act === null ? '未填' : act) +
+      (dv && dv.value ? '｜发货 ' + dv.value : '') + (rv && rv.value ? '｜' + rv.value : ''));
+  });
+  const rate = tp ? Math.round(ta / tp * 1000) / 10 : 0;
+  return {lines: lines, tp: tp, ta: ta, rate: rate, unfilled: unfilled, rg: rg};
+}
+function submitShip() {
+  const d = shipLines();
+  const now = new Date();
+  const ts = dstr(now) + ' ' + p2(now.getHours()) + ':' + p2(now.getMinutes());
+  const subject = encodeURIComponent('【外协发货】' + SUPPLIER + ' ' + dstr(d.rg[0]) + '~' + dstr(d.rg[1]) + ' 发货情况');
+  const body = SUPPLIER + ' 上周发货情况反馈' + NL + NL +
+    '■ 供应商：' + SUPPLIER + NL +
+    '■ 周次：' + dstr(d.rg[0]) + ' ~ ' + dstr(d.rg[1]) + NL +
+    '■ 计划总量：' + d.tp.toLocaleString() + ' 件' + NL +
+    '■ 实际发货：' + d.ta.toLocaleString() + ' 件' + NL +
+    '■ 达成率：' + d.rate + '%' + NL +
+    '■ 未填零件：' + d.unfilled + ' 个' + NL +
+    '■ 填报时间：' + ts + NL + NL + '明细：' + NL + d.lines.join(NL);
+  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + encodeURIComponent(body);
+  document.getElementById('shipState').textContent = '已生成邮件，请在邮件客户端点发送（' + ts + '）';
+}
+function copyShip() {
+  const d = shipLines();
+  const txt = '【' + SUPPLIER + '】上周发货情况 ' + dstr(d.rg[0]) + '~' + dstr(d.rg[1]) + NL +
+    '计划 ' + d.tp + ' 件 / 实际 ' + d.ta + ' 件 / 达成率 ' + d.rate + '%' + NL + d.lines.join(NL);
+  const st = document.getElementById('shipState');
+  if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(() => { st.textContent = '已复制，可直接粘贴到微信发给臻畅'; }).catch(() => { window.prompt('复制以下内容：', txt); }); }
+  else { window.prompt('复制以下内容：', txt); }
+}
+renderShip();
 renderConfirmState();
 </script>
 </body>
