@@ -207,15 +207,25 @@ function planFor(r, s0, e0) {
   return s;
 }
 let SHIP_ROWS = [];
+function monthPlanOf(r) {
+  const arr = (r.daily && r.daily[curMonth]) || [];
+  let s = 0; for (let i = 0; i < arr.length; i++) s += (arr[i] || 0);
+  return s;
+}
 function renderShip() {
   const rg = lastWeekRange(), s0 = rg[0], e0 = rg[1];
-  document.getElementById('shipTitle').textContent = '📦 上周发货情况填报 · ' + dstr(s0) + ' ~ ' + dstr(e0);
+  const withPlan = DATA.filter(function (r) { return planFor(r, s0, e0) > 0; }).length;
+  document.getElementById('shipTitle').textContent = '📦 上周发货情况填报 · ' + dstr(s0) + ' ~ ' + dstr(e0) +
+    '（本页 ' + DATA.length + ' 个零件，上周有计划 ' + withPlan + ' 个；无计划的也照列，有发就填）';
   SHIP_ROWS = [];
-  DATA.forEach((r, i) => { const p = planFor(r, s0, e0); if (p > 0) SHIP_ROWS.push({i: i, part: r.part, plan: p}); });
-  if (!SHIP_ROWS.length) { document.getElementById('shipBox').innerHTML = '<div style="color:#8a8f98;font-size:13px">上周（' + dstr(s0) + ' ~ ' + dstr(e0) + '）无计划量</div>'; return; }
-  let h = '<table><thead><tr><th>零件</th><th>上周计划(件)</th><th>实际发货(件)</th><th>发货日期</th><th>备注(缺料/延期原因)</th></tr></thead><tbody>';
+  DATA.forEach(function (r, i) {
+    SHIP_ROWS.push({i: i, part: r.part, plan: planFor(r, s0, e0), mplan: monthPlanOf(r)});
+  });
+  let h = '<table><thead><tr><th>零件</th><th>上周计划(件)</th><th>' + MONTH_NAMES[curMonth] + '计划(件)</th><th>实际发货(件)</th><th>发货日期</th><th>备注(缺料/延期原因)</th></tr></thead><tbody>';
   SHIP_ROWS.forEach((x, k) => {
-    h += '<tr><td class="part">' + x.part + '</td><td>' + x.plan.toLocaleString() + '</td>' +
+    const pd = x.plan ? x.plan.toLocaleString() : '<span style="color:#c8cbd0">—</span>';
+    const md = x.mplan ? x.mplan.toLocaleString() : '<span style="color:#c8cbd0">—</span>';
+    h += '<tr><td class="part">' + x.part + '</td><td>' + pd + '</td><td>' + md + '</td>' +
       '<td><input class="shq" data-k="' + k + '" type="number" min="0" style="width:96px;padding:4px;border:1px solid #dfe2e7;border-radius:6px;text-align:right"></td>' +
       '<td><input class="shd" data-k="' + k + '" type="text" placeholder="如 9/16" style="width:80px;padding:4px;border:1px solid #dfe2e7;border-radius:6px"></td>' +
       '<td><input class="shr" data-k="' + k + '" type="text" placeholder="如 缺料延期至9/22" style="width:180px;padding:4px;border:1px solid #dfe2e7;border-radius:6px"></td></tr>';
@@ -231,9 +241,10 @@ function shipLines() {
     const dv = document.querySelector('.shd[data-k="' + k + '"]');
     const rv = document.querySelector('.shr[data-k="' + k + '"]');
     const act = (q && q.value !== '') ? parseInt(q.value, 10) : null;
-    if (act === null) unfilled++;
-    tp += x.plan; ta += (act || 0);
-    lines.push('• ' + x.part + '｜计划 ' + x.plan + '｜实际 ' + (act === null ? '未填' : act) +
+    if (x.plan > 0) { tp += x.plan; if (act === null) unfilled++; }
+    ta += (act || 0);
+    if (act === null && x.plan === 0 && !(rv && rv.value)) return;   // 无计划且没填的零件不进邮件
+    lines.push('• ' + x.part + '｜上周计划 ' + x.plan + '｜' + MONTH_NAMES[curMonth] + '计划 ' + x.mplan + '｜实际 ' + (act === null ? '未填' : act) +
       (dv && dv.value ? '｜发货 ' + dv.value : '') + (rv && rv.value ? '｜' + rv.value : ''));
   });
   const rate = tp ? Math.round(ta / tp * 1000) / 10 : 0;
