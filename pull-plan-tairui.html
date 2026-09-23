@@ -44,17 +44,17 @@
   <div class="sum-line" id="sumLine"></div>
   <div style="overflow-x:auto"><table id="pt"><thead id="ptHead"></thead><tbody id="ptBody"></tbody></table></div>
   <div style="margin-top:18px;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;background:#fffdf7">
-    <h2 id="shipTitle" style="font-size:15px;margin:0 0 4px;color:#b45309">📦 上周发货情况填报</h2>
-    <div style="font-size:12px;color:#8a8f98;margin-bottom:8px">请填写上周<b>实际发货件数</b>；缺货/延期的在备注里写明原因与预计发货日。填完点「提交」，邮件会自动带好。</div>
+    <h2 id="shipTitle" style="font-size:15px;margin:0 0 4px;color:#b45309">📦 本周发货情况填报</h2>
+    <div style="font-size:12px;color:#8a8f98;margin-bottom:8px">请填写本周（周一~周日）<b>实际发货件数</b>；缺货/延期的在备注里写明原因与预计发货日。填完点「提交」，邮件会自动带好。</div>
     <div id="shipBox" style="overflow-x:auto"></div>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
-      <button onclick="submitShip()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer">📤 提交上周发货情况</button>
+      <button onclick="submitShip()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer">📤 提交本周发货情况</button>
       <button onclick="copyShip()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer">📋 复制表格</button>
       <span id="shipState" style="font-size:12px;color:#8a8f98"></span>
     </div>
     <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #f0d9a8">
       <div style="font-size:13px;font-weight:700;color:#b45309;margin-bottom:6px">📎 签收单上传</div>
-      <div style="font-size:12px;color:#8a8f98;margin-bottom:8px">选好上周签收单（照片可多张 / PDF）→ 手机端点「📤 发送到微信/邮箱」直接发我们；电脑端点「⬇️ 下载」后拖进微信。也可直接发到 <b>xufeng_cao@zhenchang.group</b>（邮件可带附件）。照片会自动压缩，不影响看清。</div>
+      <div style="font-size:12px;color:#8a8f98;margin-bottom:8px">选好本周签收单（照片可多张 / PDF）→ 手机端点「📤 发送到微信/邮箱」直接发我们；电脑端点「⬇️ 下载」后拖进微信。也可直接发到 <b>xufeng_cao@zhenchang.group</b>（邮件可带附件）。照片会自动压缩，不影响看清。</div>
       <input id="podFiles" type="file" accept="image/*,application/pdf" multiple onchange="onPodPick(event)" style="font-size:12px">
       <div id="podList" style="font-size:12px;color:#334155;margin-top:6px;line-height:1.7"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
@@ -188,13 +188,14 @@ function openDelay() {
   localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 需延期' + (eta ? ' 至 ' + eta : '') + ' (' + ts + ')');
   renderConfirmState();
 }
-// ===== 上周发货情况填报 =====
+// ===== 本周发货情况填报 =====
 function p2(n) { return String(n).padStart(2,'0'); }
 function dstr(d) { return d.getFullYear() + '-' + p2(d.getMonth()+1) + '-' + p2(d.getDate()); }
-function lastWeekRange() {
+function thisWeekRange() {
   const today = new Date(); today.setHours(0,0,0,0);
-  const end = new Date(today); end.setDate(today.getDate() - 1);
-  const start = new Date(end); start.setDate(end.getDate() - 6);
+  const day = today.getDay();                       // 0=周日
+  const start = new Date(today); start.setDate(today.getDate() + (day === 0 ? -6 : 1 - day));  // 本周一
+  const end = new Date(start); end.setDate(start.getDate() + 6);                               // 本周日
   return [start, end];
 }
 function planFor(r, s0, e0) {
@@ -213,15 +214,15 @@ function monthPlanOf(r) {
   return s;
 }
 function renderShip() {
-  const rg = lastWeekRange(), s0 = rg[0], e0 = rg[1];
+  const rg = thisWeekRange(), s0 = rg[0], e0 = rg[1];
   const withPlan = DATA.filter(function (r) { return planFor(r, s0, e0) > 0; }).length;
-  document.getElementById('shipTitle').textContent = '📦 上周发货情况填报 · ' + dstr(s0) + ' ~ ' + dstr(e0) +
-    '（本页 ' + DATA.length + ' 个零件，上周有计划 ' + withPlan + ' 个；无计划的也照列，有发就填）';
+  document.getElementById('shipTitle').textContent = '📦 本周发货情况填报 · ' + dstr(s0) + ' ~ ' + dstr(e0) +
+    '（本页 ' + DATA.length + ' 个零件，本周有计划 ' + withPlan + ' 个；无计划的也照列，有发就填）';
   SHIP_ROWS = [];
   DATA.forEach(function (r, i) {
     SHIP_ROWS.push({i: i, part: r.part, plan: planFor(r, s0, e0), mplan: monthPlanOf(r)});
   });
-  let h = '<table><thead><tr><th>零件</th><th>上周计划(件)</th><th>' + MONTH_NAMES[curMonth] + '计划(件)</th><th>实际发货(件)</th><th>发货日期</th><th>备注(缺料/延期原因)</th></tr></thead><tbody>';
+  let h = '<table><thead><tr><th>零件</th><th>本周计划(件)</th><th>' + MONTH_NAMES[curMonth] + '计划(件)</th><th>实际发货(件)</th><th>发货日期</th><th>备注(缺料/延期原因)</th></tr></thead><tbody>';
   SHIP_ROWS.forEach((x, k) => {
     const pd = x.plan ? x.plan.toLocaleString() : '<span style="color:#c8cbd0">—</span>';
     const md = x.mplan ? x.mplan.toLocaleString() : '<span style="color:#c8cbd0">—</span>';
@@ -234,7 +235,7 @@ function renderShip() {
   document.getElementById('shipBox').innerHTML = h;
 }
 function shipLines() {
-  const rg = lastWeekRange();
+  const rg = thisWeekRange();
   let tp = 0, ta = 0, unfilled = 0, lines = [];
   SHIP_ROWS.forEach((x, k) => {
     const q = document.querySelector('.shq[data-k="' + k + '"]');
@@ -244,7 +245,7 @@ function shipLines() {
     if (x.plan > 0) { tp += x.plan; if (act === null) unfilled++; }
     ta += (act || 0);
     if (act === null && x.plan === 0 && !(rv && rv.value)) return;   // 无计划且没填的零件不进邮件
-    lines.push('• ' + x.part + '｜上周计划 ' + x.plan + '｜' + MONTH_NAMES[curMonth] + '计划 ' + x.mplan + '｜实际 ' + (act === null ? '未填' : act) +
+    lines.push('• ' + x.part + '｜本周计划 ' + x.plan + '｜' + MONTH_NAMES[curMonth] + '计划 ' + x.mplan + '｜实际 ' + (act === null ? '未填' : act) +
       (dv && dv.value ? '｜发货 ' + dv.value : '') + (rv && rv.value ? '｜' + rv.value : ''));
   });
   const rate = tp ? Math.round(ta / tp * 1000) / 10 : 0;
@@ -255,7 +256,7 @@ function submitShip() {
   const now = new Date();
   const ts = dstr(now) + ' ' + p2(now.getHours()) + ':' + p2(now.getMinutes());
   const subject = encodeURIComponent('【外协发货】' + SUPPLIER + ' ' + dstr(d.rg[0]) + '~' + dstr(d.rg[1]) + ' 发货情况');
-  const body = SUPPLIER + ' 上周发货情况反馈' + NL + NL +
+  const body = SUPPLIER + ' 本周发货情况反馈' + NL + NL +
     '■ 供应商：' + SUPPLIER + NL +
     '■ 周次：' + dstr(d.rg[0]) + ' ~ ' + dstr(d.rg[1]) + NL +
     '■ 计划总量：' + d.tp.toLocaleString() + ' 件' + NL +
@@ -268,7 +269,7 @@ function submitShip() {
 }
 function copyShip() {
   const d = shipLines();
-  const txt = '【' + SUPPLIER + '】上周发货情况 ' + dstr(d.rg[0]) + '~' + dstr(d.rg[1]) + NL +
+  const txt = '【' + SUPPLIER + '】本周发货情况 ' + dstr(d.rg[0]) + '~' + dstr(d.rg[1]) + NL +
     '计划 ' + d.tp + ' 件 / 实际 ' + d.ta + ' 件 / 达成率 ' + d.rate + '%' + NL + d.lines.join(NL);
   const st = document.getElementById('shipState');
   if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(() => { st.textContent = '已复制，可直接粘贴到微信发给臻畅'; }).catch(() => { window.prompt('复制以下内容：', txt); }); }
@@ -314,7 +315,7 @@ function sharePod() {
   const st = document.getElementById('podState');
   if (!POD.length) { st.textContent = '请先选择签收单文件'; return; }
   const files = POD.map(x => new File([x.blob], x.name, {type: x.blob.type || 'image/jpeg'}));
-  const txt = '【' + SUPPLIER + '】上周发货签收单 ' + POD.length + ' 个文件';
+  const txt = '【' + SUPPLIER + '】本周发货签收单 ' + POD.length + ' 个文件';
   if (navigator.canShare && navigator.canShare({files: files})) {
     navigator.share({files: files, title: txt, text: txt})
       .then(() => { st.textContent = '已发送，谢谢！'; })
