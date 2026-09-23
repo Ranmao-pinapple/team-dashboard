@@ -60,6 +60,7 @@ TMPL = """<!DOCTYPE html>
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
     <button id="confirmBtn" onclick="openConfirm()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(232,33,39,.3)">✅ 能按期完成 · 可执行拉动</button>
     <button id="delayBtn" onclick="openDelay()" style="background:#fff;color:#b45309;border:1px solid #f0c36d;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer">⚠️ 无法按期完成 · 反馈交期</button>
+    <button onclick="window.print()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">🖨 打印 / 存PDF</button>
     <span id="confirmState" style="font-size:12px;color:#8a8f98"></span>
   </div>
   <div class="sum-line" id="sumLine"></div>
@@ -377,151 +378,6 @@ pages = [
     ("supplier-chengfeng.html", "江苏诚丰", CHENGFENG),
 ]
 
-# ---------- 自制件（内部生产计划）模板 ----------
-# 用 __占位符__ + .replace 组装(不用 .format); JS 里不放 \' 一类转义, 避免多层引号被吃掉
-INTERNAL_TMPL = """<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>月拉动计划 · 上海泰瑞（自制件）</title>
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:"Microsoft YaHei","PingFang SC",sans-serif; background:#f5f6f8; color:#171a20; padding:20px; }
-  .wrap { max-width:1280px; margin:0 auto; background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.06); padding:24px; }
-  .head { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #e82127; padding-bottom:14px; margin-bottom:16px; }
-  h1 { font-size:20px; color:#171a20; }
-  h1 span { color:#e82127; }
-  .meta { font-size:12px; color:#8a8f98; }
-  .bar { display:flex; gap:8px; margin-bottom:12px; align-items:center; flex-wrap:wrap; }
-  .bar button { padding:6px 16px; border:1px solid #d8dbe0; background:#fff; border-radius:8px; cursor:pointer; font-size:13px; }
-  .bar button.active { background:#e82127; color:#fff; border-color:#e82127; font-weight:700; }
-  .sum-line { font-size:13px; color:#555; margin-bottom:10px; }
-  .sum-line b { color:#e82127; font-size:16px; }
-  table { width:100%; border-collapse:collapse; font-size:11.5px; }
-  th, td { border:1px solid #e4e6ea; padding:4px 2px; text-align:center; white-space:nowrap; }
-  th { background:#f0f2f5; font-weight:600; position:sticky; top:0; }
-  td.part { text-align:left; min-width:230px; padding-left:8px; font-weight:600; background:#fff; position:sticky; left:0; }
-  td.proj { text-align:left; min-width:64px; padding-left:6px; color:#8a8f98; background:#fff; }
-  tr.total-row td { background:#fff3cd; font-weight:700; }
-  td.weekend { background:#faf3f0; }
-  td.zero { color:#c8cbd0; }
-  .foot { margin-top:14px; font-size:11px; color:#8a8f98; text-align:right; }
-  @media print { body { padding:0; background:#fff; } .wrap { box-shadow:none; border-radius:0; } .no-print { display:none; } }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="head">
-    <h1>📋 月拉动计划 · <span>上海泰瑞（自制件）</span></h1>
-    <div class="meta">臻畅/泰瑞 · 销售四部 &nbsp;|&nbsp; 数据更新：__UPDATED__</div>
-  </div>
-  <div class="bar no-print" id="monthBar"></div>
-  <div class="bar no-print">
-    <button onclick="window.print()">🖨 打印 / 存PDF</button>
-    <button onclick="copyTable()">📋 复制表格（贴Excel）</button>
-    <span id="tip" style="font-size:12px;color:#8a8f98">内部生产计划用 · 按客户拉动计划排产</span>
-  </div>
-  <div class="sum-line" id="sumLine"></div>
-  <div style="overflow-x:auto"><table id="pt"><thead id="ptHead"></thead><tbody id="ptBody"></tbody></table></div>
-  <div class="foot">※ 数量单位：件（pcs）· 自制件＝上海泰瑞生产 · 如有变动以最新通知为准</div>
-</div>
-<script>
-const DATA = __ROWS__;
-const YEAR = __YEAR__;
-const MONTHS = __MONTHS__;
-const MONTH_NAMES = __MONTH_NAMES__;
-const TAB = String.fromCharCode(9), NL = String.fromCharCode(10);
-let curMonth = MONTHS[MONTHS.length - 1];
-const fmt = n => (n || 0).toLocaleString();
-function barHtml() {
-  return MONTHS.map(function (m) {
-    return '<button data-m="' + m + '" class="' + (m === curMonth ? 'active' : '') + '">' + MONTH_NAMES[m] + '</button>';
-  }).join('');
-}
-function renderBar() { document.getElementById('monthBar').innerHTML = barHtml(); }
-document.getElementById('monthBar').addEventListener('click', function (e) {
-  const b = e.target.closest('button');
-  if (!b) return;
-  curMonth = b.getAttribute('data-m');
-  renderBar(); render();
-});
-function render() {
-  const dim = new Date(YEAR, parseInt(curMonth), 0).getDate();
-  let head = '<tr><th>零件名称</th><th>项目</th>';
-  for (let d = 1; d <= dim; d++) {
-    const dt = new Date(YEAR, parseInt(curMonth) - 1, d);
-    const wk = ['日','一','二','三','四','五','六'][dt.getDay()];
-    const we = dt.getDay() === 0 || dt.getDay() === 6;
-    head += '<th class="' + (we ? 'weekend' : '') + '">' + d + '<br><span style="font-weight:400;font-size:10px;color:#8a8f98">' + wk + '</span></th>';
-  }
-  head += '<th>月合计</th></tr>';
-  document.getElementById('ptHead').innerHTML = head;
-  let body = '', grand = 0;
-  DATA.forEach(function (r) {
-    const arr = r.daily[curMonth] || [];
-    let sum = 0, cells = '';
-    for (let d = 0; d < dim; d++) {
-      const v = arr[d] || 0;
-      sum += v;
-      const dt = new Date(YEAR, parseInt(curMonth) - 1, d + 1);
-      const we = dt.getDay() === 0 || dt.getDay() === 6;
-      cells += '<td class="' + (v === 0 ? 'zero' : '') + ' ' + (we ? 'weekend' : '') + '">' + (v ? fmt(v) : '') + '</td>';
-    }
-    grand += sum;
-    body += '<tr><td class="part">' + r.part + '</td><td class="proj">' + (r.proj || '') + '</td>' + cells + '<td style="font-weight:700">' + fmt(sum) + '</td></tr>';
-  });
-  body += '<tr class="total-row"><td>合计（自制件）</td><td></td>';
-  for (let d = 0; d < dim; d++) {
-    let s = 0;
-    DATA.forEach(function (r) { s += (r.daily[curMonth] || [])[d] || 0; });
-    body += '<td>' + (s ? fmt(s) : '') + '</td>';
-  }
-  body += '<td>' + fmt(grand) + '</td></tr>';
-  document.getElementById('ptBody').innerHTML = body;
-  document.getElementById('sumLine').innerHTML = MONTH_NAMES[curMonth] + ' 自制件拉动总量：<b>' + fmt(grand) + '</b> 件 · 共 ' + DATA.length + ' 个零件';
-}
-function copyTable() {
-  const dim = new Date(YEAR, parseInt(curMonth), 0).getDate();
-  const lines = ['零件名称' + TAB + '项目'];
-  for (let d = 1; d <= dim; d++) lines[0] += TAB + d;
-  lines[0] += TAB + '月合计';
-  DATA.forEach(function (r) {
-    const arr = r.daily[curMonth] || [];
-    let sum = 0, line = r.part + TAB + (r.proj || '');
-    for (let d = 0; d < dim; d++) { const v = arr[d] || 0; sum += v; line += TAB + (v || ''); }
-    lines.push(line + TAB + sum);
-  });
-  const txt = lines.join(NL);
-  const tip = document.getElementById('tip');
-  const done = function () { tip.textContent = '✅ 已复制，直接粘到 Excel 即可'; setTimeout(function () { tip.textContent = '内部生产计划用 · 按客户拉动计划排产'; }, 4000); };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(txt).then(done).catch(function () { window.prompt('复制以下内容：', txt); });
-  } else {
-    window.prompt('复制以下内容：', txt);
-  }
-}
-renderBar();
-render();
-</script>
-</body>
-</html>"""
-
-
-def make_internal_page(rows):
-    rows_data = [{
-        "part": r["part"],
-        "proj": r.get("project", ""),
-        "daily": {m: r.get("daily", {}).get(m, [0] * 31) for m in MONTHS},
-    } for r in rows]
-    return (INTERNAL_TMPL
-            .replace("__ROWS__", json.dumps(rows_data, ensure_ascii=False))
-            .replace("__YEAR__", str(YEAR))
-            .replace("__MONTHS__", json.dumps(MONTHS))
-            .replace("__MONTH_NAMES__", json.dumps(MONTH_NAMES, ensure_ascii=False))
-            .replace("__UPDATED__", datetime.date.today().isoformat()))
-
-
 OUT = os.path.dirname(BASE)  # 仓库根目录
 for fname, sup, rows in pages:
     if not rows:
@@ -532,10 +388,10 @@ for fname, sup, rows in pages:
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
 
-# 自制件页面（内部生产计划）
+# 自制件页面（内部生产计划）— 复用外协同款模板, 全套确认/反馈/发货填报/签收单
 if TAIRUI:
     with open(os.path.join(OUT, "pull-plan-tairui.html"), "w", encoding="utf-8") as f:
-        f.write(make_internal_page(TAIRUI))
-    print(f"pull-plan-tairui.html: {len(TAIRUI)} 个自制零件 -> 已生成")
+        f.write(make_page("上海泰瑞·自制", TAIRUI))
+    print(f"pull-plan-tairui.html: {len(TAIRUI)} 个自制零件(含确认/反馈/发货填报/签收单) -> 已生成")
 else:
     print("pull-plan-tairui.html: 无自制件数据, 跳过")
