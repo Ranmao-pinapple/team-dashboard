@@ -73,7 +73,8 @@ const DATA = [{"part": "VF-LIMO7 RHD-左下挡脚板隔音垫 BIN32551820AA", "d
 const YEAR = 2026;
 const MONTHS = ["6", "7", "8", "9"];
 const MONTH_NAMES = {"6": "6月", "7": "7月", "8": "8月", "9": "9月"};
-let curMonth = '9';
+const NOWM = String(new Date().getMonth() + 1);
+let curMonth = (MONTHS.indexOf(NOWM) >= 0) ? NOWM : MONTHS[MONTHS.length - 1];
 const dim = m => new Date(YEAR, parseInt(m), 0).getDate();
 const fmt = n => (n||0).toLocaleString();
 document.getElementById('monthBar').innerHTML = MONTHS.map(m =>
