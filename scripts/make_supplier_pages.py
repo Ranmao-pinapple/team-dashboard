@@ -8,8 +8,14 @@ BASE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
 # ---------- 读取数据 ----------
 orders = json.load(open(f"{BASE}/orders.json"))
 YEAR = orders.get("year", 2026)
-MONTHS = ["6", "7", "8", "9"]
+BASE_MONTHS = ["6", "7", "8", "9"]      # 固定显示的基础月份(和看板一致)
 MONTH_NAMES = {"6": "6月", "7": "7月", "8": "8月", "9": "9月"}
+
+def months_for(rows):
+    """基础 6-9 月 + 该页数据里真有量的月份(自动把10月等加上, 没数据不会多出空月份)"""
+    extra = sorted({m for r in rows for m, arr in (r.get("daily") or {}).items()
+                    if any(arr) and m not in BASE_MONTHS}, key=int)
+    return BASE_MONTHS + extra
 
 def supplier_rows(supplier):
     return [r for r in orders["rows"] if r.get("supplier") == supplier and r.get("makeType") == "外协"]
@@ -95,7 +101,7 @@ const DATA = {rows_json};
 const YEAR = {year};
 const MONTHS = {months_json};
 const MONTH_NAMES = {month_names_json};
-let curMonth = '9';
+const NOWM = String(new Date().getMonth() + 1);\nlet curMonth = (MONTHS.indexOf(NOWM) >= 0) ? NOWM : MONTHS[MONTHS.length - 1];
 const dim = m => new Date(YEAR, parseInt(m), 0).getDate();
 const fmt = n => (n||0).toLocaleString();
 document.getElementById('monthBar').innerHTML = MONTHS.map(m =>
@@ -370,17 +376,19 @@ renderConfirmState();
 </html>"""
 
 def make_page(supplier, rows):
+    months = months_for(rows)
+    names = {m: MONTH_NAMES.get(m, m + "月") for m in months}
     rows_data = [{
         "part": r["part"],
-        "daily": {m: r.get("daily", {}).get(m, [0]*31) for m in MONTHS},
+        "daily": {m: r.get("daily", {}).get(m, [0]*31) for m in months},
     } for r in rows]
     html = TMPL.format(
         supplier=supplier,
         supplier_json=json.dumps(supplier, ensure_ascii=False),
         rows_json=json.dumps(rows_data, ensure_ascii=False),
         year=YEAR,
-        months_json=json.dumps(MONTHS),
-        month_names_json=json.dumps(MONTH_NAMES, ensure_ascii=False),
+        months_json=json.dumps(months),
+        month_names_json=json.dumps(names, ensure_ascii=False),
         updated=datetime.date.today().isoformat(),
     )
     return html
