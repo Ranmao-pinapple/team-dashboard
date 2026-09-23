@@ -66,7 +66,7 @@ def main():
                 hits.append({'mid': mid, 'kind': 'confirm', 'supplier': supplier, 'status': status_,
                              'month': month, 'date': msg.get('Date', '')})
             else:
-                # 上周发货情况填报: 取正文里的 计划/实际/达成率
+                # 本周发货情况填报: 取正文里的 计划/实际/达成率
                 info = {}
                 atts = []
                 try:
@@ -119,9 +119,9 @@ def main():
             if h.get('kind') == 'ship':
                 i = h.get('info') or {}
                 if i:
-                    print(f"📦 {h['supplier']} 上周发货填报（{h['week']}）：计划 {i.get('plan','?')} 件 / 实际 {i.get('actual','?')} 件 · 达成率 {i.get('rate','?')}% · 未填 {i.get('unfilled','?')} 个（{h['date']}）")
+                    print(f"📦 {h['supplier']} 本周发货填报（{h['week']}）：计划 {i.get('plan','?')} 件 / 实际 {i.get('actual','?')} 件 · 达成率 {i.get('rate','?')}% · 未填 {i.get('unfilled','?')} 个（{h['date']}）")
                 else:
-                    print(f"📦 {h['supplier']} 上周发货填报（{h['week']}）— 请到邮箱看明细（{h['date']}）")
+                    print(f"📦 {h['supplier']} 本周发货填报（{h['week']}）— 请到邮箱看明细（{h['date']}）")
                 for fn, sz, path in (h.get('atts') or []):
                     print(f"   📎 签收单附件已存: {fn}（{round(sz/1024)}KB）→ {path}")
                 continue
