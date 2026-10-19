@@ -22,6 +22,7 @@ def supplier_rows(supplier):
 
 HUSHENG = supplier_rows("宁波互盛")
 CHENGFENG = supplier_rows("江苏诚丰")
+XINJIUYUE = supplier_rows("新久玥")
 # 自制件（上海泰瑞生产）→ 内部生产计划用页面, 与外协页同款表格但不带外协反馈区
 TAIRUI = [r for r in orders["rows"] if r.get("makeType") == "自制"]
 
@@ -396,6 +397,7 @@ def make_page(supplier, rows):
 pages = [
     ("supplier-husheng.html", "宁波互盛", HUSHENG),
     ("supplier-chengfeng.html", "江苏诚丰", CHENGFENG),
+    ("supplier-xinjiuyue.html", "新久玥", XINJIUYUE),
 ]
 
 OUT = os.path.dirname(BASE)  # 仓库根目录
