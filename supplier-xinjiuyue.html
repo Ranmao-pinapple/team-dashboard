@@ -25,7 +25,25 @@
   td.weekend { background:#faf3f0; }
   td.zero { color:#c8cbd0; }
   .foot { margin-top:14px; font-size:11px; color:#8a8f98; text-align:right; }
-  @media print { body { padding:0; background:#fff; } .wrap { box-shadow:none; border-radius:0; } .month-bar { display:none; } }
+  .dn-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:8px; }
+  .dn-grid label { display:block; font-size:11.5px; color:#8a8f98; margin-bottom:2px; }
+  .dn-grid input { width:100%; padding:6px 8px; border:1px solid #dfe2e7; border-radius:6px; font-size:12px; }
+  #dnPaper h2 { font-size:20px; text-align:center; letter-spacing:4px; margin:0 0 2px; }
+  #dnPaper .en { font-size:11px; color:#8a8f98; text-align:center; letter-spacing:2px; margin-bottom:14px; }
+  #dnPaper .dmeta { display:grid; grid-template-columns:1fr 1fr; gap:4px 18px; font-size:12.5px; margin-bottom:12px; }
+  #dnPaper .dmeta div { border-bottom:1px dotted #d8dbe0; padding:3px 0; }
+  #dnPaper table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  #dnPaper th, #dnPaper td { border:1px solid #333; padding:6px 6px; text-align:center; }
+  #dnPaper th { background:#f2f2f2; }
+  #dnPaper td.nm { text-align:left; }
+  #dnPaper .sign { display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:26px; font-size:12.5px; }
+  #dnPaper .sign div { border-top:1px solid #333; padding-top:6px; }
+  @media print { body { padding:0; background:#fff; } .wrap { box-shadow:none; border-radius:0; } .month-bar { display:none; }
+    body.dn-print .wrap { display:none !important; }
+    body.dn-print #dnModal { position:static !important; display:block !important; background:#fff !important; padding:0 !important; }
+    body.dn-print #dnModal .noprint { display:none !important; }
+    body.dn-print #dnPaper { max-width:none !important; box-shadow:none !important; border:0 !important; padding:0 !important; }
+  }
 </style>
 </head>
 <body>
@@ -64,6 +82,28 @@
         <span id="podState" style="font-size:12px;color:#8a8f98"></span>
       </div>
     </div>
+  </div>
+  <div style="margin-top:18px;border:1px solid #cfe3d4;border-radius:10px;padding:12px 14px;background:#f7fdf9">
+    <h2 style="font-size:15px;margin:0 0 4px;color:#0f7a3d">🧾 生成发货单</h2>
+    <div style="font-size:12px;color:#8a8f98;margin-bottom:10px">固定信息填一次就自动记住（本机保存）；每次只需在下面填 <b>本次发货数量</b> → 点「生成发货单」，可直接打印 / 存 PDF / 复制 / 邮件发出。所有供应商用同一套模板。</div>
+    <div class="dn-grid" style="margin-bottom:12px">
+      <div><label>发货单位</label><input id="dnFrom" oninput="saveDNMeta()"></div>
+      <div><label>收货单位</label><input id="dnTo" oninput="saveDNMeta()"></div>
+      <div><label>收货地址</label><input id="dnAddr" oninput="saveDNMeta()"></div>
+      <div><label>联系人 / 电话</label><input id="dnContact" oninput="saveDNMeta()"></div>
+      <div><label>单号前缀</label><input id="dnPrefix" oninput="saveDNMeta()"></div>
+      <div><label>发货日期</label><input id="dnDate" type="date" onchange="saveDNMeta()"></div>
+    </div>
+    <div id="dnBox" style="overflow-x:auto"></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
+      <button onclick="genDN()" style="background:#0f7a3d;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer">🧾 生成发货单</button>
+      <button onclick="copyDN()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer">📋 复制文本</button>
+      <button onclick="resetDN()" style="background:#fff;color:#8a8f98;border:1px solid #e4e6ea;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer">清空数量</button>
+      <span id="dnState" style="font-size:12px;color:#8a8f98"></span>
+    </div>
+  </div>
+  <div id="dnModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;overflow:auto;padding:22px">
+    <div style="max-width:820px;margin:0 auto;background:#fff;border-radius:10px;padding:24px 28px;box-shadow:0 10px 40px rgba(0,0,0,.3)" id="dnPaper"></div>
   </div>
   <div class="foot">※ 数量单位：件（pcs）· 按客户拉动计划排产，如有变动以最新通知为准</div>
 </div>
@@ -342,6 +382,127 @@ function copyMail() {
   if (navigator.clipboard) { navigator.clipboard.writeText(mail).then(() => { st.textContent = '已复制邮箱：' + mail; }); }
   else { window.prompt('我们的邮箱：', mail); }
 }
+
+// ===== 发货单生成（所有供应商同一模板）=====
+const DN_META_KEY = 'dn_meta_' + SUPPLIER;
+const DN_PREFIX = {'宁波互盛': 'HS', '江苏诚丰': 'CF', '新久玥': 'XJY', '上海泰瑞·自制': 'TR'};
+const DN_DEFAULTS = {from: SUPPLIER, to: '常州臻畅汽车配件有限公司', addr: '', contact: '', prefix: (DN_PREFIX[SUPPLIER] || 'DN')};
+let DN_META = null, DN_ROWS = [];
+function dnEl(id) { return document.getElementById(id); }
+function loadDNMeta() {
+  try { DN_META = JSON.parse(localStorage.getItem(DN_META_KEY) || 'null'); } catch (e) { DN_META = null; }
+  if (!DN_META) { DN_META = Object.assign({}, DN_DEFAULTS); }
+  dnEl('dnFrom').value = DN_META.from || '';
+  dnEl('dnTo').value = DN_META.to || '';
+  dnEl('dnAddr').value = DN_META.addr || '';
+  dnEl('dnContact').value = DN_META.contact || '';
+  dnEl('dnPrefix').value = DN_META.prefix || '';
+  dnEl('dnDate').value = DN_META.date || dstr(new Date());
+}
+function saveDNMeta() {
+  DN_META = {from: dnEl('dnFrom').value, to: dnEl('dnTo').value, addr: dnEl('dnAddr').value,
+             contact: dnEl('dnContact').value, prefix: dnEl('dnPrefix').value, date: dnEl('dnDate').value};
+  localStorage.setItem(DN_META_KEY, JSON.stringify(DN_META));
+}
+function splitPart(p) {
+  var i = p.lastIndexOf(' ');
+  return i < 0 ? {name: p, code: ''} : {name: p.slice(0, i), code: p.slice(i + 1)};
+}
+function renderDN() {
+  var rg = thisWeekRange();
+  DN_ROWS = [];
+  var h = '<table><thead><tr><th style="min-width:150px">件号</th><th>零件名称</th><th>本周计划</th><th>本次发货数量</th></tr></thead><tbody>';
+  DATA.forEach(function (r, i) {
+    var sp = splitPart(r.part), plan = planFor(r, rg[0], rg[1]);
+    DN_ROWS.push({code: sp.code, name: sp.name, plan: plan});
+    h += '<tr><td style="font-size:11px;font-family:monospace">' + sp.code + '</td><td class="part">' + sp.name + '</td>' +
+      '<td>' + (plan ? plan.toLocaleString() : '<span style="color:#c8cbd0">—</span>') + '</td>' +
+      '<td><input class="dnq" data-k="' + i + '" type="number" min="0" placeholder="填发货数" style="width:112px;padding:4px;border:1px solid #dfe2e7;border-radius:6px;text-align:right"></td></tr>';
+  });
+  h += '</tbody></table>';
+  dnEl('dnBox').innerHTML = h;
+}
+function collectDN() {
+  var items = [];
+  DN_ROWS.forEach(function (x, k) {
+    var el = document.querySelector('.dnq[data-k="' + k + '"]');
+    var q = (el && el.value !== '') ? parseInt(el.value, 10) : 0;
+    if (q > 0) { items.push({code: x.code, name: x.name, qty: q}); }
+  });
+  return items;
+}
+function dnNo() {
+  var d = new Date(), key = 'dn_seq_' + SUPPLIER + '_' + dstr(d);
+  var n = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+  localStorage.setItem(key, String(n));
+  var pre = (dnEl('dnPrefix').value || 'DN');
+  return pre + '-' + dstr(d).replace(/-/g, '') + '-' + String(n).padStart(2, '0');
+}
+function dnMetaNow() {
+  return {from: dnEl('dnFrom').value, to: dnEl('dnTo').value, addr: dnEl('dnAddr').value,
+          contact: dnEl('dnContact').value, date: dnEl('dnDate').value || dstr(new Date())};
+}
+function genDN() {
+  var items = collectDN(), st = dnEl('dnState');
+  if (!items.length) { st.textContent = '请先填本次发货数量（可只填有发的零件）'; return; }
+  var m = dnMetaNow(), no = dnNo();
+  var tot = items.reduce(function (s, x) { return s + x.qty; }, 0);
+  var rows = items.map(function (x, i) {
+    return '<tr><td>' + (i + 1) + '</td><td style="font-family:monospace;font-size:11.5px">' + x.code + '</td>' +
+      '<td class="nm">' + x.name + '</td><td>件</td><td style="text-align:right;font-weight:600">' + x.qty.toLocaleString() + '</td></tr>';
+  }).join('');
+  var html = '<h2>发 货 单</h2><div class="en">DELIVERY NOTE</div>' +
+    '<div class="dmeta">' +
+      '<div><b>单号：</b>' + no + '</div><div><b>发货日期：</b>' + m.date + '</div>' +
+      '<div><b>发货单位：</b>' + (m.from || '') + '</div><div><b>收货单位：</b>' + (m.to || '') + '</div>' +
+      '<div style="grid-column:1 / -1"><b>收货地址：</b>' + (m.addr || '—') + '</div>' +
+      '<div style="grid-column:1 / -1"><b>联系人/电话：</b>' + (m.contact || '—') + '</div>' +
+    '</div>' +
+    '<table><thead><tr><th style="width:44px">序号</th><th style="width:190px">件号</th><th>零件名称</th><th style="width:52px">单位</th><th style="width:90px">数量</th></tr></thead><tbody>' +
+    rows +
+    '<tr><td colspan="4" style="text-align:right;font-weight:700">合计</td><td style="text-align:right;font-weight:700">' + tot.toLocaleString() + '</td></tr>' +
+    '</tbody></table>' +
+    '<div class="sign"><div>发货人（签字/盖章）：</div><div>收货人（签字/盖章）：</div></div>' +
+    '<div class="noprint" style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">' +
+      '<button onclick="printDN()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer">🖨 打印 / 存PDF</button>' +
+      '<button onclick="mailDN()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer">📧 发邮件</button>' +
+      '<button onclick="closeDN()" style="background:#fff;color:#8a8f98;border:1px solid #e4e6ea;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer">关闭</button>' +
+    '</div>';
+  dnEl('dnPaper').innerHTML = html;
+  dnEl('dnModal').style.display = 'block';
+  st.textContent = '已生成 ' + no + '（' + items.length + ' 项 / ' + tot.toLocaleString() + ' 件）';
+}
+function printDN() {
+  document.body.classList.add('dn-print');
+  window.print();
+}
+window.addEventListener('afterprint', function () { document.body.classList.remove('dn-print'); });
+function closeDN() { dnEl('dnModal').style.display = 'none'; }
+function copyDN() {
+  var items = collectDN(), st = dnEl('dnState');
+  if (!items.length) { st.textContent = '请先填本次发货数量'; return; }
+  var m = dnMetaNow(), txt = '【发货单】' + (m.from || '') + ' → ' + (m.to || '') + '  ' + m.date + NL;
+  txt += '收货地址：' + (m.addr || '—') + NL + '联系人/电话：' + (m.contact || '—') + NL + '——' + NL;
+  items.forEach(function (x, i) { txt += (i + 1) + '. ' + x.code + ' ' + x.name + '  ' + x.qty + ' 件' + NL; });
+  txt += '合计：' + items.reduce(function (s, x) { return s + x.qty; }, 0) + ' 件';
+  if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(function () { st.textContent = '已复制，可直接粘贴到微信发给对接人'; }).catch(function () { window.prompt('复制以下内容：', txt); }); }
+  else { window.prompt('复制以下内容：', txt); }
+}
+function mailDN() {
+  var items = collectDN(), body = '发货单明细：' + NL, m = dnMetaNow();
+  items.forEach(function (x, i) { body += (i + 1) + '. ' + x.code + ' ' + x.name + '  ' + x.qty + ' 件' + NL; });
+  body += '合计 ' + items.reduce(function (s, x) { return s + x.qty; }, 0) + ' 件' + NL + NL +
+    '发货单位：' + (m.from || '') + NL + '收货单位：' + (m.to || '') + NL + '收货地址：' + (m.addr || '') + NL +
+    '发货日期：' + m.date + NL + '联系人/电话：' + (m.contact || '') + NL + NL + '（发货单原件请打印盖章后随货或拍照发送）';
+  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + encodeURIComponent('【发货单】' + (m.from || '') + ' ' + m.date) + '&body=' + encodeURIComponent(body);
+}
+function resetDN() {
+  document.querySelectorAll('.dnq').forEach(function (e) { e.value = ''; });
+  dnEl('dnState').textContent = '';
+  dnEl('dnModal').style.display = 'none';
+}
+loadDNMeta();
+renderDN();
 renderShip();
 renderConfirmState();
 </script>
