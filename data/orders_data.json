@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-23 08:30",
+ "updatedAt": "2026-10-23 08:39",
  "orders": [
   {
    "po": "4500118027",
@@ -1664,8 +1664,8 @@
    "delivery_note": "原单含税单价/总额均为0(未定价)待补; 抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500127228",
@@ -1681,8 +1681,8 @@
    "delivery_note": "原单含税单价/总额均为0(未定价)待补; 抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500127228",
@@ -1698,8 +1698,8 @@
    "delivery_note": "原单含税单价/总额均为0(未定价)待补; 抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500127228",
@@ -1715,8 +1715,8 @@
    "delivery_note": "原单含税单价/总额均为0(未定价)待补; 抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500127228",
@@ -1732,8 +1732,8 @@
    "delivery_note": "原单含税单价/总额均为0(未定价)待补; 抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500127228",
@@ -1749,8 +1749,8 @@
    "delivery_note": "原单含税单价/总额均为0(未定价)待补; 抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500127228",
@@ -1766,8 +1766,8 @@
    "delivery_note": "原单含税单价/总额均为0(未定价)待补; 抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500129099",
@@ -1851,8 +1851,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1868,8 +1868,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1885,8 +1885,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1902,8 +1902,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1919,8 +1919,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1936,8 +1936,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1953,8 +1953,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1970,8 +1970,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -1987,8 +1987,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2004,8 +2004,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2021,8 +2021,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2038,8 +2038,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2055,8 +2055,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2072,8 +2072,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2089,8 +2089,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2106,8 +2106,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2123,8 +2123,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500128917",
@@ -2140,8 +2140,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500130102",
@@ -2157,8 +2157,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500130102",
@@ -2174,8 +2174,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500130102",
@@ -2191,8 +2191,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500130102",
@@ -2208,8 +2208,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   },
   {
    "po": "4500130102",
@@ -2225,8 +2225,8 @@
    "delivery_note": "抬头=凯华汽车科技(安徽)芜湖南陵",
    "payment": "票到90天",
    "status": "received",
-   "makeType": "待定",
-   "supplier": "待定"
+   "makeType": "自制",
+   "supplier": "上海泰瑞"
   }
  ]
 }
