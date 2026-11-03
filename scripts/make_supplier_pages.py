@@ -519,7 +519,7 @@ function renderDN() {{
   var rg = thisWeekRange();
   DN_ROWS = [];
   var def = dnEl('dnPlant').value || '凯华9000工厂';
-  var h = '<table><thead><tr><th style="min-width:175px">物料号</th><th>零件名称</th><th>收货工厂</th><th>本周计划</th><th>本次发货数量</th></tr></thead><tbody>';
+  var h = '<table><thead><tr><th style="min-width:175px">物料号</th><th>零件名称</th><th>收货工厂</th><th>本周计划</th><th>本次发货数量</th><th style="min-width:130px">备注</th></tr></thead><tbody>';
   DATA.forEach(function (r, i) {{
     var sp = splitPart(r.part), plan = planFor(r, rg[0], rg[1]);
     var mat = r.mat || MAT_MAP[sp.name] || sp.code || '';
@@ -529,7 +529,8 @@ function renderDN() {{
     h += '<tr><td style="font-size:11px;font-family:monospace">' + mat + '</td><td class="part">' + sp.name + '</td>' +
       '<td>' + tag + '</td>' +
       '<td>' + (plan ? plan.toLocaleString() : '<span style="color:#c8cbd0">—</span>') + '</td>' +
-      '<td><input class="dnq" data-k="' + i + '" type="number" min="0" placeholder="填发货数" style="width:112px;padding:4px;border:1px solid #dfe2e7;border-radius:6px;text-align:right"></td></tr>';
+      '<td><input class="dnq" data-k="' + i + '" type="number" min="0" placeholder="填发货数" style="width:100px;padding:4px;border:1px solid #dfe2e7;border-radius:6px;text-align:right"></td>' +
+      '<td><input class="dnr" data-k="' + i + '" placeholder="备注(可选)" style="width:126px;padding:4px;border:1px solid #dfe2e7;border-radius:6px"></td></tr>';
   }});
   h += '</tbody></table>';
   dnEl('dnBox').innerHTML = h;
@@ -539,7 +540,9 @@ function collectDN() {{
   DN_ROWS.forEach(function (x, k) {{
     var el = document.querySelector('.dnq[data-k="' + k + '"]');
     var q = (el && el.value !== '') ? parseInt(el.value, 10) : 0;
-    if (q > 0) {{ items.push({{mat: x.mat, name: x.name, qty: q, plant: x.plant}}); }}
+    var er = document.querySelector('.dnr[data-k="' + k + '"]');
+    var rm = (er && er.value) ? er.value.trim() : '';
+    if (q > 0) {{ items.push({{mat: x.mat, name: x.name, qty: q, plant: x.plant, remark: rm}}); }}
   }});
   return items;
 }}
@@ -577,7 +580,8 @@ function buildSheet(m, no, items) {{
   var tot = items.reduce(function (s, x) {{ return s + x.qty; }}, 0);
   var rows = items.map(function (x, i) {{
     return '<tr><td>' + (i + 1) + '</td><td style="font-family:monospace;font-size:11.5px">' + x.mat + '</td>' +
-      '<td class="nm">' + x.name + '</td><td>件</td><td style="text-align:right;font-weight:600">' + x.qty.toLocaleString() + '</td></tr>';
+      '<td class="nm">' + x.name + '</td><td>件</td><td style="text-align:right;font-weight:600">' + x.qty.toLocaleString() + '</td>' +
+      '<td class="nm" style="font-size:11.5px">' + (x.remark || '') + '</td></tr>';
   }}).join('');
   return '<div class="dn-sheet">' +
     '<h2>发 货 单</h2><div class="en">DELIVERY NOTE</div>' +
@@ -587,9 +591,9 @@ function buildSheet(m, no, items) {{
       '<div><b>发货联系人/电话：</b>' + (m.fromContact || '—') + '</div><div><b>收货联系人/电话：</b>' + (m.contact || '—') + '</div>' +
       '<div style="grid-column:1 / -1"><b>收货地址：</b>' + (m.addr || '—') + '（' + (m.plant || '') + '）</div>' +
     '</div>' +
-    '<table><thead><tr><th style="width:44px">序号</th><th style="width:200px">物料号</th><th>零件名称</th><th style="width:52px">单位</th><th style="width:90px">数量</th></tr></thead><tbody>' +
+    '<table><thead><tr><th style="width:44px">序号</th><th style="width:190px">物料号</th><th>零件名称</th><th style="width:48px">单位</th><th style="width:84px">数量</th><th style="width:130px">备注</th></tr></thead><tbody>' +
     rows +
-    '<tr><td colspan="4" style="text-align:right;font-weight:700">合计</td><td style="text-align:right;font-weight:700">' + tot.toLocaleString() + '</td></tr>' +
+    '<tr><td colspan="5" style="text-align:right;font-weight:700">合计</td><td style="text-align:right;font-weight:700">' + tot.toLocaleString() + '</td></tr>' +
     '</tbody></table>' +
     '<div class="sign"><div>发货人（签字/盖章）：</div><div>收货人（签字/盖章）：</div></div>' +
     '</div>';
@@ -633,7 +637,7 @@ function copyDN() {{
     if (gi) txt += NL + '════════' + NL;
     txt += '【发货单】' + (m.from || '') + ' → ' + (m.to || '') + '（' + (m.plant || '') + '）  ' + m.date + NL;
     txt += '收货地址：' + (m.addr || '—') + NL + '收货联系人：' + (m.contact || '—') + NL + '发货联系人：' + (m.fromContact || '—') + NL;
-    g.items.forEach(function (x, i) {{ txt += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
+    g.items.forEach(function (x, i) {{ txt += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + (x.remark ? '（' + x.remark + '）' : '') + NL; }});
     txt += '合计：' + t + ' 件' + NL;
   }});
   if (navigator.clipboard) {{ navigator.clipboard.writeText(txt).then(function () {{ st.textContent = '已复制（' + groups.length + ' 张单），可直接粘贴到微信'; }}).catch(function () {{ window.prompt('复制以下内容：', txt); }}); }}
@@ -646,7 +650,7 @@ function mailDN() {{
     var t = g.items.reduce(function (s, x) {{ return s + x.qty; }}, 0);
     if (gi) body += NL + '════════' + NL + NL;
     body += '发货单明细：' + NL;
-    g.items.forEach(function (x, i) {{ body += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
+    g.items.forEach(function (x, i) {{ body += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + (x.remark ? '（' + x.remark + '）' : '') + NL; }});
     body += '合计 ' + t + ' 件' + NL + NL +
       '发货单位：' + (m.from || '') + '（' + (m.fromContact || '') + '）' + NL +
       '收货单位：' + (m.to || '') + '（' + (m.plant || '') + '）' + NL +
@@ -658,6 +662,7 @@ function mailDN() {{
 }}
 function resetDN() {{
   document.querySelectorAll('.dnq').forEach(function (e) {{ e.value = ''; }});
+  document.querySelectorAll('.dnr').forEach(function (e) {{ e.value = ''; }});
   dnEl('dnState').textContent = '';
   dnEl('dnModal').style.display = 'none';
 }}
