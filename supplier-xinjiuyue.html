@@ -165,6 +165,20 @@ render();
 
 // ===== 确认收到 · 一键回执 =====
 const RECEIVER_EMAIL = 'xufeng_cao@zhenchang.group';
+// ===== 直连提交：不依赖客户手机上的邮件客户端，点一次就到臻畅邮箱 =====
+const FORM_ENDPOINT = 'https://formsubmit.co/ajax/xufeng_cao@zhenchang.group';
+function sendMail(subjRaw, bodyText, cb) {
+  fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify({_subject: subjRaw, _template: 'box', _captcha: 'false', 内容: bodyText})
+  }).then(function (r) { return r.json(); }).then(function (j) {
+    cb(String(j.success) === 'true', j.message || '');
+  }).catch(function (e) { cb(false, (e && e.message) ? e.message : '网络错误'); });
+}
+function mailtoFallback(subjRaw, bodyText) {
+  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + encodeURIComponent(subjRaw) + '&body=' + encodeURIComponent(bodyText);
+}
 const CONFIRM_KEY = 'sup_confirm_' + SUPPLIER;
 function grandTotal(m) {
   return DATA.reduce((s,r)=>s+((r.daily[m]||[]).reduce((a,b)=>a+(b||0),0)),0);
@@ -197,9 +211,12 @@ function openConfirm() {
     '■ 页面：' + location.href + '\n\n' +
     '如有疑问请联系臻畅销售四部。'
   );
-  const mailto = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + body;
+  const subjRaw = decodeURIComponent(subject), bodyRaw = decodeURIComponent(body);
   if (confirm('确认【' + SUPPLIER + '】已收到 ' + MONTH_NAMES[curMonth] + ' 月拉动计划（共 ' + DATA.length + ' 个零件 / ' + total.toLocaleString() + ' 件），并通知臻畅可执行订单拉动？')) {
-    location.href = mailto;
+    sendMail(subjRaw, bodyRaw, function (ok, msg) {
+      if (ok) { alert('✅ 已直接提交给臻畅，无需再发邮件。'); }
+      else { mailtoFallback(subjRaw, bodyRaw); alert('直连提交未成功（' + msg + '），已改用邮件方式，请点发送。'); }
+    });
     localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 ' + ts);
     renderConfirmState();
   }
@@ -230,7 +247,12 @@ function openDelay() {
     '■ 页面：' + location.href + NL + NL +
     '请臻畅确认调整后的拉动计划。'
   );
-  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + body;
+  const subjD = '【外协确认】' + SUPPLIER + ' 无法按期完成 ' + MONTH_NAMES[curMonth] + '月拉动计划';
+  const bodyD = decodeURIComponent(body);
+  sendMail(subjD, bodyD, function (ok, msg) {
+    if (ok) { alert('✅ 已直接提交给臻畅，无需再发邮件。'); }
+    else { mailtoFallback(subjD, bodyD); alert('直连提交未成功（' + msg + '），已改用邮件方式，请点发送。'); }
+  });
   localStorage.setItem(CONFIRM_KEY, MONTH_NAMES[curMonth] + '月 需延期' + (eta ? ' 至 ' + eta : '') + ' (' + ts + ')');
   renderConfirmState();
 }
@@ -310,8 +332,19 @@ function submitShip() {
     '■ 达成率：' + d.rate + '%' + NL +
     '■ 未填零件：' + d.unfilled + ' 个' + NL +
     '■ 填报时间：' + ts + NL + NL + '明细：' + NL + d.lines.join(NL);
-  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + subject + '&body=' + encodeURIComponent(body);
-  document.getElementById('shipState').textContent = '已生成邮件，请在邮件客户端点发送（' + ts + '）';
+  const subjS = '【外协发货】' + SUPPLIER + ' ' + dstr(d.rg[0]) + '~' + dstr(d.rg[1]) + ' 发货情况';
+  const st = document.getElementById('shipState');
+  st.textContent = '提交中…';
+  sendMail(subjS, body, function (ok, msg) {
+    if (ok) {
+      st.textContent = '✅ 已提交给臻畅（' + ts + '），无需再发邮件';
+      alert('✅ 本周发货情况已直接提交给臻畅，不需要再转发或复制粘贴。');
+    } else {
+      mailtoFallback(subjS, body);
+      st.textContent = '直连失败，已改用邮件方式（' + ts + '）';
+      alert('直连提交未成功（' + msg + '），已改用邮件方式，请点发送。');
+    }
+  });
 }
 function copyShip() {
   const d = shipLines();
