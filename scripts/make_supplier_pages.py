@@ -120,11 +120,13 @@ TMPL = """<!DOCTYPE html>
   #dnPaper td.nm {{ text-align:left; }}
   #dnPaper .sign {{ display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:26px; font-size:12.5px; }}
   #dnPaper .sign div {{ border-top:1px solid #333; padding-top:6px; }}
+  #dnPaper .dn-sheet + .dn-sheet {{ margin-top:26px; padding-top:18px; border-top:2px dashed #c8cdd4; }}
   @media print {{ body {{ padding:0; background:#fff; }} .wrap {{ box-shadow:none; border-radius:0; }} .month-bar {{ display:none; }}
     body.dn-print .wrap {{ display:none !important; }}
     body.dn-print #dnModal {{ position:static !important; display:block !important; background:#fff !important; padding:0 !important; }}
     body.dn-print #dnModal .noprint {{ display:none !important; }}
     body.dn-print #dnPaper {{ max-width:none !important; box-shadow:none !important; border:0 !important; padding:0 !important; }}
+    body.dn-print #dnPaper .dn-sheet + .dn-sheet {{ page-break-before:always; break-before:page; border-top:0 !important; margin-top:0 !important; padding-top:0 !important; }}
   }}
 </style>
 </head>
@@ -167,11 +169,11 @@ TMPL = """<!DOCTYPE html>
   </div>
   <div style="margin-top:18px;border:1px solid #cfe3d4;border-radius:10px;padding:12px 14px;background:#f7fdf9">
     <h2 style="font-size:15px;margin:0 0 4px;color:#0f7a3d">🧾 生成发货单</h2>
-    <div style="font-size:12px;color:#8a8f98;margin-bottom:10px">固定信息填一次就自动记住（本机保存）；每次只需在下面填 <b>本次发货数量</b> → 点「生成发货单」，可直接打印 / 存 PDF / 复制 / 邮件发出。所有供应商用同一套模板。</div>
+    <div style="font-size:12px;color:#8a8f98;margin-bottom:10px">固定信息已设好；每次只需在下面填 <b>本次发货数量</b> → 点「生成发货单」。<b style="color:#0f7a3d">若同时有凯华9000厂和济南厂的件，会自动拆成两张发货单（各自单号/抬头/地址/收货人）。</b></div>
     <div class="dn-grid" style="margin-bottom:12px">
       <div><label>发货单位 <span style="color:#0f7a3d;font-size:11px">固定</span></label><input id="dnFrom" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>发货联系人 / 电话 <span style="color:#0f7a3d;font-size:11px">固定</span></label><input id="dnFromContact" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
-      <div><label>收货工厂（选择后自动带出地址/联系人）</label><select id="dnPlant" onchange="applyPlant()" style="width:100%;padding:6px 8px;border:1px solid #dfe2e7;border-radius:6px;font-size:12px;background:#fff"></select></div>
+      <div><label>默认收货工厂 <span style="color:#8a8f98;font-size:11px">未标注零件归此厂</span></label><select id="dnPlant" onchange="applyPlant()" style="width:100%;padding:6px 8px;border:1px solid #dfe2e7;border-radius:6px;font-size:12px;background:#fff"></select></div>
       <div><label>收货单位</label><input id="dnTo" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>收货联系人 / 电话</label><input id="dnContact" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>收货地址</label><input id="dnAddr" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
@@ -508,15 +510,24 @@ function splitPart(p) {{
   var i = p.lastIndexOf(' ');
   return i < 0 ? {{name: p, code: ''}} : {{name: p.slice(0, i), code: p.slice(i + 1)}};
 }}
+function plantOf(name, def) {{
+  if (name.indexOf('济南') >= 0) return '凯华济南工厂';
+  if (name.indexOf('9000') >= 0) return '凯华9000工厂';
+  return def || '凯华9000工厂';
+}}
 function renderDN() {{
   var rg = thisWeekRange();
   DN_ROWS = [];
-  var h = '<table><thead><tr><th style="min-width:175px">物料号</th><th>零件名称</th><th>本周计划</th><th>本次发货数量</th></tr></thead><tbody>';
+  var def = dnEl('dnPlant').value || '凯华9000工厂';
+  var h = '<table><thead><tr><th style="min-width:175px">物料号</th><th>零件名称</th><th>收货工厂</th><th>本周计划</th><th>本次发货数量</th></tr></thead><tbody>';
   DATA.forEach(function (r, i) {{
     var sp = splitPart(r.part), plan = planFor(r, rg[0], rg[1]);
     var mat = r.mat || MAT_MAP[sp.name] || sp.code || '';
-    DN_ROWS.push({{mat: mat, name: sp.name, plan: plan}});
+    var pl = plantOf(sp.name, def);
+    DN_ROWS.push({{mat: mat, name: sp.name, plan: plan, plant: pl}});
+    var tag = pl.indexOf('济南') >= 0 ? '<span style="color:#b45309;font-weight:600">济南厂</span>' : '<span style="color:#8a8f98">9000厂</span>';
     h += '<tr><td style="font-size:11px;font-family:monospace">' + mat + '</td><td class="part">' + sp.name + '</td>' +
+      '<td>' + tag + '</td>' +
       '<td>' + (plan ? plan.toLocaleString() : '<span style="color:#c8cbd0">—</span>') + '</td>' +
       '<td><input class="dnq" data-k="' + i + '" type="number" min="0" placeholder="填发货数" style="width:112px;padding:4px;border:1px solid #dfe2e7;border-radius:6px;text-align:right"></td></tr>';
   }});
@@ -528,9 +539,27 @@ function collectDN() {{
   DN_ROWS.forEach(function (x, k) {{
     var el = document.querySelector('.dnq[data-k="' + k + '"]');
     var q = (el && el.value !== '') ? parseInt(el.value, 10) : 0;
-    if (q > 0) {{ items.push({{mat: x.mat, name: x.name, qty: q}}); }}
+    if (q > 0) {{ items.push({{mat: x.mat, name: x.name, qty: q, plant: x.plant}}); }}
   }});
   return items;
+}}
+function groupByPlant(items) {{
+  var g = {{}}, order = [];
+  items.forEach(function (x) {{
+    var k = x.plant || '凯华9000工厂';
+    if (!g[k]) {{ g[k] = []; order.push(k); }}
+    g[k].push(x);
+  }});
+  order.sort(function (a, b) {{
+    var ja = a.indexOf('济南') >= 0 ? 1 : 0, jb = b.indexOf('济南') >= 0 ? 1 : 0;
+    return ja - jb;
+  }});
+  return order.map(function (k) {{ return {{plant: k, items: g[k]}}; }});
+}}
+function plantMeta(plant, base) {{
+  var p = DN_PLANTS[plant] || DN_PLANTS['凯华9000工厂'];
+  return {{from: base.from, fromContact: base.fromContact, plant: plant,
+          to: p.to, addr: p.addr, contact: p.contact, date: base.date}};
 }}
 function dnNo() {{
   var d = new Date(), key = 'dn_seq_' + SUPPLIER + '_' + dstr(d);
@@ -544,16 +573,14 @@ function dnMetaNow() {{
           to: dnEl('dnTo').value, addr: dnEl('dnAddr').value,
           contact: dnEl('dnContact').value, date: dnEl('dnDate').value || dstr(new Date())}};
 }}
-function genDN() {{
-  var items = collectDN(), st = dnEl('dnState');
-  if (!items.length) {{ st.textContent = '请先填本次发货数量（可只填有发的零件）'; return; }}
-  var m = dnMetaNow(), no = dnNo();
+function buildSheet(m, no, items) {{
   var tot = items.reduce(function (s, x) {{ return s + x.qty; }}, 0);
   var rows = items.map(function (x, i) {{
     return '<tr><td>' + (i + 1) + '</td><td style="font-family:monospace;font-size:11.5px">' + x.mat + '</td>' +
       '<td class="nm">' + x.name + '</td><td>件</td><td style="text-align:right;font-weight:600">' + x.qty.toLocaleString() + '</td></tr>';
   }}).join('');
-  var html = '<h2>发 货 单</h2><div class="en">DELIVERY NOTE</div>' +
+  return '<div class="dn-sheet">' +
+    '<h2>发 货 单</h2><div class="en">DELIVERY NOTE</div>' +
     '<div class="dmeta">' +
       '<div><b>单号：</b>' + no + '</div><div><b>发货日期：</b>' + m.date + '</div>' +
       '<div><b>发货单位：</b>' + (m.from || '') + '</div><div><b>收货单位：</b>' + (m.to || '') + '</div>' +
@@ -565,19 +592,30 @@ function genDN() {{
     '<tr><td colspan="4" style="text-align:right;font-weight:700">合计</td><td style="text-align:right;font-weight:700">' + tot.toLocaleString() + '</td></tr>' +
     '</tbody></table>' +
     '<div class="sign"><div>发货人（签字/盖章）：</div><div>收货人（签字/盖章）：</div></div>' +
-    '<div class="noprint" style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">' +
-      '<button onclick="printDN()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer">🖨 打印 / 存PDF</button>' +
-      '<button onclick="mailDN()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer">📧 发邮件</button>' +
-      '<button onclick="closeDN()" style="background:#fff;color:#8a8f98;border:1px solid #e4e6ea;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer">关闭</button>' +
     '</div>';
-  dnEl('dnPaper').innerHTML = html;
+}}
+function dnButtons() {{
+  return '<div class="noprint" style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">' +
+    '<button onclick="printDN()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer">🖨 打印 / 存PDF</button>' +
+    '<button onclick="mailDN()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer">📧 发邮件</button>' +
+    '<button onclick="closeDN()" style="background:#fff;color:#8a8f98;border:1px solid #e4e6ea;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer">关闭</button>' +
+    '</div>';
+}}
+function genDN() {{
+  var items = collectDN(), st = dnEl('dnState');
+  if (!items.length) {{ st.textContent = '请先填本次发货数量（可只填有发的零件）'; return; }}
+  var base = dnMetaNow(), groups = groupByPlant(items), sheets = [], info = [];
+  groups.forEach(function (g) {{
+    var m = plantMeta(g.plant, base), no = dnNo();
+    sheets.push(buildSheet(m, no, g.items));
+    var t = g.items.reduce(function (s, x) {{ return s + x.qty; }}, 0);
+    var short = g.plant.indexOf('济南') >= 0 ? '济南厂' : '9000厂';
+    info.push(short + ' ' + g.items.length + '项/' + t.toLocaleString() + '件 → ' + no);
+  }});
+  dnEl('dnPaper').innerHTML = sheets.join('') + dnButtons();
   dnEl('dnModal').style.display = 'block';
-  var hasJN = items.some(function (x) {{ return x.name.indexOf('济南') >= 0; }});
-  var hasMain = items.some(function (x) {{ return x.name.indexOf('济南') < 0; }});
-  var warn = '';
-  if (m.plant.indexOf('济南') < 0 && hasJN) {{ warn = ' ⚠️ 明细含济南厂零件，但收货工厂是9000厂，请核对'; }}
-  if (m.plant.indexOf('济南') >= 0 && !hasJN && hasMain) {{ warn = ' ⚠️ 收货工厂选了济南厂，但明细全是9000厂零件'; }}
-  st.textContent = '已生成 ' + no + '（' + items.length + ' 项 / ' + tot.toLocaleString() + ' 件）' + warn;
+  st.textContent = '已生成 ' + groups.length + ' 张发货单：' + info.join('　｜　') +
+    (groups.length > 1 ? '（打印时自动分页）' : '');
 }}
 function printDN() {{
   document.body.classList.add('dn-print');
@@ -588,21 +626,35 @@ function closeDN() {{ dnEl('dnModal').style.display = 'none'; }}
 function copyDN() {{
   var items = collectDN(), st = dnEl('dnState');
   if (!items.length) {{ st.textContent = '请先填本次发货数量'; return; }}
-  var m = dnMetaNow(), txt = '【发货单】' + (m.from || '') + ' → ' + (m.to || '') + '（' + (m.plant || '') + '）  ' + m.date + NL;
-  txt += '收货地址：' + (m.addr || '—') + NL + '收货联系人：' + (m.contact || '—') + NL + '发货联系人：' + (m.fromContact || '—') + NL + '——' + NL;
-  items.forEach(function (x, i) {{ txt += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
-  txt += '合计：' + items.reduce(function (s, x) {{ return s + x.qty; }}, 0) + ' 件';
-  if (navigator.clipboard) {{ navigator.clipboard.writeText(txt).then(function () {{ st.textContent = '已复制，可直接粘贴到微信发给对接人'; }}).catch(function () {{ window.prompt('复制以下内容：', txt); }}); }}
+  var base = dnMetaNow(), txt = '', groups = groupByPlant(items);
+  groups.forEach(function (g, gi) {{
+    var m = plantMeta(g.plant, base);
+    var t = g.items.reduce(function (s, x) {{ return s + x.qty; }}, 0);
+    if (gi) txt += NL + '════════' + NL;
+    txt += '【发货单】' + (m.from || '') + ' → ' + (m.to || '') + '（' + (m.plant || '') + '）  ' + m.date + NL;
+    txt += '收货地址：' + (m.addr || '—') + NL + '收货联系人：' + (m.contact || '—') + NL + '发货联系人：' + (m.fromContact || '—') + NL;
+    g.items.forEach(function (x, i) {{ txt += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
+    txt += '合计：' + t + ' 件' + NL;
+  }});
+  if (navigator.clipboard) {{ navigator.clipboard.writeText(txt).then(function () {{ st.textContent = '已复制（' + groups.length + ' 张单），可直接粘贴到微信'; }}).catch(function () {{ window.prompt('复制以下内容：', txt); }}); }}
   else {{ window.prompt('复制以下内容：', txt); }}
 }}
 function mailDN() {{
-  var items = collectDN(), body = '发货单明细：' + NL, m = dnMetaNow();
-  items.forEach(function (x, i) {{ body += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
-  body += '合计 ' + items.reduce(function (s, x) {{ return s + x.qty; }}, 0) + ' 件' + NL + NL +
-    '发货单位：' + (m.from || '') + '（' + (m.fromContact || '') + '）' + NL + '收货单位：' + (m.to || '') + '（' + (m.plant || '') + '）' + NL +
-    '收货地址：' + (m.addr || '') + NL + '收货联系人：' + (m.contact || '') + NL +
-    '发货日期：' + m.date + NL + NL + '（发货单原件请打印盖章后随货或拍照发送）';
-  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + encodeURIComponent('【发货单】' + (m.from || '') + ' ' + m.date) + '&body=' + encodeURIComponent(body);
+  var items = collectDN(), base = dnMetaNow(), body = '', groups = groupByPlant(items);
+  groups.forEach(function (g, gi) {{
+    var m = plantMeta(g.plant, base);
+    var t = g.items.reduce(function (s, x) {{ return s + x.qty; }}, 0);
+    if (gi) body += NL + '════════' + NL + NL;
+    body += '发货单明细：' + NL;
+    g.items.forEach(function (x, i) {{ body += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
+    body += '合计 ' + t + ' 件' + NL + NL +
+      '发货单位：' + (m.from || '') + '（' + (m.fromContact || '') + '）' + NL +
+      '收货单位：' + (m.to || '') + '（' + (m.plant || '') + '）' + NL +
+      '收货地址：' + (m.addr || '') + NL + '收货联系人：' + (m.contact || '') + NL +
+      '发货日期：' + m.date + NL;
+  }});
+  body += NL + '（发货单原件请打印盖章后随货或拍照发送）';
+  location.href = 'mailto:' + RECEIVER_EMAIL + '?subject=' + encodeURIComponent('【发货单】' + (base.from || '') + ' ' + base.date + (groups.length > 1 ? '（' + groups.length + '张）' : '')) + '&body=' + encodeURIComponent(body);
 }}
 function resetDN() {{
   document.querySelectorAll('.dnq').forEach(function (e) {{ e.value = ''; }});
