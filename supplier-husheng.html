@@ -88,9 +88,9 @@
     <div style="font-size:12px;color:#8a8f98;margin-bottom:10px">固定信息填一次就自动记住（本机保存）；每次只需在下面填 <b>本次发货数量</b> → 点「生成发货单」，可直接打印 / 存 PDF / 复制 / 邮件发出。所有供应商用同一套模板。</div>
     <div class="dn-grid" style="margin-bottom:12px">
       <div><label>发货单位</label><input id="dnFrom" oninput="saveDNMeta()"></div>
-      <div><label>收货单位</label><input id="dnTo" oninput="saveDNMeta()"></div>
+      <div><label>收货单位 <span style="color:#0f7a3d;font-size:11px">固定</span></label><input id="dnTo" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>收货地址</label><input id="dnAddr" oninput="saveDNMeta()"></div>
-      <div><label>联系人 / 电话</label><input id="dnContact" oninput="saveDNMeta()"></div>
+      <div><label>联系人 / 电话 <span style="color:#0f7a3d;font-size:11px">固定</span></label><input id="dnContact" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>单号前缀</label><input id="dnPrefix" oninput="saveDNMeta()"></div>
       <div><label>发货日期</label><input id="dnDate" type="date" onchange="saveDNMeta()"></div>
     </div>
@@ -386,22 +386,23 @@ function copyMail() {
 // ===== 发货单生成（所有供应商同一模板）=====
 const DN_META_KEY = 'dn_meta_' + SUPPLIER;
 const DN_PREFIX = {'宁波互盛': 'HS', '江苏诚丰': 'CF', '新久玥': 'XJY', '上海泰瑞·自制': 'TR'};
-const DN_DEFAULTS = {from: SUPPLIER, to: '常州臻畅汽车配件有限公司', addr: '', contact: '', prefix: (DN_PREFIX[SUPPLIER] || 'DN')};
+const DN_FIXED = {to: '常州臻畅汽车配件有限公司', contact: '曹旭锋 13671667491'};
+const DN_DEFAULTS = {from: SUPPLIER, to: DN_FIXED.to, addr: '', contact: DN_FIXED.contact, prefix: (DN_PREFIX[SUPPLIER] || 'DN')};
 let DN_META = null, DN_ROWS = [];
 function dnEl(id) { return document.getElementById(id); }
 function loadDNMeta() {
   try { DN_META = JSON.parse(localStorage.getItem(DN_META_KEY) || 'null'); } catch (e) { DN_META = null; }
   if (!DN_META) { DN_META = Object.assign({}, DN_DEFAULTS); }
   dnEl('dnFrom').value = DN_META.from || '';
-  dnEl('dnTo').value = DN_META.to || '';
+  dnEl('dnTo').value = DN_FIXED.to;
   dnEl('dnAddr').value = DN_META.addr || '';
-  dnEl('dnContact').value = DN_META.contact || '';
+  dnEl('dnContact').value = DN_FIXED.contact;
   dnEl('dnPrefix').value = DN_META.prefix || '';
   dnEl('dnDate').value = DN_META.date || dstr(new Date());
 }
 function saveDNMeta() {
-  DN_META = {from: dnEl('dnFrom').value, to: dnEl('dnTo').value, addr: dnEl('dnAddr').value,
-             contact: dnEl('dnContact').value, prefix: dnEl('dnPrefix').value, date: dnEl('dnDate').value};
+  DN_META = {from: dnEl('dnFrom').value, to: DN_FIXED.to, addr: dnEl('dnAddr').value,
+             contact: DN_FIXED.contact, prefix: dnEl('dnPrefix').value, date: dnEl('dnDate').value};
   localStorage.setItem(DN_META_KEY, JSON.stringify(DN_META));
 }
 function splitPart(p) {
