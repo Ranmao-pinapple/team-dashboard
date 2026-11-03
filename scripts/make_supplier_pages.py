@@ -8,6 +8,59 @@ BASE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
 # ---------- 读取数据 ----------
 orders = json.load(open(f"{BASE}/orders.json"))
 YEAR = orders.get("year", 2026)
+
+# 客户物料号（51 开头那串），从订单台账 orders_data.json 的 part_code 取
+# 键同时放「零件名(去掉末尾图号)」和「完整 part」，前端按零件名匹配
+def _name_of(p):
+    p = (p or "").strip()
+    i = p.rfind(" ")
+    return p[:i] if i > 0 else p
+
+MAT_MAP = {}
+try:
+    _od = json.load(open(f"{BASE}/orders_data.json"))
+    for _o in _od.get("orders", []):
+        _p = (_o.get("part") or "").strip()
+        _c = (_o.get("part_code") or "").strip()
+        if _p and _c:
+            MAT_MAP.setdefault(_name_of(_p), _c)
+            MAT_MAP.setdefault(_p, _c)
+except Exception:
+    pass
+# data/part_mat.json 是汇总过的「零件名→物料号」映射，优先级高于台账
+try:
+    _pm = json.load(open(f"{BASE}/part_mat.json"))
+    for _k, _v in (_pm.get("norm") or {}).items():
+        MAT_MAP.setdefault(_k, _v)
+    for _k, _v in (_pm.get("exact") or {}).items():
+        MAT_MAP.setdefault(_k, _v)
+except Exception:
+    pass
+
+
+def _norm(s):
+    s = (s or "").strip()
+    for ch in " -_()（）·×*/　":
+        s = s.replace(ch, "")
+    return s.lower()
+
+
+def mat_for(part):
+    """零件名 → 客户物料号(51开头)；查不到返回空串"""
+    p = (part or "").strip()
+    i = p.rfind(" ")
+    nm = p[:i] if i > 0 else p
+    hit = MAT_MAP.get(nm) or MAT_MAP.get(p) or MAT_MAP.get(_norm(nm)) or MAT_MAP.get(_norm(p))
+    if hit and hit.startswith("51"):
+        return hit
+    n = _norm(nm)
+    for k, v in MAT_MAP.items():
+        if not v.startswith("51"):
+            continue
+        nk = _norm(k)
+        if nk and (nk == n or nk.startswith(n) or n in nk):
+            return v
+    return ""
 BASE_MONTHS = ["6", "7", "8", "9"]      # 固定显示的基础月份(和看板一致)
 MONTH_NAMES = {"6": "6月", "7": "7月", "8": "8月", "9": "9月"}
 
@@ -140,6 +193,7 @@ TMPL = """<!DOCTYPE html>
 </div>
 <script>
 const SUPPLIER = {supplier_json};
+const MAT_MAP = {mat_map_json};   // 零件名 → 客户物料号(51开头)
 const DATA = {rows_json};
 const YEAR = {year};
 const MONTHS = {months_json};
@@ -457,11 +511,12 @@ function splitPart(p) {{
 function renderDN() {{
   var rg = thisWeekRange();
   DN_ROWS = [];
-  var h = '<table><thead><tr><th style="min-width:150px">件号</th><th>零件名称</th><th>本周计划</th><th>本次发货数量</th></tr></thead><tbody>';
+  var h = '<table><thead><tr><th style="min-width:175px">物料号</th><th>零件名称</th><th>本周计划</th><th>本次发货数量</th></tr></thead><tbody>';
   DATA.forEach(function (r, i) {{
     var sp = splitPart(r.part), plan = planFor(r, rg[0], rg[1]);
-    DN_ROWS.push({{code: sp.code, name: sp.name, plan: plan}});
-    h += '<tr><td style="font-size:11px;font-family:monospace">' + sp.code + '</td><td class="part">' + sp.name + '</td>' +
+    var mat = r.mat || MAT_MAP[sp.name] || sp.code || '';
+    DN_ROWS.push({{mat: mat, name: sp.name, plan: plan}});
+    h += '<tr><td style="font-size:11px;font-family:monospace">' + mat + '</td><td class="part">' + sp.name + '</td>' +
       '<td>' + (plan ? plan.toLocaleString() : '<span style="color:#c8cbd0">—</span>') + '</td>' +
       '<td><input class="dnq" data-k="' + i + '" type="number" min="0" placeholder="填发货数" style="width:112px;padding:4px;border:1px solid #dfe2e7;border-radius:6px;text-align:right"></td></tr>';
   }});
@@ -473,7 +528,7 @@ function collectDN() {{
   DN_ROWS.forEach(function (x, k) {{
     var el = document.querySelector('.dnq[data-k="' + k + '"]');
     var q = (el && el.value !== '') ? parseInt(el.value, 10) : 0;
-    if (q > 0) {{ items.push({{code: x.code, name: x.name, qty: q}}); }}
+    if (q > 0) {{ items.push({{mat: x.mat, name: x.name, qty: q}}); }}
   }});
   return items;
 }}
@@ -495,7 +550,7 @@ function genDN() {{
   var m = dnMetaNow(), no = dnNo();
   var tot = items.reduce(function (s, x) {{ return s + x.qty; }}, 0);
   var rows = items.map(function (x, i) {{
-    return '<tr><td>' + (i + 1) + '</td><td style="font-family:monospace;font-size:11.5px">' + x.code + '</td>' +
+    return '<tr><td>' + (i + 1) + '</td><td style="font-family:monospace;font-size:11.5px">' + x.mat + '</td>' +
       '<td class="nm">' + x.name + '</td><td>件</td><td style="text-align:right;font-weight:600">' + x.qty.toLocaleString() + '</td></tr>';
   }}).join('');
   var html = '<h2>发 货 单</h2><div class="en">DELIVERY NOTE</div>' +
@@ -505,7 +560,7 @@ function genDN() {{
       '<div><b>发货联系人/电话：</b>' + (m.fromContact || '—') + '</div><div><b>收货联系人/电话：</b>' + (m.contact || '—') + '</div>' +
       '<div style="grid-column:1 / -1"><b>收货地址：</b>' + (m.addr || '—') + '（' + (m.plant || '') + '）</div>' +
     '</div>' +
-    '<table><thead><tr><th style="width:44px">序号</th><th style="width:190px">件号</th><th>零件名称</th><th style="width:52px">单位</th><th style="width:90px">数量</th></tr></thead><tbody>' +
+    '<table><thead><tr><th style="width:44px">序号</th><th style="width:200px">物料号</th><th>零件名称</th><th style="width:52px">单位</th><th style="width:90px">数量</th></tr></thead><tbody>' +
     rows +
     '<tr><td colspan="4" style="text-align:right;font-weight:700">合计</td><td style="text-align:right;font-weight:700">' + tot.toLocaleString() + '</td></tr>' +
     '</tbody></table>' +
@@ -535,14 +590,14 @@ function copyDN() {{
   if (!items.length) {{ st.textContent = '请先填本次发货数量'; return; }}
   var m = dnMetaNow(), txt = '【发货单】' + (m.from || '') + ' → ' + (m.to || '') + '（' + (m.plant || '') + '）  ' + m.date + NL;
   txt += '收货地址：' + (m.addr || '—') + NL + '收货联系人：' + (m.contact || '—') + NL + '发货联系人：' + (m.fromContact || '—') + NL + '——' + NL;
-  items.forEach(function (x, i) {{ txt += (i + 1) + '. ' + x.code + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
+  items.forEach(function (x, i) {{ txt += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
   txt += '合计：' + items.reduce(function (s, x) {{ return s + x.qty; }}, 0) + ' 件';
   if (navigator.clipboard) {{ navigator.clipboard.writeText(txt).then(function () {{ st.textContent = '已复制，可直接粘贴到微信发给对接人'; }}).catch(function () {{ window.prompt('复制以下内容：', txt); }}); }}
   else {{ window.prompt('复制以下内容：', txt); }}
 }}
 function mailDN() {{
   var items = collectDN(), body = '发货单明细：' + NL, m = dnMetaNow();
-  items.forEach(function (x, i) {{ body += (i + 1) + '. ' + x.code + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
+  items.forEach(function (x, i) {{ body += (i + 1) + '. ' + x.mat + ' ' + x.name + '  ' + x.qty + ' 件' + NL; }});
   body += '合计 ' + items.reduce(function (s, x) {{ return s + x.qty; }}, 0) + ' 件' + NL + NL +
     '发货单位：' + (m.from || '') + '（' + (m.fromContact || '') + '）' + NL + '收货单位：' + (m.to || '') + '（' + (m.plant || '') + '）' + NL +
     '收货地址：' + (m.addr || '') + NL + '收货联系人：' + (m.contact || '') + NL +
@@ -567,12 +622,14 @@ def make_page(supplier, rows):
     names = {m: MONTH_NAMES.get(m, m + "月") for m in months}
     rows_data = [{
         "part": r["part"],
+        "mat": mat_for(r["part"]),
         "daily": {m: r.get("daily", {}).get(m, [0]*31) for m in months},
     } for r in rows]
     html = TMPL.format(
         supplier=supplier,
         supplier_json=json.dumps(supplier, ensure_ascii=False),
         rows_json=json.dumps(rows_data, ensure_ascii=False),
+        mat_map_json=json.dumps(MAT_MAP, ensure_ascii=False),
         year=YEAR,
         months_json=json.dumps(months),
         month_names_json=json.dumps(names, ensure_ascii=False),
