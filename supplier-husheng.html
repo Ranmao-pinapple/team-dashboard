@@ -93,7 +93,7 @@
       <div><label>收货单位</label><input id="dnTo" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>收货联系人 / 电话</label><input id="dnContact" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>收货地址</label><input id="dnAddr" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
-      <div><label>单号前缀</label><input id="dnPrefix" oninput="saveDNMeta()"></div>
+      <div><label>单号前缀 <span style="color:#0f7a3d;font-size:11px">固定</span></label><input id="dnPrefix" readonly style="background:#f2f4f6;color:#334155;cursor:not-allowed"></div>
       <div><label>发货日期</label><input id="dnDate" type="date" onchange="saveDNMeta()"></div>
     </div>
     <div id="dnBox" style="overflow-x:auto"></div>
@@ -387,7 +387,8 @@ function copyMail() {
 
 // ===== 发货单生成（所有供应商同一模板）=====
 const DN_META_KEY = 'dn_meta_' + SUPPLIER;
-const DN_PREFIX = {'宁波互盛': 'HS', '江苏诚丰': 'CF', '新久玥': 'XJY', '上海泰瑞·自制': 'TR'};
+const DN_PREFIX_FIXED = 'ZC';   // 统一用臻畅前缀，不暴露外协厂缩写
+const DN_PREFIX = {'宁波互盛': DN_PREFIX_FIXED, '江苏诚丰': DN_PREFIX_FIXED, '新久玥': DN_PREFIX_FIXED, '上海泰瑞·自制': DN_PREFIX_FIXED};
 const DN_SENDER = {name: '常州臻畅汽车配件有限公司', contact: '曹旭锋 13671667491'};
 const DN_PLANTS = {
   '凯华9000工厂': {to: '浙江凯华汽车科技有限公司', addr: '浙江省台州市三门县兴港大道7号', contact: '李星星 19332067820'},
@@ -413,12 +414,12 @@ function loadDNMeta() {
   dnEl('dnPlant').value = pk;
   dnEl('dnFrom').value = DN_SENDER.name;
   dnEl('dnFromContact').value = DN_SENDER.contact;
-  dnEl('dnPrefix').value = DN_META.prefix || '';
+  dnEl('dnPrefix').value = DN_PREFIX_FIXED;
   dnEl('dnDate').value = DN_META.date || dstr(new Date());
   applyPlant(pk);
 }
 function saveDNMeta() {
-  DN_META = {plant: dnEl('dnPlant').value, prefix: dnEl('dnPrefix').value, date: dnEl('dnDate').value};
+  DN_META = {plant: dnEl('dnPlant').value, prefix: DN_PREFIX_FIXED, date: dnEl('dnDate').value};
   localStorage.setItem(DN_META_KEY, JSON.stringify(DN_META));
 }
 function splitPart(p) {
