@@ -420,7 +420,7 @@ const DN_PREFIX = {{'宁波互盛': DN_PREFIX_FIXED, '江苏诚丰': DN_PREFIX_F
 const DN_SENDER = {{name: '常州臻畅汽车配件有限公司', contact: '曹旭锋 13671667491'}};
 const DN_PLANTS = {{
   '凯华9000工厂': {{to: '浙江凯华汽车科技有限公司', addr: '浙江省台州市三门县兴港大道7号', contact: '李星星 19332067820'}},
-  '凯华济南工厂': {{to: '浙江凯华汽车科技有限公司', addr: '山东省济南市济阳区同德街6号少海汇科创绿建产业园五号厂房三号门', contact: '马子航 19861918606'}}
+  '凯华济南工厂': {{to: '浙江靖凯模塑科技有限公司济南分公司', addr: '山东省济南市济阳区同德街6号少海汇科创绿建产业园五号厂房三号门', contact: '马子航 19861918606'}}
 }};
 const DN_DEFAULTS = {{plant: '凯华9000工厂', prefix: (DN_PREFIX[SUPPLIER] || 'DN')}};
 let DN_META = null, DN_ROWS = [];
