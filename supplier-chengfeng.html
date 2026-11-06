@@ -291,12 +291,28 @@ function planFor(r, s0, e0) {
     s += arr[d.getDate()-1] || 0;
     d.setDate(d.getDate() + 1);
   }
+  // 周计划：只有周总量、无具体日期 → 按交集天数比例计入
+  if (r.wkPlan) {
+    Object.keys(r.wkPlan).forEach(function (m) {
+      const w = r.wkPlan[m], mi = parseInt(m) - 1;
+      const ws = new Date(YEAR, mi, w.start), we = new Date(YEAR, mi, w.end);
+      const a = new Date(Math.max(ws.getTime(), new Date(s0).getTime()));
+      const b = new Date(Math.min(we.getTime(), new Date(e0).getTime()));
+      if (a <= b) {
+        const tot = Math.round((we - ws) / 86400000) + 1;
+        const hit = Math.round((b - a) / 86400000) + 1;
+        s += Math.round(w.qty * hit / tot);
+      }
+    });
+  }
   return s;
 }
 let SHIP_ROWS = [];
 function monthPlanOf(r) {
   const arr = (r.daily && r.daily[curMonth]) || [];
   let s = 0; for (let i = 0; i < arr.length; i++) s += (arr[i] || 0);
+  const w = (r.wkPlan && r.wkPlan[curMonth]) || null;
+  if (w) s += w.qty;
   return s;
 }
 function renderShip() {
@@ -446,7 +462,8 @@ const DN_PREFIX = {'宁波互盛': DN_PREFIX_FIXED, '江苏诚丰': DN_PREFIX_FI
 const DN_SENDER = {name: '常州臻畅汽车配件有限公司', contact: '曹旭锋 13671667491'};
 const DN_PLANTS = {
   '凯华9000工厂': {to: '浙江凯华汽车科技有限公司', addr: '浙江省台州市三门县兴港大道7号', contact: '李星星 19332067820'},
-  '凯华济南工厂': {to: '浙江靖凯模塑科技有限公司济南分公司', addr: '山东省济南市济阳区同德街6号少海汇科创绿建产业园五号厂房三号门', contact: '马子航 19861918606'}
+  '凯华济南工厂': {to: '浙江靖凯模塑科技有限公司济南分公司', addr: '山东省济南市济阳区同德街6号少海汇科创绿建产业园五号厂房三号门', contact: '马子航 19861918606'},
+  '凯华芜湖工厂': {to: '凯华汽车科技（安徽）有限公司', addr: '安徽省芜湖市南陵县许镇龙潭产业园', contact: '朱心蓝 13155330153'}
 };
 const DN_DEFAULTS = {plant: '凯华9000工厂', prefix: (DN_PREFIX[SUPPLIER] || 'DN')};
 let DN_META = null, DN_ROWS = [];
@@ -483,6 +500,7 @@ function splitPart(p) {
 function plantOf(name, def) {
   if (name.indexOf('济南') >= 0) return '凯华济南工厂';
   if (name.indexOf('9000') >= 0) return '凯华9000工厂';
+  if (name.indexOf('S56') >= 0) return '凯华芜湖工厂';
   return def || '凯华9000工厂';
 }
 function renderDN() {
@@ -495,7 +513,7 @@ function renderDN() {
     var mat = r.mat || MAT_MAP[sp.name] || sp.code || '';
     var pl = plantOf(sp.name, def);
     DN_ROWS.push({mat: mat, name: sp.name, plan: plan, plant: pl});
-    var tag = pl.indexOf('济南') >= 0 ? '<span style="color:#b45309;font-weight:600">济南厂</span>' : '<span style="color:#8a8f98">9000厂</span>';
+    var tag = pl.indexOf('济南') >= 0 ? '<span style="color:#b45309;font-weight:600">济南厂</span>' : (pl.indexOf('芜湖') >= 0 ? '<span style="color:#0f7a3d;font-weight:600">芜湖厂</span>' : '<span style="color:#8a8f98">9000厂</span>');
     h += '<tr><td style="font-size:11px;font-family:monospace">' + mat + '</td><td class="part">' + sp.name + '</td>' +
       '<td>' + tag + '</td>' +
       '<td>' + (plan ? plan.toLocaleString() : '<span style="color:#c8cbd0">—</span>') + '</td>' +
