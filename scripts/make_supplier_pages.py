@@ -220,9 +220,16 @@ function render() {{
   let body = '', grand = 0;
   DATA.forEach(r => {{
     const arr = r.daily[curMonth] || [];
+    const wk = (r.wkPlan && r.wkPlan[curMonth]) || null;
     let sum = 0;
     let cells = '';
     for (let d=0; d<dim; d++) {{
+      if (wk && (d+1)===wk.start) {{
+        cells += `<td colspan="${{wk.end-wk.start+1}}" style="background:#e8f0fe;font-weight:700;color:#1f4e79">本周计划 ${{fmt(wk.qty)}}</td>`;
+        sum += wk.qty;
+        d = wk.end - 1;
+        continue;
+      }}
       const v = arr[d] || 0;
       sum += v;
       const dt = new Date(YEAR, parseInt(curMonth)-1, d+1);
@@ -234,7 +241,18 @@ function render() {{
   }});
   body += `<tr class="total-row"><td>合计（{supplier}）</td>`;
   const arrs = DATA.map(r => r.daily[curMonth] || []);
+  const wkRanges = {{}};
+  DATA.forEach(r => {{ const w = (r.wkPlan && r.wkPlan[curMonth]) || null; if (w) wkRanges[w.start] = w; }});
   for (let d=0; d<dim; d++) {{
+    const w = wkRanges[d+1];
+    if (w) {{
+      let s = 0;
+      for (let i=d; i<=w.end-1; i++) {{ arrs.forEach(a => s += a[i]||0); }}
+      DATA.forEach(r => {{ const ww=(r.wkPlan&&r.wkPlan[curMonth])||null; if (ww && ww.start===w.start) s += ww.qty; }});
+      body += `<td colspan="${{w.end-w.start+1}}" style="background:#fff3cd;font-weight:700">${{s?fmt(s):''}}</td>`;
+      d = w.end - 1;
+      continue;
+    }}
     let s = 0; arrs.forEach(a => s += a[d]||0);
     body += `<td>${{s?fmt(s):''}}</td>`;
   }}
@@ -262,7 +280,7 @@ function mailtoFallback(subjRaw, bodyText) {{
 }}
 const CONFIRM_KEY = 'sup_confirm_' + SUPPLIER;
 function grandTotal(m) {{
-  return DATA.reduce((s,r)=>s+((r.daily[m]||[]).reduce((a,b)=>a+(b||0),0)),0);
+  return DATA.reduce((s,r)=>{{ const w=(r.wkPlan&&r.wkPlan[m])||null; return s+((r.daily[m]||[]).reduce((a,b)=>a+(b||0),0))+(w?w.qty:0); }},0);
 }}
 function renderConfirmState() {{
   const done = localStorage.getItem(CONFIRM_KEY);
@@ -714,6 +732,7 @@ def make_page(supplier, rows):
         "part": r["part"],
         "mat": mat_for(r["part"]),
         "daily": {m: r.get("daily", {}).get(m, [0]*31) for m in months},
+        "wkPlan": r.get("wkPlan") or {},
     } for r in rows]
     html = TMPL.format(
         supplier=supplier,
