@@ -12436,7 +12436,7 @@
   },
   {
    "part": "VF5-防水海绵 BEX37122460AA",
-   "project": "VF5",
+   "project": "VFe32",
    "proj": "凯华",
    "status": "live",
    "daily": {
@@ -12475,8 +12475,8 @@
     ]
    },
    "actual": {},
-   "makeType": null,
-   "supplier": "待定"
+   "makeType": "外协",
+   "supplier": "宁波互盛"
   },
   {
    "part": "VF5-左侧3M胶-2 BEX37122440AA",
@@ -12524,7 +12524,7 @@
   },
   {
    "part": "VF5-隔音海绵 BEX37122470AA",
-   "project": "VF5",
+   "project": "VFe32",
    "proj": "凯华",
    "status": "live",
    "daily": {
@@ -12563,8 +12563,8 @@
     ]
    },
    "actual": {},
-   "makeType": null,
-   "supplier": "待定"
+   "makeType": "外协",
+   "supplier": "宁波互盛"
   },
   {
    "part": "VF5-右侧3M胶-1 BEX37122431AA",
