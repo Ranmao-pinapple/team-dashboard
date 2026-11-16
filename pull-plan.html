@@ -433,10 +433,12 @@
 
     <div class="card" style="padding:10px 14px;margin:12px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <span style="font-weight:600;font-size:13px">📤 转发月拉动计划</span>
-      <button onclick="shareSupplier('husheng')" style="background:#f3e8ff;color:#8b5cf6;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer">宁波互盛 · 外协</button>
-      <button onclick="shareSupplier('chengfeng')" style="background:#fef3e2;color:#b45309;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer">江苏诚丰 · 外协</button>
-      <button onclick="shareSupplier('tairui')" style="background:#e0f2fe;color:#0369a1;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer">上海泰瑞 · 自制（内部生产计划）</button>
-      <span id="supTip" style="font-size:12px;color:var(--muted)"></span>
+      <a href="https://ranmao-pinapple.github.io/team-dashboard/supplier-husheng.html" target="_blank" rel="noopener" style="background:#f3e8ff;color:#8b5cf6;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">宁波互盛 · 外协 ↗</a>
+      <a href="https://ranmao-pinapple.github.io/team-dashboard/supplier-chengfeng.html" target="_blank" rel="noopener" style="background:#fef3e2;color:#b45309;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">江苏诚丰 · 外协 ↗</a>
+      <a href="https://ranmao-pinapple.github.io/team-dashboard/supplier-xinjiuyue.html" target="_blank" rel="noopener" style="background:#eef2ff;color:#4338ca;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">新久玥 · 外协 ↗</a>
+      <a href="https://ranmao-pinapple.github.io/team-dashboard/supplier-shuntuo.html" target="_blank" rel="noopener" style="background:#e6f7ef;color:#0f766e;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">常州顺拓 · 外协 ↗</a>
+      <a href="https://ranmao-pinapple.github.io/team-dashboard/pull-plan-tairui.html" target="_blank" rel="noopener" style="background:#e0f2fe;color:#0369a1;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">上海泰瑞 · 自制 ↗</a>
+      <span id="supTip" style="font-size:12px;color:var(--muted)">点开页面后右上角「···」可直接转发</span>
     </div>
 
     <div class="month-picker" id="monthPicker"></div>
@@ -706,7 +708,7 @@
 <script>
 // ===== 月拉动计划数据块（白猫脚本自动更新区域） =====
 const PULL_DATA = {
-  updatedAt: "2026-11-16 08:15",
+  updatedAt: "2026-11-13",
   year: 2026,
   rows: [
     {
@@ -1771,26 +1773,14 @@ const PULL_DATA = {
       actual: {}
     },
     {
-      part: "VF5-左侧3M胶-1 BEX37122430AA",
-      project: "VF5",
-      proj: "凯华",
-      status: "live",
-      makeType: "外协",
-      supplier: "常州顺拓",
-      daily: {
-        11: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      },
-      actual: {}
-    },
-    {
       part: "VF5-左侧3M胶-2 BEX37122440AA",
       project: "VF5",
       proj: "凯华",
       status: "live",
-      makeType: "外协",
-      supplier: "常州顺拓",
+      makeType: "None",
+      supplier: "待定",
       daily: {
-        11: [0, 0, 0, 0, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 0, 0, 6400, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        11: [0, 0, 0, 0, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       },
       actual: {}
     },
@@ -1811,10 +1801,10 @@ const PULL_DATA = {
       project: "VF5",
       proj: "凯华",
       status: "live",
-      makeType: "外协",
-      supplier: "常州顺拓",
+      makeType: "None",
+      supplier: "待定",
       daily: {
-        11: [0, 0, 0, 0, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 0, 0, 6400, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        11: [0, 0, 0, 0, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       },
       actual: {}
     },
@@ -1823,10 +1813,10 @@ const PULL_DATA = {
       project: "VF5",
       proj: "凯华",
       status: "live",
-      makeType: "外协",
-      supplier: "常州顺拓",
+      makeType: "None",
+      supplier: "待定",
       daily: {
-        11: [0, 0, 0, 0, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 0, 0, 6400, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        11: [0, 0, 0, 0, 0, 0, 0, 0, 2200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       },
       actual: {}
     }
