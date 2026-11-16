@@ -76,6 +76,7 @@ def supplier_rows(supplier):
 HUSHENG = supplier_rows("宁波互盛")
 CHENGFENG = supplier_rows("江苏诚丰")
 XINJIUYUE = supplier_rows("新久玥")
+SHUNTUO = supplier_rows("常州顺拓")
 # 自制件（上海泰瑞生产）→ 内部生产计划用页面, 与外协页同款表格但不带外协反馈区
 TAIRUI = [r for r in orders["rows"] if r.get("makeType") == "自制"]
 
@@ -539,7 +540,7 @@ function copyMail() {{
 // ===== 发货单生成（所有供应商同一模板）=====
 const DN_META_KEY = 'dn_meta_' + SUPPLIER;
 const DN_PREFIX_FIXED = 'ZC';   // 统一用臻畅前缀，不暴露外协厂缩写
-const DN_PREFIX = {{'宁波互盛': DN_PREFIX_FIXED, '江苏诚丰': DN_PREFIX_FIXED, '新久玥': DN_PREFIX_FIXED, '上海泰瑞·自制': DN_PREFIX_FIXED}};
+const DN_PREFIX = {{'宁波互盛': DN_PREFIX_FIXED, '江苏诚丰': DN_PREFIX_FIXED, '新久玥': DN_PREFIX_FIXED, '常州顺拓': DN_PREFIX_FIXED, '上海泰瑞·自制': DN_PREFIX_FIXED}};
 const DN_SENDER = {{name: '常州臻畅汽车配件有限公司', contact: '曹旭锋 13671667491'}};
 const DN_PLANTS = {{
   '凯华9000工厂': {{to: '浙江凯华汽车科技有限公司', addr: '浙江省台州市三门县兴港大道7号', contact: '李星星 19332067820'}},
@@ -768,6 +769,7 @@ pages = [
     ("supplier-husheng.html", "宁波互盛", HUSHENG),
     ("supplier-chengfeng.html", "江苏诚丰", CHENGFENG),
     ("supplier-xinjiuyue.html", "新久玥", XINJIUYUE),
+    ("supplier-shuntuo.html", "常州顺拓", SHUNTUO),
 ]
 
 OUT = os.path.dirname(BASE)  # 仓库根目录
