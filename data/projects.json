@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-19 09:05",
+ "updatedAt": "2026-11-19 09:07",
  "projects": [
   {
    "name": "VFe32",
@@ -1547,7 +1547,7 @@
   {
    "name": "AL01",
    "customer": "凯华",
-   "oem": "VINFAST",
+   "oem": "蔚来(NIO)",
    "product": "海绵 6个零件",
    "status": "closed",
    "rfqDate": "",
@@ -1599,6 +1599,11 @@
     {
      "date": "2026-11-19",
      "event": "⚫ 项目关闭：仅初步沟通/无零件清单与询价进展, 长期挂起；转归档, 客户重新推进可恢复",
+     "status": "done"
+    },
+    {
+     "date": "2026-11-19",
+     "event": "⚫ 更正主机厂：AL01 主机厂为蔚来(NIO)，原误填 VINFAST",
      "status": "done"
     }
    ],
