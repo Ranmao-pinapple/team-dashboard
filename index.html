@@ -2018,7 +2018,7 @@ const PO_DATA = {
 // 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
 // APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
 const PROJECT_DATA = {
-  updatedAt: "2026-11-19 09:28",
+  updatedAt: "2026-11-19 09:31",
   projects: [
     {
       name: "VFe32", customer: "凯华", oem: "VINFAST", product: "35个零件",
@@ -2094,11 +2094,11 @@ const PROJECT_DATA = {
     },
     {
       name: "ROX MCE", customer: "凯华", oem: "极石", product: "5个零件(骨架/延伸板毛毡)",
-      status: "active", rfqDate: "", phase: 1,
-      nextStep: "SOP 2026.11; 5件毛毡外协(宁波互盛·含税0.05元), 待补内部询价与APQP排期",
+      status: "won", rfqDate: "", phase: 4,
+      nextStep: "已定点；小批量交付中(宁波互盛外协5件·含税0.05元/件)；待客户批量订单与拉动计划",
       bomFiles: [],
-      phases: [{"phase": 1, "name": "计划和确定项目", "status": "doing", "planDate": "2026-11-19", "remark": "新建项目卡片(11/19 补入零件), 待补内部询价日期与APQP排期"}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
-      timeline: [{"date": "2026-11-19", "event": "🔵 新建项目卡片：补入外协零件(宁波互盛) 5件；SOP 2026.11; 5件毛毡外协(宁波互盛·含税0.05元), 待补内部询价与APQP排期", "status": "done"}],
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "2026-11-19", "remark": "客户已定点(11/19确认)"}, {"phase": 2, "name": "产品设计和开发", "status": "done", "planDate": "", "actualDate": "", "remark": "零件图纸/样件确认(按小批量交付倒推, 具体日期待补)"}, {"phase": 3, "name": "过程设计和开发", "status": "done", "planDate": "", "actualDate": "", "remark": "过程开发完成(宁波互盛外协, 排产确认)"}, {"phase": 4, "name": "产品和过程确认", "status": "doing", "planDate": "2026-11-19", "actualDate": "", "remark": "小批量交付中; PPAP/批量认可待客户确认"}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-11-19", "event": "🔵 新建项目卡片：补入外协零件(宁波互盛) 5件；SOP 2026.11; 5件毛毡外协(宁波互盛·含税0.05元), 待补内部询价与APQP排期", "status": "done"}, {"date": "2026-11-19", "event": "🟢 客户已定点 + 进入小批量交付(5件毛毡外协·宁波互盛, 含税0.05元/件)", "status": "done"}],
       parts: [{"code": "510000000000012985", "name": "ROX MCE-下骨架毛毡1 (22x22x1mm)（单车3件）", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000012986", "name": "ROX MCE-下骨架毛毡2（单车4件）", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000012987", "name": "ROX MCE-上骨架毛毡（单车2件）", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000013006", "name": "ROX MCE-副驾驶下延伸板毛毡-15200206AA（单车3件）", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}, {"code": "510000000000013594", "name": "ROX MCE-主驾驶下延伸板毛毡-65x8x1（单车2件）", "priceTax": 0.05, "pulled": false, "makeType": "外协", "supplier": "宁波互盛"}]
     },
     {
