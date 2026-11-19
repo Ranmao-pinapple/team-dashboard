@@ -1905,7 +1905,7 @@ const PO_DATA = {
 // 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
 // APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
 const PROJECT_DATA = {
-  updatedAt: "2026-11-19 08:46",
+  updatedAt: "2026-11-19 09:05",
   projects: [
     {
       name: "VFe32", customer: "凯华", oem: "VINFAST", product: "32个零件",
@@ -1953,51 +1953,6 @@ const PROJECT_DATA = {
       parts: [{"code": "510000000000017025", "name": "SHD密封板毛毡(12478375-1)", "priceTax": null, "pulled": false, "makeType": "外协", "supplier": "待定"}]
     },
     {
-      name: "VWCO", customer: "巴西大众(VWCO)", oem: "VW", product: "篷布 5个零件",
-      status: "active", rfqDate: "", phase: 1,
-      nextStep: "NDA已签；现阶段需提供大众集团下的审核证明",
-      bomFiles: [],
-      phases: [{"phase": 1, "name": "计划和确定项目", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "NDA已签，开发中；待提供大众集团审核证明(供应商资质)"}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
-      timeline: [{"date": "2026-08-05", "event": "项目登记：NDA已签，产品篷布，开发中", "status": "done"}],
-      parts: []
-    },
-    {
-      name: "AL01", customer: "凯华", oem: "VINFAST", product: "海绵 6个零件",
-      status: "active", rfqDate: "", phase: 1,
-      nextStep: "待补充：内部询价日期 / 零件清单 / 进度",
-      bomFiles: [],
-      phases: [{"phase": 1, "name": "计划和确定项目", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
-      timeline: [],
-      parts: []
-    },
-    {
-      name: "VFe32-3M海绵胶", customer: "凯华", oem: "VINFAST", product: "3M海绵胶",
-      status: "active", rfqDate: "", phase: 2,
-      nextStep: "图纸已收到，准备供小样 20片",
-      bomFiles: [],
-      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "2026-07-28", "remark": "项目启动，图纸确认"}, {"phase": 2, "name": "产品设计和开发", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "图纸已收到(7.28)，准备供小样20片"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
-      timeline: [{"date": "2026-07-28", "event": "图纸已收到", "status": "done"}, {"date": "2026-08-05", "event": "准备供小样20片", "status": "in_progress"}],
-      parts: []
-    },
-    {
-      name: "蔚来风管海绵", customer: "浙江鑫凯", oem: "蔚来(NIO)", product: "风管海绵",
-      status: "active", rfqDate: "", phase: 2,
-      nextStep: "材料报价已报；寄材料样阶段",
-      bomFiles: [],
-      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "", "remark": "项目启动"}, {"phase": 2, "name": "产品设计和开发", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "材料报价已报，寄材料样中"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
-      timeline: [{"date": "2026-08-05", "event": "材料报价已报", "status": "done"}, {"date": "2026-08-05", "event": "寄材料样阶段", "status": "in_progress"}],
-      parts: []
-    },
-    {
-      name: "CX835", customer: "凯华", oem: "长安福特烈马", product: "4个零件(吸音棉)",
-      status: "active", rfqDate: "2026-08-26", phase: 1,
-      nextStep: "等技术要求",
-      bomFiles: [],
-      phases: [{"phase": 1, "name": "计划和确定项目", "status": "doing", "planDate": "2026-08-26", "remark": "客户找我们报价, 内部启动(8/26); SOP目标2026.11"}],
-      timeline: [{"date": "2026-08-26", "event": "客户找我们报价, 内部启动", "status": "doing"}],
-      parts: [{"name": "CX835-右A吸音棉-RAA3-02534-AAW-04", "code": "510000000000012934", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "CX835-右风管吸音棉-RAA3-02534-AAW_06", "code": "510000000000013277", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "CX835-左A吸音棉-RAA3-02535-AAW-04", "code": "510000000000012928", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "CX835-左风管吸音棉-RAA3-02535-AAW_06", "code": "510000000000013276", "pulled": false, "makeType": "外协", "supplier": "待定"}]
-    },
-    {
       name: "EHEA", customer: "凯华", oem: "海豹06GT", product: "21个零件(吸音棉/海绵/毛毡)",
       status: "active", rfqDate: "2026-08-26", phase: 2,
       nextStep: "9/12样品认证合格；9/23排定三季度订单出货计划：三单合计562,077件(11件外协·新久玥) 分4等份两两并批 → 9/28发281,038件、10/5发281,039件(10/5前发完)，拉动计划已入看板",
@@ -2041,6 +1996,42 @@ const PROJECT_DATA = {
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "2026-09-16", "remark": "内部定点完成（奇瑞S56_X3/X3L 吸音棉14件）"}, {"phase": 2, "name": "产品设计和开发", "status": "doing", "planDate": "", "actualDate": "", "remark": "14件成本/定点单价已核（10-18）；制造方式已确认=全件自制(上海泰瑞)"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
       timeline: [{"date": "2026-09-14", "event": "收到凯华汽车科技(安徽)首单PO4500127228：S56_X3/X3L吸音棉5件/12,040件，含税单价与金额全部为0(未定价)，交期2026-09-25，收货地安徽芜湖南陵", "status": "done"}, {"date": "2026-09-16", "event": "内部定点完成：奇瑞S56_X3/X3L吸音棉14件，平均年产量50,000套(单车用量16件)，EOP 2029.12，交货地芜湖", "status": "done"}, {"date": "2026-09-18", "event": "各零件打样：5 个件号（51-12330 / 51-13896 / 51-13897 / 51-13898 / 51-13899）各做 5 件，共 25 件样品，样品清单已出，待送凯华确认", "status": "done"}, {"date": "2026-09-18", "event": "客户取消零件 51-12723（S56_X3_B下吸音棉）：不排产、不计年量与报价，刀模排版剔除", "status": "done"}, {"date": "2026-10-18", "event": "S56 价格更新(10/18)：13 件（51-12723 不生产）按单车 16 件加权，套成本 13.9319 / 套未税 17.0695 / 套含税 19.2886，毛利率 18.4%；首单 PO4500127228 回填含税 ¥23,239.66。表单合计行 15.9771/18.0542 为各件单价直接相加（未乘用量），已按加权重算", "status": "done"}, {"date": "2026-10-23", "event": "确认 S56 全部零件为自制、由上海泰瑞生产；同步客户拉动计划：10/3 到货需求 27,000 件、10/23 紧急需求 26,000 件（10 件）", "status": "done"}],
       parts: [{"name": "S56_X3L_右C下吸音棉4", "code": "510000000000013898", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_C上吸音棉1", "code": "510000000000012724", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_C上吸音棉2", "code": "510000000000012725", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_左下吸音棉3", "code": "510000000000012721", "pulled": false, "supplier": "待定"}, {"name": "S56_X3L_左C下吸音棉5", "code": "510000000000013897", "pulled": true, "supplier": "待定"}, {"name": "S56_X3L_右C下吸音棉5", "code": "510000000000013899", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_B下吸音棉", "code": "510000000000012723", "pulled": false, "supplier": "待定", "canceled": true, "remark": "客户取消（2026-09-18），不排产、不计年量与报价、不参与刀模排版"}, {"name": "S56_X3L_左C下吸音棉4", "code": "510000000000013896", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_吸音棉2", "code": "510000000000012330", "pulled": true, "supplier": "待定"}, {"name": "S56_X3_C下吸音棉1", "code": "510000000000012719", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_右下吸音棉2", "code": "510000000000012727", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_03T吸音棉1", "code": "510000000000012328", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_C上吸音棉3", "code": "510000000000012726", "pulled": false, "supplier": "待定"}, {"name": "S56_X3_左下吸音棉2", "code": "510000000000012720", "pulled": false, "supplier": "待定"}]
+    },
+    {
+      name: "VWCO", customer: "巴西大众(VWCO)", oem: "VW", product: "篷布 5个零件",
+      status: "closed", rfqDate: "", phase: 1,
+      nextStep: "项目已关闭(2026-11-19)：NDA已签, 长期等大众集团供应商审核证明, 无实质推进",
+      bomFiles: [],
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "NDA已签，开发中；待提供大众集团审核证明(供应商资质)"}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-08-05", "event": "项目登记：NDA已签，产品篷布，开发中", "status": "done"}, {"date": "2026-11-19", "event": "⚫ 项目关闭：NDA已签, 长期等大众集团供应商审核证明, 无实质推进；转归档, 客户重新推进可恢复", "status": "done"}],
+      parts: []
+    },
+    {
+      name: "AL01", customer: "凯华", oem: "VINFAST", product: "海绵 6个零件",
+      status: "closed", rfqDate: "", phase: 1,
+      nextStep: "项目已关闭(2026-11-19)：仅初步沟通/无零件清单与询价进展, 长期挂起",
+      bomFiles: [],
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 2, "name": "产品设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-11-19", "event": "⚫ 项目关闭：仅初步沟通/无零件清单与询价进展, 长期挂起；转归档, 客户重新推进可恢复", "status": "done"}],
+      parts: []
+    },
+    {
+      name: "蔚来风管海绵", customer: "浙江鑫凯", oem: "蔚来(NIO)", product: "风管海绵",
+      status: "closed", rfqDate: "", phase: 2,
+      nextStep: "项目已关闭(2026-11-19)：材料报价已报、寄材料样后无反馈, 长期pending",
+      bomFiles: [],
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "", "remark": "项目启动"}, {"phase": 2, "name": "产品设计和开发", "status": "in_progress", "planDate": "", "actualDate": "", "remark": "材料报价已报，寄材料样中"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-08-05", "event": "材料报价已报", "status": "done"}, {"date": "2026-08-05", "event": "寄材料样阶段", "status": "in_progress"}, {"date": "2026-11-19", "event": "⚫ 项目关闭：材料报价已报、寄材料样后无反馈, 长期pending；转归档, 客户重新推进可恢复", "status": "done"}],
+      parts: []
+    },
+    {
+      name: "CX835", customer: "凯华", oem: "长安福特烈马", product: "4个零件(吸音棉)",
+      status: "closed", rfqDate: "2026-08-26", phase: 1,
+      nextStep: "项目已关闭(2026-11-19)：8/26启动后等技术要求, 客户未再推进",
+      bomFiles: [],
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "doing", "planDate": "2026-08-26", "remark": "客户找我们报价, 内部启动(8/26); SOP目标2026.11"}],
+      timeline: [{"date": "2026-08-26", "event": "客户找我们报价, 内部启动", "status": "doing"}, {"date": "2026-11-19", "event": "⚫ 项目关闭：8/26启动后等技术要求, 客户未再推进；转归档, 客户重新推进可恢复", "status": "done"}],
+      parts: [{"name": "CX835-右A吸音棉-RAA3-02534-AAW-04", "code": "510000000000012934", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "CX835-右风管吸音棉-RAA3-02534-AAW_06", "code": "510000000000013277", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "CX835-左A吸音棉-RAA3-02535-AAW-04", "code": "510000000000012928", "pulled": false, "makeType": "外协", "supplier": "待定"}, {"name": "CX835-左风管吸音棉-RAA3-02535-AAW_06", "code": "510000000000013276", "pulled": false, "makeType": "外协", "supplier": "待定"}]
     }
   ]
 };
