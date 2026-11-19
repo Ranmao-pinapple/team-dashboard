@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-19 09:28",
+ "updatedAt": "2026-11-19 09:31",
  "projects": [
   {
    "name": "VFe32",
@@ -1200,41 +1200,41 @@
    "customer": "凯华",
    "oem": "极石",
    "product": "5个零件(骨架/延伸板毛毡)",
-   "status": "active",
+   "status": "won",
    "rfqDate": "",
-   "phase": 1,
-   "nextStep": "SOP 2026.11; 5件毛毡外协(宁波互盛·含税0.05元), 待补内部询价与APQP排期",
+   "phase": 4,
+   "nextStep": "已定点；小批量交付中(宁波互盛外协5件·含税0.05元/件)；待客户批量订单与拉动计划",
    "phases": [
     {
      "phase": 1,
      "name": "计划和确定项目",
-     "status": "doing",
+     "status": "done",
      "planDate": "2026-11-19",
-     "remark": "新建项目卡片(11/19 补入零件), 待补内部询价日期与APQP排期"
+     "remark": "客户已定点(11/19确认)"
     },
     {
      "phase": 2,
      "name": "产品设计和开发",
-     "status": "todo",
+     "status": "done",
      "planDate": "",
      "actualDate": "",
-     "remark": ""
+     "remark": "零件图纸/样件确认(按小批量交付倒推, 具体日期待补)"
     },
     {
      "phase": 3,
      "name": "过程设计和开发",
-     "status": "todo",
+     "status": "done",
      "planDate": "",
      "actualDate": "",
-     "remark": ""
+     "remark": "过程开发完成(宁波互盛外协, 排产确认)"
     },
     {
      "phase": 4,
      "name": "产品和过程确认",
-     "status": "todo",
-     "planDate": "",
+     "status": "doing",
+     "planDate": "2026-11-19",
      "actualDate": "",
-     "remark": ""
+     "remark": "小批量交付中; PPAP/批量认可待客户确认"
     },
     {
      "phase": 5,
@@ -1249,6 +1249,11 @@
     {
      "date": "2026-11-19",
      "event": "🔵 新建项目卡片：补入外协零件(宁波互盛) 5件；SOP 2026.11; 5件毛毡外协(宁波互盛·含税0.05元), 待补内部询价与APQP排期",
+     "status": "done"
+    },
+    {
+     "date": "2026-11-19",
+     "event": "🟢 客户已定点 + 进入小批量交付(5件毛毡外协·宁波互盛, 含税0.05元/件)",
      "status": "done"
     }
    ],
