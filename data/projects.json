@@ -1,10 +1,10 @@
 {
- "updatedAt": "2026-11-19 09:15",
+ "updatedAt": "2026-11-19 09:28",
  "projects": [
   {
    "name": "VFe32",
    "customer": "凯华",
-   "product": "32个零件",
+   "product": "35个零件",
    "status": "live",
    "rfqDate": "2026-05-25",
    "phase": 5,
@@ -85,6 +85,11 @@
     {
      "date": "2026-10-13",
      "event": "🟢 10/13 新增13件定点(泡棉2=宁波互盛 + 3M胶11=常州顺拓), 含税价0.07~0.84元/件, 年产值合计¥1,206,000(生命周期5年¥6,030,000), 无年降, 账期90天承兑; 510000000000010737/510000000000010738 两件交货地济南(济南靖凯), 其余台州",
+     "status": "done"
+    },
+    {
+     "date": "2026-11-19",
+     "event": "🟢 补入3件外协毛毡/棉毡(宁波互盛·含税0.03~0.09元): 棉毡BIN20000967 / 手套箱下挡板棉毡 / 毛毡BIN73031004AA",
      "status": "done"
     }
    ],
@@ -358,6 +363,30 @@
      "makeType": "外协",
      "supplier": "常州顺拓",
      "plant": "台州"
+    },
+    {
+     "code": "510000000000011032",
+     "name": "VFe32 棉毡 BIN20000967（单车4件）",
+     "priceTax": 0.03,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
+    },
+    {
+     "code": "510000000000010610",
+     "name": "VFe32 手套箱下挡板棉毡（单车4件）",
+     "priceTax": 0.05,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
+    },
+    {
+     "code": "510000000000011033",
+     "name": "VFe32 毛毡 BIN73031004AA（单车2件）",
+     "priceTax": 0.09,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
     }
    ]
   },
@@ -1163,6 +1192,174 @@
      "pulled": false,
      "makeType": "自制",
      "supplier": "上海泰瑞"
+    }
+   ]
+  },
+  {
+   "name": "ROX MCE",
+   "customer": "凯华",
+   "oem": "极石",
+   "product": "5个零件(骨架/延伸板毛毡)",
+   "status": "active",
+   "rfqDate": "",
+   "phase": 1,
+   "nextStep": "SOP 2026.11; 5件毛毡外协(宁波互盛·含税0.05元), 待补内部询价与APQP排期",
+   "phases": [
+    {
+     "phase": 1,
+     "name": "计划和确定项目",
+     "status": "doing",
+     "planDate": "2026-11-19",
+     "remark": "新建项目卡片(11/19 补入零件), 待补内部询价日期与APQP排期"
+    },
+    {
+     "phase": 2,
+     "name": "产品设计和开发",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    },
+    {
+     "phase": 3,
+     "name": "过程设计和开发",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    },
+    {
+     "phase": 4,
+     "name": "产品和过程确认",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    },
+    {
+     "phase": 5,
+     "name": "反馈评定纠正",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    }
+   ],
+   "timeline": [
+    {
+     "date": "2026-11-19",
+     "event": "🔵 新建项目卡片：补入外协零件(宁波互盛) 5件；SOP 2026.11; 5件毛毡外协(宁波互盛·含税0.05元), 待补内部询价与APQP排期",
+     "status": "done"
+    }
+   ],
+   "parts": [
+    {
+     "code": "510000000000012985",
+     "name": "ROX MCE-下骨架毛毡1 (22x22x1mm)（单车3件）",
+     "priceTax": 0.05,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
+    },
+    {
+     "code": "510000000000012986",
+     "name": "ROX MCE-下骨架毛毡2（单车4件）",
+     "priceTax": 0.05,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
+    },
+    {
+     "code": "510000000000012987",
+     "name": "ROX MCE-上骨架毛毡（单车2件）",
+     "priceTax": 0.05,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
+    },
+    {
+     "code": "510000000000013006",
+     "name": "ROX MCE-副驾驶下延伸板毛毡-15200206AA（单车3件）",
+     "priceTax": 0.05,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
+    },
+    {
+     "code": "510000000000013594",
+     "name": "ROX MCE-主驾驶下延伸板毛毡-65x8x1（单车2件）",
+     "priceTax": 0.05,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
+    }
+   ]
+  },
+  {
+   "name": "H97",
+   "customer": "凯华",
+   "oem": "岚图",
+   "product": "1个零件(前机舱泡沫垫)",
+   "status": "active",
+   "rfqDate": "",
+   "phase": 1,
+   "nextStep": "前机舱泡沫垫1件外协(宁波互盛·含税0.09元/单车6件), 待补内部询价与SOP",
+   "phases": [
+    {
+     "phase": 1,
+     "name": "计划和确定项目",
+     "status": "doing",
+     "planDate": "2026-11-19",
+     "remark": "新建项目卡片(11/19 补入零件), 待补内部询价日期与APQP排期"
+    },
+    {
+     "phase": 2,
+     "name": "产品设计和开发",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    },
+    {
+     "phase": 3,
+     "name": "过程设计和开发",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    },
+    {
+     "phase": 4,
+     "name": "产品和过程确认",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    },
+    {
+     "phase": 5,
+     "name": "反馈评定纠正",
+     "status": "todo",
+     "planDate": "",
+     "actualDate": "",
+     "remark": ""
+    }
+   ],
+   "timeline": [
+    {
+     "date": "2026-11-19",
+     "event": "🔵 新建项目卡片：补入外协零件(宁波互盛) 1件；前机舱泡沫垫1件外协(宁波互盛·含税0.09元/单车6件), 待补内部询价与SOP",
+     "status": "done"
+    }
+   ],
+   "parts": [
+    {
+     "code": "510000000000011450",
+     "name": "H97 前机舱泡沫垫（单车6件）",
+     "priceTax": 0.09,
+     "pulled": false,
+     "makeType": "外协",
+     "supplier": "宁波互盛"
     }
    ]
   },
