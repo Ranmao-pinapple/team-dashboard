@@ -540,7 +540,7 @@ function copyMail() {{
 // ===== 发货单生成（所有供应商同一模板）=====
 const DN_META_KEY = 'dn_meta_' + SUPPLIER;
 const DN_PREFIX_FIXED = 'ZC';   // 统一用臻畅前缀，不暴露外协厂缩写
-const DN_PREFIX = {{'宁波互盛': DN_PREFIX_FIXED, '江苏诚丰': DN_PREFIX_FIXED, '新久玥': DN_PREFIX_FIXED, '常州顺拓': DN_PREFIX_FIXED, '上海泰瑞·自制': DN_PREFIX_FIXED}};
+const DN_PREFIX = {{'宁波互盛': DN_PREFIX_FIXED, '江苏诚丰': DN_PREFIX_FIXED, '新久玥': DN_PREFIX_FIXED, '上海泰瑞·自制': DN_PREFIX_FIXED, '常州顺拓': DN_PREFIX_FIXED}};
 const DN_SENDER = {{name: '常州臻畅汽车配件有限公司', contact: '曹旭锋 13671667491'}};
 const DN_PLANTS = {{
   '凯华9000工厂': {{to: '浙江凯华汽车科技有限公司', addr: '浙江省台州市三门县兴港大道7号', contact: '李星星 19332067820'}},
