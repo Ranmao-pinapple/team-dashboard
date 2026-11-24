@@ -292,6 +292,15 @@ def main():
         if d is not None:
             data[block_name] = d
 
+    # 月拉动计划页：所有项目/零件都要列出，没有计划的行补 0
+    if data.get("PULL_DATA") and data.get("PROJECT_DATA"):
+        try:
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            import pull_plan_all_projects as _ppa
+            data["PULL_DATA"]["rows"] = _ppa.display_rows(data["PROJECT_DATA"], data["PULL_DATA"])
+        except Exception as e:
+            print("⚠️  展开全部项目失败, 只显示已有计划行:", e)
+
     print("=== 同步看板数据 ===")
     update_file("index.html", data)
     update_file("pull-plan.html", {
