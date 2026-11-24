@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24 11:40",
+  "updatedAt": "2026-11-24 11:28",
   "projects": [
     {
       "name": "VFe32",
@@ -123,7 +123,7 @@
           "code": "510000000000011011",
           "name": "VFe32防水海绵-侧裙",
           "priceTax": 0.05,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -131,7 +131,7 @@
           "code": "510000000000010920",
           "name": "VFe32后扰流板内部海绵条",
           "priceTax": 1.37,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -139,7 +139,7 @@
           "code": "510000000000011034",
           "name": "VFe32前通风盖板本体海绵条6x10x1301.3",
           "priceTax": 1,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -147,7 +147,7 @@
           "code": "510000000000010921",
           "name": "VFe32后保险杠安装支架密封圈",
           "priceTax": 0.05,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -179,7 +179,7 @@
           "code": "510000000000010919",
           "name": "VFe32防水垫圈",
           "priceTax": 0.05,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -203,7 +203,7 @@
           "code": "510000000000011006",
           "name": "VFe32防水海绵22x10.5x6mm",
           "priceTax": 0.1,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -323,7 +323,7 @@
           "code": "510000000000011009",
           "name": "VFe32 左侧3M胶 170.9x7x0.8mm BEX73020407",
           "priceTax": 0.84,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"
@@ -332,7 +332,7 @@
           "code": "510000000000011010",
           "name": "VFe32 右侧3M胶 170.9x7x0.8mm BEX73020408",
           "priceTax": 0.84,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"
@@ -341,7 +341,7 @@
           "code": "510000000000011039",
           "name": "VFe32 堵块（左）下方3M胶 45.2x127.8 BEX73050107AA",
           "priceTax": 0.7,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"
@@ -350,7 +350,7 @@
           "code": "510000000000011040",
           "name": "VFe32 堵块（右）下方3M胶 45.2x127.8 BEX73050109AA",
           "priceTax": 0.7,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"
@@ -1161,7 +1161,7 @@
         {
           "name": "ROX01前围毛毡",
           "code": "510000000000011238",
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -1233,14 +1233,14 @@
         {
           "name": "ROX左侧端盖板吸音棉 15200958AA",
           "code": "510000000000016422",
-          "pulled": false,
+          "pulled": true,
           "makeType": "自制",
           "supplier": "上海泰瑞"
         },
         {
           "name": "ROX右侧端盖板吸音棉 15200961AA",
           "code": "510000000000016423",
-          "pulled": false,
+          "pulled": true,
           "makeType": "自制",
           "supplier": "上海泰瑞"
         }
@@ -1337,7 +1337,7 @@
           "code": "510000000000013006",
           "name": "ROX MCE-副驾驶下延伸板毛毡-15200206AA（单车3件）",
           "priceTax": 0.05,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
@@ -1345,7 +1345,7 @@
           "code": "510000000000013594",
           "name": "ROX MCE-主驾驶下延伸板毛毡-65x8x1（单车2件）",
           "priceTax": 0.05,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         }
@@ -1413,7 +1413,7 @@
           "code": "510000000000011450",
           "name": "H97 前机舱泡沫垫（单车6件）",
           "priceTax": 0.09,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         }
@@ -1670,7 +1670,7 @@
         {
           "name": "S56_X3_左下吸音棉3",
           "code": "510000000000012721",
-          "pulled": false,
+          "pulled": true,
           "supplier": "待定"
         },
         {
@@ -1708,19 +1708,19 @@
         {
           "name": "S56_X3_C下吸音棉1",
           "code": "510000000000012719",
-          "pulled": false,
+          "pulled": true,
           "supplier": "待定"
         },
         {
           "name": "S56_X3_右下吸音棉2",
           "code": "510000000000012727",
-          "pulled": false,
+          "pulled": true,
           "supplier": "待定"
         },
         {
           "name": "S56_X3_03T吸音棉1",
           "code": "510000000000012328",
-          "pulled": false,
+          "pulled": true,
           "supplier": "待定"
         },
         {
@@ -1732,7 +1732,7 @@
         {
           "name": "S56_X3_左下吸音棉2",
           "code": "510000000000012720",
-          "pulled": false,
+          "pulled": true,
           "supplier": "待定"
         }
       ]

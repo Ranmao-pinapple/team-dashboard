@@ -278,6 +278,14 @@ SOURCES = {
 
 
 def main():
+    # 每次都按最新「月拉动计划 / 实际交付 / PO」重算零件「已拉动」标记
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import sync_pulled_from_pullplan as _spp
+        _spp.main(apply=True)
+    except Exception as e:  # 不让标记重算失败挡住页面生成
+        print("⚠️  已拉动标记重算失败, 跳过:", e)
+
     data = {}
     for block_name, src in SOURCES.items():
         d = load(src)
