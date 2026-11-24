@@ -301,6 +301,14 @@ def main():
         except Exception as e:
             print("⚠️  展开全部项目失败, 只显示已有计划行:", e)
 
+    # 销售额预测页：量纲(年产量) × 单车用量 × 单价 → forecast.json / forecast.html
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import make_forecast as _mf
+        _mf.main()
+    except Exception as e:
+        print("⚠️  销售额预测生成失败:", e)
+
     print("=== 同步看板数据 ===")
     update_file("index.html", data)
     update_file("pull-plan.html", {
