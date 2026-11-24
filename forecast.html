@@ -84,7 +84,7 @@
 
   <div class="toolbar">
     <span>改完数字如需固化，告诉我写进参数表</span>
-    <button class="btn" onclick="render()">重置为本页数据</button>
+    <button class="btn" onclick="render(true)">重置为本页数据</button>
   </div>
 
   <h2>按项目汇总</h2>
@@ -1983,8 +1983,8 @@ const FORECAST_DATA = {
 const money = v => '¥' + (Math.round(v||0)).toLocaleString('zh-CN');
 let D = null;
 
-function render(){
-  D = JSON.parse(JSON.stringify(FORECAST_DATA));
+function render(reset){
+  if(!D || reset) D = JSON.parse(JSON.stringify(FORECAST_DATA));
   let tot = 0, totQty = 0, nProj = 0;
   D.projects.forEach(p => {
     p.annualNet = 0; p.annualQty = 0;
