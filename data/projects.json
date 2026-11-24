@@ -1653,10 +1653,6 @@
         {
           "title": "首单PO4500127228分析（5件/12,040件·单价待定价）",
           "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-奇瑞S56-首单PO4500127228分析-20260915.xlsx"
-        },
-        {
-          "title": "S56 吸音棉定点信息提交表(价格更新·14件)",
-          "url": "https://ranmao-pinapple.github.io/team-dashboard/files/S56-%E5%90%B8%E9%9F%B3%E6%A3%89%E5%AE%9A%E7%82%B9%E4%BF%A1%E6%81%AF%E6%8F%90%E4%BA%A4%E8%A1%A8-%E4%BB%B7%E6%A0%BC%E6%9B%B4%E6%96%B0-202611.xlsx"
         }
       ],
       "phases": [
@@ -1797,12 +1793,12 @@
           "name": "S56_X3_B下吸音棉（0不生产）",
           "code": "510000000000012723",
           "pulled": false,
-          "supplier": "",
+          "supplier": "上海泰瑞",
           "canceled": true,
           "remark": "客户取消（2026-09-18），不排产、不计年量与报价、不参与刀模排版",
           "cost": null,
           "priceTax": null,
-          "makeType": ""
+          "makeType": "自制"
         },
         {
           "name": "S56_X3L_左C下吸音棉4",
