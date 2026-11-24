@@ -3139,7 +3139,7 @@ function renderPull() {
     const pid = 'proj' + p.replace(/[^A-Za-z0-9]/g, '');
     const nMake = rows.filter(r => r.makeType === '自制').length;
     const nOut = rows.length - nMake;
-    html += `<tr class="proj-group-row" onclick="toggleProj(this, '${pid}')"><td class="part"><span class="proj-caret">▸</span> ${p} <span class="proj-count">${rows.length}件</span>${nMake ? `<span class="tag tag-make">自制${nMake}</span>` : ''}${nOut ? `<span class="tag tag-out">外协${nOut}</span>` : ''}</td><td class="proj">—</td><td></td>`;
+    html += `<tr class="proj-group-row" onclick="toggleProj(this, '${pid}')"><td class="part"><span class="proj-caret">▾</span> ${p} <span class="proj-count">${rows.length}件</span>${nMake ? `<span class="tag tag-make">自制${nMake}</span>` : ''}${nOut ? `<span class="tag tag-out">外协${nOut}</span>` : ''}</td><td class="proj">—</td><td></td>`;
     html += `<td class="num">${pPlanSum.toLocaleString()}</td><td class="num">${pActSum > 0 ? pActSum.toLocaleString() : '0'}</td>`;
     html += `<td class="rate ${rateClass(prate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(prate)}"><i style="width:${Math.min(prate, 100)}%"></i></div>${pPlanSum > 0 && pActSum > 0 ? prate + '%' : '—'}</div></td>`;
     for (let d = 0; d < dim; d++) {
@@ -3159,7 +3159,7 @@ function renderPull() {
       for (let d = 0; d < dim; d++) { planSum += arr[d] || 0; actSum += act[d] || 0; }
       const rate = planSum > 0 ? Math.round((actSum / planSum) * 100) : 0;
       const pTag = r.makeType ? `<span class="tag ${r.makeType === '自制' ? 'tag-make' : 'tag-out'}">${r.makeType}</span>${r.supplier ? `<span class="tag tag-supplier" style="color:${r.supplier === '上海泰瑞' ? '#1e6fd9' : '#8b5cf6'}">${r.supplier}</span>` : ''}` : '';
-      html += `<tr class="proj-part ${pid}" style="display:none"><td class="proj"></td><td class="part">${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
+      html += `<tr class="proj-part ${pid}"><td class="proj"></td><td class="part">${r.part} ${pTag}</td><td>${statusMap[r.status]}</td>`;
       html += `<td class="num">${planSum.toLocaleString()}</td><td class="num">${actSum > 0 ? actSum.toLocaleString() : '0'}</td><td class="rate ${rateClass(rate)}"><div class="rate-wrap"><div class="rate-bar ${rateClass(rate)}"><i style="width:${Math.min(rate, 100)}%"></i></div>${planSum > 0 && actSum > 0 ? rate + '%' : '—'}</div></td>`;
       for (let d = 0; d < dim; d++) {
         const plan = arr[d] || 0, a = act[d] || 0;
