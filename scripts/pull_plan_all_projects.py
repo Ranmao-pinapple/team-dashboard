@@ -15,6 +15,22 @@ import collections
 
 MATCH_RATIO = 0.80
 
+# 同件多工厂/同名件：这些计划行归到卡里的同一个零件，避免卡零件被误补一行 0
+# 510000000000011011 = VFe32防水海绵-侧裙（凯华9000 + 济南 两个工厂分行拉动）
+ALIAS_NAME = {"510000000000011011": "防水海绵-侧裙"}
+
+# ---- 项目/件号别名（Zane 2026-11-24: VF5 就是 VFe32 项目）----
+ALIAS_PROJECT = {"VF5": "VFe32"}
+ALIAS_CODE = {
+    "BEX37122430AA": "510000000000017441",
+    "BEX37122440AA": "510000000000017442",
+    "BEX37122431AA": "510000000000017444",
+    "BEX37122441AA": "510000000000017445",
+    "BEX37122460AA": "510000000000017440",
+    "BEX37122470AA": "510000000000017443",
+}
+
+
 
 def _codes(s):
     return set(re.findall(r"(BIN\d{6,}[A-Z0-9]*|BEX\d+[A-Z]*|\d{8,})", s or ""))
@@ -39,11 +55,17 @@ def display_rows(projects, pull_data):
     names = [p.get("name", "") for p in (projects.get("projects") or [])]
     for r in src:
         r["project"] = _canon(r.get("project", ""), names)
+        r["project"] = ALIAS_PROJECT.get(r["project"], r["project"])
 
     idx = collections.defaultdict(list)
     for r in src:
         for c in _codes(r.get("part", "")):
             idx[c].append(r)
+            if c in ALIAS_CODE:
+                idx[ALIAS_CODE[c]].append(r)
+        for tgt, kw in ALIAS_NAME.items():
+            if kw in r.get("part", ""):
+                idx[tgt].append(r)
     by_proj = collections.defaultdict(list)
     for r in src:
         by_proj[r.get("project")].append(r)

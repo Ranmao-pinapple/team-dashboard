@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24 11:49",
+  "updatedAt": "2026-11-24 12:12",
   "projects": [
     {
       "name": "VFe32",
@@ -251,7 +251,7 @@
           "code": "510000000000017440",
           "name": "VF5-防水海绵 26*14.5*6",
           "priceTax": 0.09,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛",
           "plant": "台州"
@@ -260,7 +260,7 @@
           "code": "510000000000017443",
           "name": "VF5-隔音海绵 28*10*2.5",
           "priceTax": 0.07,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛",
           "plant": "台州"
@@ -269,7 +269,7 @@
           "code": "510000000000017444",
           "name": "VF5-右侧3M胶-1- 22.8*11*1",
           "priceTax": 0.27,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"
@@ -278,7 +278,7 @@
           "code": "510000000000017445",
           "name": "VF5-右侧3M胶-2- 40*52*1",
           "priceTax": 0.35,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"
@@ -287,7 +287,7 @@
           "code": "510000000000017441",
           "name": "VF5-左侧3M胶-1- 22.8*11*1",
           "priceTax": 0.27,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"
@@ -296,7 +296,7 @@
           "code": "510000000000017442",
           "name": "VF5-左侧3M胶-2- 40*52*1",
           "priceTax": 0.35,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "常州顺拓",
           "plant": "台州"

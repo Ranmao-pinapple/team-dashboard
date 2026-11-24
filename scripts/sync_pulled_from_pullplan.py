@@ -25,6 +25,18 @@ if not os.path.isdir(_D):          # repo 布局: scripts/ 与 data/ 同级
 PJ = os.path.join(_D, "projects.json")
 OJ = os.path.join(_D, "orders.json")
 ODJ = os.path.join(_D, "orders_data.json")
+# ---- 项目/件号别名（Zane 2026-11-24: VF5 就是 VFe32 项目）----
+ALIAS_PROJECT = {"VF5": "VFe32"}
+ALIAS_CODE = {
+    "BEX37122430AA": "510000000000017441",
+    "BEX37122440AA": "510000000000017442",
+    "BEX37122431AA": "510000000000017444",
+    "BEX37122441AA": "510000000000017445",
+    "BEX37122460AA": "510000000000017440",
+    "BEX37122470AA": "510000000000017443",
+}
+
+
 CUR_MONTH = str(datetime.date.today().month)
 
 
@@ -67,10 +79,14 @@ def main(apply=False):
         po_parts.append(o.get("part", ""))
     po_codes |= set(c for s in po_parts for c in codes(s))
 
+    for r in O["rows"]:
+        r["project"] = ALIAS_PROJECT.get(r.get("project", ""), r.get("project", ""))
     idx = collections.defaultdict(list)
     for r in O["rows"]:
         for c in codes(r["part"]):
             idx[c].append(r)
+            if c in ALIAS_CODE:
+                idx[ALIAS_CODE[c]].append(r)
     rows_by_proj = collections.defaultdict(list)
     for r in O["rows"]:
         rows_by_proj[r["project"]].append(r)
