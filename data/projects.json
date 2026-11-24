@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24 11:37",
+  "updatedAt": "2026-11-24 11:49",
   "projects": [
     {
       "name": "VFe32",
@@ -905,10 +905,6 @@
         {
           "title": "BS5PR 泡棉EPDM 报价(常州臻畅·1件)",
           "url": "https://ranmao-pinapple.github.io/team-dashboard/files/BS5PR-%E6%B3%A1%E6%A3%89EPDM%E6%8A%A5%E4%BB%B7-%E5%B8%B8%E5%B7%9E%E8%87%BB%E7%95%85-20261012.xlsx"
-        },
-        {
-          "title": "BS5PR 定点内部信(1件·未税0.042)",
-          "url": "https://ranmao-pinapple.github.io/team-dashboard/files/BS5PR-%E5%AE%9A%E7%82%B9%E5%86%85%E9%83%A8%E4%BF%A1-202610.xlsx"
         }
       ]
     },
@@ -1644,7 +1640,7 @@
       "status": "won",
       "rfqDate": "",
       "phase": 2,
-      "nextStep": "已定点(9/16)；价格 10/18 已出：13 件按单车 16 件加权，套成本 13.9319 / 套未税 17.0695 / 套含税 19.2886，毛利率 18.4%；首单 PO4500127228（7 行/12,040 件）回填含税 ¥23,239.66；待客户签认后与排产对齐（⚠️ 表单合计行 15.9771/18.0542 未乘用量）；🔴10-23确认全件自制(上海泰瑞), 拉动计划已入看板(10/3 27,000 + 10/23 26,000)",
+      "nextStep": "已定点(9/16)；价格表 11/24 更新入卡：13 件在产按单车 16 件加权，套成本 13.9319 / 套未税 17.0695 / 套含税 19.2886，毛利率 18.4%；年量 5 万台(80 万件)、年产值未税 85.3 万、年毛利 15.7 万；全件自制(上海泰瑞)，交货地芜湖，EOP 2029.12；🔴3 件亏损/微利：C上吸音棉3 −22.1%、C下吸音棉1 −1.6%、C上吸音棉2 +1.8%；B下吸音棉 0 不生产",
       "bomFiles": [
         {
           "title": "S56吸音棉定点信息提交表（14件·定点2026-09-16）",
@@ -1657,6 +1653,10 @@
         {
           "title": "首单PO4500127228分析（5件/12,040件·单价待定价）",
           "url": "https://ranmao-pinapple.github.io/team-dashboard/files/凯华-奇瑞S56-首单PO4500127228分析-20260915.xlsx"
+        },
+        {
+          "title": "S56 吸音棉定点信息提交表(价格更新·14件)",
+          "url": "https://ranmao-pinapple.github.io/team-dashboard/files/S56-%E5%90%B8%E9%9F%B3%E6%A3%89%E5%AE%9A%E7%82%B9%E4%BF%A1%E6%81%AF%E6%8F%90%E4%BA%A4%E8%A1%A8-%E4%BB%B7%E6%A0%BC%E6%9B%B4%E6%96%B0-202611.xlsx"
         }
       ],
       "phases": [
@@ -1731,6 +1731,11 @@
           "date": "2026-10-23",
           "event": "确认 S56 全部零件为自制、由上海泰瑞生产；同步客户拉动计划：10/3 到货需求 27,000 件、10/23 紧急需求 26,000 件（10 件）",
           "status": "done"
+        },
+        {
+          "date": "2026-11-24",
+          "event": "💰 价格更新表入卡(14 件含 1 件不生产)：逐件填入成本/含税价与利润率；按单车 16 件加权 套成本 13.9319/套未税 17.0695/套含税 19.2886(毛利率 18.4%)；🔴C上吸音棉3 −22.1%、C下吸音棉1 −1.6%、C上吸音棉2 +1.8% 三件亏损/微利；B下吸音棉标 0 不生产",
+          "status": "done"
         }
       ],
       "parts": [
@@ -1738,87 +1743,129 @@
           "name": "S56_X3L_右C下吸音棉4",
           "code": "510000000000013898",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 2.546333,
+          "priceTax": 3.707547,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_C上吸音棉1",
           "code": "510000000000012724",
           "pulled": false,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 0.223772,
+          "priceTax": 0.278747,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_C上吸音棉2",
           "code": "510000000000012725",
           "pulled": false,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 0.356353,
+          "priceTax": 0.41,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_左下吸音棉3",
           "code": "510000000000012721",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 1.039679,
+          "priceTax": 1.500293,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3L_左C下吸音棉5",
           "code": "510000000000013897",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 1.59117,
+          "priceTax": 2.262433,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3L_右C下吸音棉5",
           "code": "510000000000013899",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 1.495725,
+          "priceTax": 2.116832,
+          "makeType": "自制"
         },
         {
-          "name": "S56_X3_B下吸音棉",
+          "name": "S56_X3_B下吸音棉（0不生产）",
           "code": "510000000000012723",
           "pulled": false,
-          "supplier": "待定",
+          "supplier": "",
           "canceled": true,
-          "remark": "客户取消（2026-09-18），不排产、不计年量与报价、不参与刀模排版"
+          "remark": "客户取消（2026-09-18），不排产、不计年量与报价、不参与刀模排版",
+          "cost": null,
+          "priceTax": null,
+          "makeType": ""
         },
         {
           "name": "S56_X3L_左C下吸音棉4",
           "code": "510000000000013896",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 2.261821,
+          "priceTax": 3.146794,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_吸音棉2",
           "code": "510000000000012330",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 0.432204,
+          "priceTax": 0.582773,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_C下吸音棉1",
           "code": "510000000000012719",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 0.260731,
+          "priceTax": 0.29,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_右下吸音棉2",
           "code": "510000000000012727",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 1.396281,
+          "priceTax": 1.978018,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_03T吸音棉1",
           "code": "510000000000012328",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 0.275851,
+          "priceTax": 0.361643,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_C上吸音棉3",
           "code": "510000000000012726",
           "pulled": false,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 0.20532,
+          "priceTax": 0.19,
+          "makeType": "自制"
         },
         {
           "name": "S56_X3_左下吸音棉2",
           "code": "510000000000012720",
           "pulled": true,
-          "supplier": "待定"
+          "supplier": "上海泰瑞",
+          "cost": 0.877915,
+          "priceTax": 1.229086,
+          "makeType": "自制"
         }
       ]
     },
