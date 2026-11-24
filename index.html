@@ -2020,7 +2020,7 @@ const PO_DATA = {
 // 阶段 status: done(已完成) / doing(进行中) / todo(未开始) / late(延期)
 // APQP 五阶段: 1计划和确定项目 2产品设计和开发 3过程设计和开发 4产品和过程确认 5反馈评定纠正
 const PROJECT_DATA = {
-  updatedAt: "2026-11-24 11:28",
+  updatedAt: "2026-11-24 11:35",
   projects: [
     {
       name: "VFe32", customer: "凯华", oem: "VINFAST", product: "35个零件",
@@ -2066,6 +2066,15 @@ const PROJECT_DATA = {
       phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "2026-08-27", "remark": "客户已定点（8/27）"}, {"phase": 2, "name": "产品设计和开发", "status": "doing", "planDate": "2026-08-27", "actualDate": "", "remark": "OTS 120套样品已完成送样"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
       timeline: [{"date": "2026-08-27", "event": "客户已定点；OTS 120套样品已完成送样", "status": "done"}],
       parts: [{"code": "510000000000017025", "name": "SHD密封板毛毡(12478375-1)", "priceTax": null, "pulled": false, "makeType": "外协", "supplier": "待定"}]
+    },
+    {
+      name: "BS5PR", customer: "上海海泰", oem: "上汽", product: "泡棉 1个零件(EPDM)",
+      status: "won", rfqDate: "", phase: 2,
+      nextStep: "已定点(11/24确认)；1件泡棉12444755-03，未税含运0.042元/件(含税≈0.0475)，MOQ 5000、供货地太仓；下一步=补年量与订单/APQP排期",
+      bomFiles: [{"title": "BS5PR 泡棉EPDM 报价(常州臻畅·1件)", "url": "https://ranmao-pinapple.github.io/team-dashboard/files/BS5PR-%E6%B3%A1%E6%A3%89EPDM%E6%8A%A5%E4%BB%B7-%E5%B8%B8%E5%B7%9E%E8%87%BB%E7%95%85-20261012.xlsx"}],
+      phases: [{"phase": 1, "name": "计划和确定项目", "status": "done", "planDate": "", "actualDate": "", "remark": "客户定点(2026-11-24确认)"}, {"phase": 2, "name": "产品设计和开发", "status": "doing", "planDate": "", "actualDate": "", "remark": "图纸/样件待启动，节点待补"}, {"phase": 3, "name": "过程设计和开发", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 4, "name": "产品和过程确认", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}, {"phase": 5, "name": "反馈评定纠正", "status": "todo", "planDate": "", "actualDate": "", "remark": ""}],
+      timeline: [{"date": "2026-11-24", "event": "🔵 新建项目卡：客户上海海泰 · 主机厂上汽；1件泡棉 12444755-03(泡棉-定位销，单车6件，闭孔EPDM 130±30kg/m³)；报价未税含运0.042元/件，PE袋+纸箱(20,000/箱)，供货地太仓，MOQ 5,000；客户已定点", "status": "done"}],
+      parts: [{"code": "", "name": "BS5PR 泡棉-定位销 12444755-03（单车6件·闭孔EPDM 130±30kg/m³·未税含运0.042）", "priceTax": 0.0475, "pulled": false, "makeType": "自制", "supplier": "常州臻畅"}]
     },
     {
       name: "EHEA", customer: "凯华", oem: "海豹06GT", product: "21个零件(吸音棉/海绵/毛毡)",
