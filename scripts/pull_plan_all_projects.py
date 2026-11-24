@@ -70,7 +70,7 @@ def display_rows(projects, pull_data):
                 "part": label,
                 "project": p.get("name", ""),
                 "proj": p.get("customer", ""),
-                "status": p.get("status", "active"),
+                "status": "wait",  # 拉动状态用 待定(不套 APQP 状态词)
                 "makeType": pt.get("makeType") or "",
                 "supplier": pt.get("supplier") or "",
                 "daily": {},
