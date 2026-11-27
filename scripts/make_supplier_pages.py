@@ -122,7 +122,15 @@ TMPL = """<!DOCTYPE html>
   #dnPaper .sign {{ display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:26px; font-size:12.5px; }}
   #dnPaper .sign div {{ border-top:1px solid #333; padding-top:6px; }}
   #dnPaper .dn-sheet + .dn-sheet {{ margin-top:26px; padding-top:18px; border-top:2px dashed #c8cdd4; }}
-  @media print {{ body {{ padding:0; background:#fff; }} .wrap {{ box-shadow:none; border-radius:0; }} .month-bar {{ display:none; }}
+  @page {{ size: A4 landscape; margin: 7mm 6mm; }}
+  @media print {{ body {{ padding:0; background:#fff; }} .wrap {{ box-shadow:none; border-radius:0; max-width:none !important; }} .month-bar {{ display:none; }}
+    .no-print {{ display:none !important; }}
+    div[style*="overflow-x"] {{ overflow:visible !important; }}
+    th {{ position:static !important; }}
+    td.part {{ position:static !important; min-width:0 !important; }}
+    thead {{ display:table-header-group; }}
+    tr {{ break-inside:avoid; page-break-inside:avoid; }}
+    table#pt {{ min-width:0 !important; zoom:0.78; }}
     body.dn-print .wrap {{ display:none !important; }}
     body.dn-print #dnModal {{ position:static !important; display:block !important; background:#fff !important; padding:0 !important; }}
     body.dn-print #dnModal .noprint {{ display:none !important; }}
@@ -138,15 +146,15 @@ TMPL = """<!DOCTYPE html>
     <div class="meta">臻畅/泰瑞 · 销售四部 &nbsp;|&nbsp; 数据更新：{updated}</div>
   </div>
   <div class="month-bar" id="monthBar"></div>
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+  <div class="no-print" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
     <button id="confirmBtn" onclick="openConfirm()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(232,33,39,.3)">✅ 能按期完成 · 可执行拉动</button>
     <button id="delayBtn" onclick="openDelay()" style="background:#fff;color:#b45309;border:1px solid #f0c36d;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer">⚠️ 无法按期完成 · 反馈交期</button>
-    <button onclick="window.print()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">🖨 打印 / 存PDF</button>
+    <button onclick="window.print()" style="background:#fff;color:#334155;border:1px solid #d6dae0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">🖨 打印 / 存PDF（A4横版·含全月）</button>
     <span id="confirmState" style="font-size:12px;color:#8a8f98"></span>
   </div>
   <div class="sum-line" id="sumLine"></div>
   <div style="overflow-x:auto"><table id="pt"><thead id="ptHead"></thead><tbody id="ptBody"></tbody></table></div>
-  <div style="margin-top:18px;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;background:#fffdf7">
+  <div class="no-print" style="margin-top:18px;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;background:#fffdf7">
     <h2 id="shipTitle" style="font-size:15px;margin:0 0 4px;color:#b45309">📦 本周发货情况填报</h2>
     <div style="font-size:12px;color:#8a8f98;margin-bottom:8px">请填写本周（周一~周日）<b>实际发货件数</b>；缺货/延期的在备注里写明原因与预计发货日。填完点「提交」，邮件会自动带好。</div>
     <div id="shipBox" style="overflow-x:auto"></div>
@@ -168,7 +176,7 @@ TMPL = """<!DOCTYPE html>
       </div>
     </div>
   </div>
-  <div style="margin-top:18px;border:1px solid #cfe3d4;border-radius:10px;padding:12px 14px;background:#f7fdf9">
+  <div class="no-print" style="margin-top:18px;border:1px solid #cfe3d4;border-radius:10px;padding:12px 14px;background:#f7fdf9">
     <h2 style="font-size:15px;margin:0 0 4px;color:#0f7a3d">🧾 生成发货单</h2>
     <div style="font-size:12px;color:#8a8f98;margin-bottom:10px">固定信息已设好；每次只需在下面填 <b>本次发货数量</b> → 点「生成发货单」。<b style="color:#0f7a3d">若同时有凯华9000厂 / 济南厂 / 芜湖厂的件，会自动按工厂拆成多张发货单（各自单号/抬头/地址/收货人）。</b></div>
     <div class="dn-grid" style="margin-bottom:12px">
