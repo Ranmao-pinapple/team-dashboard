@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24 12:12",
+  "updatedAt": "2026-11-27 01:05",
   "projects": [
     {
       "name": "VFe32",
@@ -376,7 +376,7 @@
           "code": "510000000000010610",
           "name": "VFe32 手套箱下挡板棉毡（单车4件）",
           "priceTax": 0.05,
-          "pulled": false,
+          "pulled": true,
           "makeType": "外协",
           "supplier": "宁波互盛"
         },
