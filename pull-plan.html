@@ -358,6 +358,27 @@
   }
   .lock-box button:hover { opacity: .85; }
   .lock-err { color: var(--red); font-size: 13px; min-height: 18px; margin-bottom: 8px; }
+  /* ===== 打印 / 存PDF（横版整月：A3 横版自动缩放，右侧列不再被裁）===== */
+  @page { size: A3 landscape; margin: 8mm 8mm; }
+  @media print {
+    html, body { background: #fff !important; }
+    #lockScreen, .tabs, .month-picker, .legend, #supTip, .no-print, .subtitle { display: none !important; }
+    .container { max-width: none !important; padding: 0 !important; margin: 0 !important; }
+    h1 { font-size: 15px !important; margin: 0 0 2px !important; }
+    .tab-content { display: none !important; }
+    .tab-content.active { display: block !important; }
+    .card, .grid { box-shadow: none !important; }
+    #tableWrap { max-height: none !important; overflow: visible !important;
+                 box-shadow: none !important; border: 0 !important; padding: 0 !important; border-radius: 0 !important; }
+    #tableWrap table { min-width: 0 !important; zoom: 0.70; }
+    #tableWrap thead { display: table-header-group; }
+    #tableWrap thead th { position: static !important; }
+    #tableWrap tbody td { position: static !important; }
+    #tableWrap tbody tr { break-inside: avoid; page-break-inside: avoid; }
+    #tableWrap tbody tr:hover td { background: transparent !important; }
+    #tableWrap td.today, #tableWrap th.today { box-shadow: none !important; }
+    #pullStats, .grid { break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
@@ -439,6 +460,12 @@
       <a href="https://ranmao-pinapple.github.io/team-dashboard/supplier-shuntuo.html" target="_blank" rel="noopener" style="background:#e6f7ef;color:#0f766e;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">常州顺拓 · 外协 ↗</a>
       <a href="https://ranmao-pinapple.github.io/team-dashboard/pull-plan-tairui.html" target="_blank" rel="noopener" style="background:#e0f2fe;color:#0369a1;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block">上海泰瑞 · 自制 ↗</a>
       <span id="supTip" style="font-size:12px;color:var(--muted)">点开页面后右上角「···」可直接转发</span>
+    </div>
+
+    <div class="no-print" style="padding:10px 14px;margin:12px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #ececef;border-radius:12px">
+      <span style="font-weight:600;font-size:13px">🖨 打印整月计划</span>
+      <button onclick="window.print()" style="background:#e82127;color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer">存 PDF / 打印（横版，含全部日期）</button>
+      <span style="font-size:12px;color:var(--muted)">弹出窗口选「另存为 PDF」；表格已设 A3 横版自动缩放，右侧列不会再被裁掉</span>
     </div>
 
     <div class="month-picker" id="monthPicker"></div>
